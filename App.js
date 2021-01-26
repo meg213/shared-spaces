@@ -2,12 +2,16 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Item from "./components/Item";
+import User from "./components/User";
+import Card from "./components/Card";
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+      <Text>Components:</Text>
       <Item/>
+      <User/>
+      <Card/>
       <StatusBar style="auto" />
     </View>
   );
@@ -16,7 +20,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#D9DED8',
     alignItems: 'center',
     justifyContent: 'center',
   },

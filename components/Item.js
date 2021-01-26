@@ -3,6 +3,21 @@ import PropTypes from 'prop-types';
 import { Pressable, Text, View, StyleSheet, Image } from 'react-native';
 import logo from "../assets/logo.png"
 
+/*
+Item contains information about an item stored by the user
+Takes in: 
+  itemName: {string}     name of the item
+  list:     {string}     the list the item belongs to
+  owner:    {string}     who the item belongs to
+  shared:   {bool}       is the item shared
+  onClick:  {func}       onClick function
+
+TODO
+  onClick function
+  user icon
+  list icon
+  background color changes depending on if in recent or in a list
+*/
 const styles = StyleSheet.create({
     item: {
       backgroundColor: '#F2F0EB',
@@ -47,7 +62,7 @@ const styles = StyleSheet.create({
   const Item = (props) => {
     return (
       <View style={[styles.item ]}>
-        <Pressable>
+         <Pressable onPress={ props.onClick() } >
           <Text style={styles.itemName}>{props.itemName}</Text>
           <View style={styles.subSectionGroup}>
               {props.list ? <SubSection text={props.list} /> : null}  
@@ -62,11 +77,12 @@ const styles = StyleSheet.create({
 
   Item.propTypes = {
     itemName: PropTypes.string,
-    text: PropTypes.string,
+    text: PropTypes.string, //private do not use
     list: PropTypes.string,
     owner: PropTypes.string,
     shared: PropTypes.bool,
-    // image: PropTypes.func,
+    
+    onClick: PropTypes.func,
   };
 
   Item.defaultProps = {
@@ -75,7 +91,8 @@ const styles = StyleSheet.create({
     list: "Living Room",
     owner: "Morgan",
     shared: true,
-    // image: logo,
+    
+    onClick: () => {}
   }
   
   export default Item;

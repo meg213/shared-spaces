@@ -2,6 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Pressable, Text, View, StyleSheet, Image } from 'react-native';
 
+/*
+Card is one of the clickable squares to select a category of item
+Takes in:
+    name: {string}  the name of the card
+    source: require(string) the source for the image (MUST HAVE REQURE())
+    onClick: {func} the function for onClick
+*/
+
 const styles = StyleSheet.create({
     card: {
       backgroundColor: '#FFFFFF',
@@ -30,7 +38,7 @@ const styles = StyleSheet.create({
     return (
       <View style={[styles.card ]}>
         <Pressable onPress={ props.onClick() } >
-            <Image source={require("../assets/logo.png")} style={[styles.image]}/>
+            <Image source={props.source} style={[styles.image]}/>
             <Text style={styles.text}>{props.name}</Text>
         </Pressable>
       </View>
@@ -47,7 +55,7 @@ const styles = StyleSheet.create({
 
   Card.defaultProps = {
     name: "Shared",
-    source: null,
+    source: require('../assets/logo.png'),
 
     onClick: () => {}
   }

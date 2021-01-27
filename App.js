@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import Item from "./components/Item";
 import User from "./components/User";
 import Card from "./components/Card";
+import Button from "./components/Button";
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
       <Item/>
       <User/>
       <Card/>
+      <Button/>
       <StatusBar style="auto" />
     </View>
   );

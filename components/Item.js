@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
 
   Item.defaultProps = {
     itemName: "Lamp",
-    text: "Sample",
+    text: "Sample", //private
     list: "Living Room",
     owner: "Morgan",
     shared: true,

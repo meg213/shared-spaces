@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
       padding: 12,
       justifyContent: 'center',
       alignItems: 'center',
+      alignSelf: 'center',
       margin: 6,
     },
     text: {

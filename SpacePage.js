@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
-import { Icon } from 'react-native-elements'
+import { Icon } from 'react-native-elements';
 import Item from "./components/Item";
 import User from "./components/User";
 import Card from "./components/Card";
@@ -11,13 +11,18 @@ import RecentMessageShow from "./components/RecentMessageShow"
 export default function SpacePage() {
   return (
     <SafeAreaView style={styles.container}>
-        <View style={{ flexDirection: 'row' }}>
+        <View style ={{
+            flexDirection: 'row',
+            alignItems: 'center',        
+        }}>
             <Icon style={{
-                flex: 1,
+                justifyContent: 'left'
             }} size={50} name='arrow-left' />
-            <Text style={{ 
+            <Text style={{
                 flex: 1,
+                paddingRight: 50,
                 textAlign: 'center',
+                alignContent: 'center',
                 fontSize:36, 
                 fontWeight:'700'
                 }}>

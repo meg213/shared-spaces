@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
       borderRadius: 6,
       padding: 12,
       minWidth: '80%',
-      margin: 6,
+      margin: 10,
     },
     subSectionGroup: {
         flexDirection: 'row',

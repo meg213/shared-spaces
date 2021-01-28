@@ -22,9 +22,9 @@ const styles = StyleSheet.create({
       alignItems: 'center'
     },
     text: {
-      fontSize: 22,  
+      fontSize: 18,  
       color: "#4E7580",
-      paddingTop: 6
+      paddingTop: 8
     },
     image: {
         height: 45,

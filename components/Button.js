@@ -11,14 +11,15 @@ Takes in:
 const styles = StyleSheet.create({
     button: {
       backgroundColor: '#D9BD4B',
-      width: '85%',
+      minWidth: '85%',
       borderRadius: 20,
       padding: 12,
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
+      margin: 6,
     },
     text: {
-      fontSize: 22,  
+      fontSize: 20,  
       color: "#FFFFFF",
       fontWeight: "400",
     },

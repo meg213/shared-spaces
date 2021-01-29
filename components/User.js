@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
     user: {
       borderRadius: 50,
       height: 55,
+      width: 55,
       padding: 10,
       backgroundColor: '#56CCF2',
       alignItems: 'center',

@@ -31,6 +31,15 @@ export default function SpacePage() {
             </Text>
         </View>
         <ScrollView scrollEventThrottle={16}>
+            <View
+            style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                }}
+            >
+                <User/>
+            </View>
             <View>
                 <Text style={{
                     fontSize: 18, 

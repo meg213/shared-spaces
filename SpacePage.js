@@ -36,6 +36,7 @@ export default function SpacePage() {
                 flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
+                margin: 6,
                 }}
             >
                 <User/>

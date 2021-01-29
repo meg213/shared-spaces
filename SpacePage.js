@@ -23,8 +23,9 @@ export default function SpacePage() {
                 paddingRight: 50,
                 textAlign: 'center',
                 alignContent: 'center',
-                fontSize:36, 
-                fontWeight:'700'
+                fontSize: 30, 
+                fontWeight:'500',
+                color: "#184254"
                 }}>
                 The Apartment
             </Text>
@@ -32,15 +33,17 @@ export default function SpacePage() {
         <ScrollView scrollEventThrottle={16}>
             <View>
                 <Text style={{
-                    fontSize: 20, 
-                    fontWeight: '700',
-                    margin: 6
+                    fontSize: 18, 
+                    fontWeight: '400',
+                    margin: 6,
+                    marginHorizontal: 12,
+                    color: '#4E7580'
                 }}> 
                     Messages 
                 </Text>
                 <RecentMessageShow/>
             </View>
-            <View style={{height: 120, marginTop: 6}}>
+            <View style={{height: 120, marginTop: 6, marginLeft: 6}}>
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                     <Card name="Shared"/>
                     <Card name="My Items"/>
@@ -54,12 +57,16 @@ export default function SpacePage() {
             <Button name="Add an Item"/>
             <View style={{
                 backgroundColor: 'white',
-                borderRadius: 10,
+                borderRadius: 12,
+                marginTop: 6
             }}>
                 <Text style={{
                     fontSize: 18, 
-                    fontWeight: '700',
-                    padding: 10,
+                    fontWeight: '400',
+                    paddingTop: 12,
+                    paddingBottom: 6,
+                    color: '#4E7580',
+                    marginHorizontal: 12
                 }}> 
                     Recently Added Items 
                 </Text>
@@ -77,7 +84,7 @@ export default function SpacePage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#D9DED8',
+    backgroundColor: '#F2F0EB',
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop:50

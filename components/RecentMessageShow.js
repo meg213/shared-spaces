@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 16,
     minWidth: '80%',
-    margin: 6,
+    marginHorizontal: 12,
   },
   circle: {
     flex: 1,
@@ -35,14 +35,16 @@ const RecentMessageShow = (props) => {
     <View style={[styles.item ]}>
       <Text style={{
         flex: 1,
-        color: 'black',
+        color: '#4E7580',
         textAlign: 'left',
+        fontWeight: "500",
         fontSize: 20,
       }}>
         Max: 
         <Text style={{
           padding: 10,
-          color: '#696969'
+          color: '#4E7580',
+          fontWeight: '300'
         }}>
           {" "}yeah, sure!
         </Text>

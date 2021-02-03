@@ -12,6 +12,16 @@ export default function SpacePage({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
         <ScrollView scrollEventThrottle={16}>
+            <View style={styles.header}>
+                <Text style={styles.headerTitle}>My Items</Text>
+                <Text>24 Items</Text>
+            </View>
+            <Item
+                listPage
+            />
+            <Item
+                listPage
+            />
             <Button
                 onClick={()=> {navigation.navigate('SpacePage')}}
             />
@@ -26,6 +36,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#F2F0EB',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop:50
   },
+  header: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+    height: 80,
+    width: '100%',
+    borderBottomRightRadius: 12,
+    borderBottomLeftRadius: 12,
+  },
+  headerTitle: {
+      fontSize: 30,
+      color: '#184254',
+      fontWeight: '500',
+      paddingBottom: 12,
+  }
 });

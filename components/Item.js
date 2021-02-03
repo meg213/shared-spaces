@@ -13,14 +13,11 @@ Takes in:
   onClick:  {func}       onClick function
 
 TODO
-  onClick function
   user icon
   list icon
-  background color changes depending on if in recent or in a list
 */
 const styles = StyleSheet.create({
     item: {
-      backgroundColor: '#F2F0EB',
       borderRadius: 6,
       padding: 12,
       minWidth: '80%',
@@ -66,7 +63,7 @@ const styles = StyleSheet.create({
 
   const Item = (props) => {
     return (
-      <View style={[styles.item ]}>
+      <View style={[{backgroundColor: props.listPage ? '#FFFFFF' : '#F2F0EB'}, styles.item]}>
          <Pressable 
           onPress={ props.onClick }
           style={({ pressed }) => [{opacity: pressed ? 0.6 : 1}]} >
@@ -88,6 +85,7 @@ const styles = StyleSheet.create({
     list: PropTypes.string,
     owner: PropTypes.string,
     shared: PropTypes.bool,
+    listPage: PropTypes.bool, //is it on a list page?
     
     onClick: PropTypes.func,
   };
@@ -98,6 +96,7 @@ const styles = StyleSheet.create({
     list: "Living Room",
     owner: "Morgan",
     shared: true,
+    listPage: false,
     
     onClick: () => {}
   }

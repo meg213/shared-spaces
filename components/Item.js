@@ -51,6 +51,10 @@ const styles = StyleSheet.create({
     }
  })
 
+  const onClickTest = () => {
+    console.log('testing');
+  }
+
   const SubSection = (props) => {
     return (
       <View style={[styles.subSection]}>
@@ -63,7 +67,9 @@ const styles = StyleSheet.create({
   const Item = (props) => {
     return (
       <View style={[styles.item ]}>
-         <Pressable onPress={ props.onClick() } >
+         <Pressable 
+          onPress={ props.onClick }
+          style={({ pressed }) => [{opacity: pressed ? 0.6 : 1}]} >
           <Text style={styles.itemName}>{props.itemName}</Text>
           <View style={styles.subSectionGroup}>
               {props.list ? <SubSection text={props.list} /> : null}  

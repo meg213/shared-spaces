@@ -37,7 +37,10 @@ const styles = StyleSheet.create({
   const Card = (props) => {
     return (
       <View style={[styles.card ]}>
-        <Pressable onPress={ props.onClick() } >
+        <Pressable
+          onPress={ props.onClick } 
+          style={({ pressed }) => [{opacity: pressed ? 0.6 : 1}]}
+          >
             <Image source={props.source} style={[styles.image]}/>
             <Text style={styles.text}>{props.name}</Text>
         </Pressable>

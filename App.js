@@ -1,17 +1,30 @@
-import { StatusBar } from 'expo-status-bar';
+import 'react-native-gesture-handler';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Item from "./components/Item";
-import User from "./components/User";
-import Card from "./components/Card";
-import Button from "./components/Button";
 import SpacePage from './screens/SpacePage';
+import ItemListPage from './screens/itemListPage'
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <SpacePage/>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="SpacePage"
+          component={SpacePage}
+          options={{ headerShown: false}}
+        />
+        <Stack.Screen
+          name="ItemList"
+          component={ItemListPage}
+          options={{ headerShown: false}}
+        />
+      </Stack.Navigator>
+  </NavigationContainer>
+
   );
 }
 

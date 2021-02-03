@@ -11,25 +11,6 @@ import RecentMessageShow from "../components/RecentMessageShow"
 export default function SpacePage() {
   return (
     <SafeAreaView style={styles.container}>
-        <View style ={{
-            flexDirection: 'row',
-            alignItems: 'center',        
-        }}>
-            <Icon style={{
-                justifyContent: 'left'
-            }} size={50} name='arrow-left' />
-            <Text style={{
-                flex: 1,
-                paddingRight: 50,
-                textAlign: 'center',
-                alignContent: 'center',
-                fontSize: 30, 
-                fontWeight:'500',
-                color: "#184254"
-                }}>
-                The Apartment
-            </Text>
-        </View>
         <ScrollView scrollEventThrottle={16}>
             <View
             style={{
@@ -52,21 +33,6 @@ export default function SpacePage() {
                     Messages 
                 </Text>
                 <RecentMessageShow/>
-            </View>
-            <View style={{height: 120, marginTop: 6, marginLeft: 6}}>
-                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                    <Card name="Shared"
-                        onClick={() => {
-                            console.log('card click test')
-                            navigation.navigate('ItemList')
-                            }}/>
-                    <Card name="My Items"/>
-                    <Card name="Lists"/>
-                    <Card name="All Items"/>
-                    <Card name="All Items"/>
-                    <Card name="All Items"/>
-                    <Card name="All Items"/>
-                </ScrollView>
             </View>
             <Button name="Add an Item"/>
             <View style={{

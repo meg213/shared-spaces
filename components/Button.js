@@ -28,13 +28,13 @@ const styles = StyleSheet.create({
 
   const Button = (props) => {
     return (
-      <View style={[styles.button ]}>
-        <Pressable 
-          onPress={ props.onClick }
-          style={({ pressed }) => [{opacity: pressed ? 0.6 : 1}]} >
-            <Text style={styles.text}>{props.name}</Text>
-        </Pressable>
-      </View>
+      <Pressable 
+        onPress={ props.onClick }
+        style={({ pressed }) => [{opacity: pressed ? 0.6 : 1}]} >
+        <View style={[styles.button ]}>
+          <Text style={styles.text}>{props.name}</Text>
+        </View>
+      </Pressable>
     );
   }
 

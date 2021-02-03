@@ -1,14 +1,22 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
+import firebase from 'firebase/app';
+import firebaseConfig from './config/keys';
+import Providers from './navigation'
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+let firebaseApp
+
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    if (firebase.apps.length == 0) {
+      firebase.initializeApp(firebaseConfig.FirebaseConfig);
+    }
+    
+  }
+  render() {
+    return <Providers />
+  }
 }
 
 const styles = StyleSheet.create({

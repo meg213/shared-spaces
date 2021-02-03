@@ -7,8 +7,7 @@ import Card from "../components/Card";
 import Button from "../components/Button";
 import RecentMessageShow from "../components/RecentMessageShow"
 
-
-export default function SpacePage() {
+export default function SpacePage({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
         <View style ={{
@@ -57,8 +56,8 @@ export default function SpacePage() {
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                     <Card name="Shared"
                         onClick={() => {
-                            console.log('card click test')
-                            navigation.navigate('ItemList')
+                            console.log('card click test');
+                            navigation.navigate('ItemList');
                             }}/>
                     <Card name="My Items"/>
                     <Card name="Lists"/>

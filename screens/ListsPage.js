@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { Icon } from 'react-native-elements';
-import Item from "../components/Item";
+import List from "../components/List";
 import User from "../components/User";
 import Card from "../components/Card";
 import Button from "../components/Button";
@@ -16,12 +16,7 @@ export default function SpacePage({navigation}) {
                 <Text style={styles.headerTitle}>Lists</Text>
                 <Text>6 Lists</Text>
             </View>
-            <Item
-                listPage
-            />
-            <Item
-                listPage
-            />
+            <List></List>
             <Button
                 onClick={()=> {navigation.navigate('SpacePage')}}
             />

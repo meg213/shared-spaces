@@ -48,10 +48,6 @@ const styles = StyleSheet.create({
     }
  })
 
-  const onClickTest = () => {
-    console.log('testing');
-  }
-
   const SubSection = (props) => {
     return (
       <View style={[styles.subSection]}>

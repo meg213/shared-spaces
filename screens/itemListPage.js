@@ -2,20 +2,46 @@ import React from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Item from "../components/Item";
-import User from "../components/User";
-import Card from "../components/Card";
 import Button from "../components/Button";
-import RecentMessageShow from "../components/RecentMessageShow"
+import { SearchBar } from 'react-native-elements';
 
+export default class ItemListPage extends React.Component {
+  state = {
+    search: '',
+  };
 
-export default function SpacePage({navigation}) {
-  return (
-    <SafeAreaView style={styles.container}>
+  updateSearch = (search) => {
+    this.setState({ search });
+  };
+
+    itemList = (list) => {
+        //this is where all the items would be sorted
+     list.sort(function(a,b){
+        if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
+        if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
+        return 0
+        });
+    };
+
+  render() {
+    const { search } = this.state;
+
+    return (
+     <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+            <Text style={styles.headerTitle}>My Items</Text>
+            <Text style={styles.itemNumber}>24 Items</Text>
+        </View>
+        <View style={styles.search}>
+            <SearchBar
+                    placeholder="Type Here..."
+                    onChangeText={this.updateSearch}
+                    value={search}
+                    lightTheme
+                />
+        </View>
         <ScrollView scrollEventThrottle={16}>
-            <View style={styles.header}>
-                <Text style={styles.headerTitle}>My Items</Text>
-                <Text>24 Items</Text>
-            </View>
+        <View>
             <Item
                 listPage
             />
@@ -25,9 +51,11 @@ export default function SpacePage({navigation}) {
             <Button
                 onClick={()=> {navigation.navigate('SpacePage')}}
             />
+        </View>
         </ScrollView>
-    </SafeAreaView>
-  );
+    </SafeAreaView> 
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -41,15 +69,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#FFFFFF',
-    height: 80,
+    height: 90,
     width: '100%',
-    borderBottomRightRadius: 12,
-    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 16,
+    borderBottomLeftRadius: 16,
   },
   headerTitle: {
       fontSize: 30,
       color: '#184254',
       fontWeight: '500',
       paddingBottom: 12,
+  },
+  itemNumber: {
+    fontSize: 18,
+    color: '#4E7580'
+  },
+  search: {
+      width: '90%'
   }
 });

@@ -59,12 +59,18 @@ export default function SpacePage({navigation}) {
                             console.log('card click test');
                             navigation.navigate('ItemList');
                             }}/>
-                    <Card name="My Items"/>
-                    <Card name="Lists"/>
-                    <Card name="All Items"/>
-                    <Card name="All Items"/>
-                    <Card name="All Items"/>
-                    <Card name="All Items"/>
+                    <Card name="My Items"
+                        onClick={() => {
+                            navigation.navigate('MyItemList');
+                            }}/>
+                    <Card name="Lists"
+                        onClick={() => {
+                            navigation.navigate('ListsList');
+                            }}/>
+                    <Card name="All Items"
+                        onClick={() => {
+                            navigation.navigate('AllItems');
+                            }}/>
                 </ScrollView>
             </View>
             <Button name="Add an Item"/>

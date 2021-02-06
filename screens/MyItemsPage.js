@@ -6,6 +6,7 @@ import User from "../components/User";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import RecentMessageShow from "../components/RecentMessageShow"
+import { SearchBar } from 'react-native-elements';
 
 
 export default function SpacePage({navigation}) {
@@ -16,6 +17,14 @@ export default function SpacePage({navigation}) {
                 <Text style={styles.headerTitle}>My Items</Text>
                 <Text>35 Items</Text>
             </View>
+            <View style={styles.search}>
+            <SearchBar
+                    placeholder="Type Here..."
+                    // onChangeText={this.updateSearch}
+                    // value={search}
+                    lightTheme
+                />
+        </View>
             <Item
                 listPage
             />
@@ -24,6 +33,7 @@ export default function SpacePage({navigation}) {
             />
             <Button
                 onClick={()=> {navigation.navigate('SpacePage')}}
+                name="Back"
             />
         </ScrollView>
     </SafeAreaView>

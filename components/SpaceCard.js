@@ -33,22 +33,27 @@ const styles = StyleSheet.create({
 
 const SpaceCard = (props) => {              //TO-DO: make props
     return(
-        <View style = {[styles.card]}>
-            <View style = {[styles.row]}>
-                <Text style = {[styles.text]}>
-                    My Apartment
-                </Text>
-                <Circle num= "2"/>
+        <Pressable
+             style={({ pressed }) => [{opacity: pressed ? 0.6 : 1}]} 
+             onPress={ props.onClick }
+        >
+            <View style = {[styles.card]}>
+                <View style = {[styles.row]}>
+                    <Text style = {[styles.text]}>
+                        My Apartment
+                    </Text>
+                    <Circle num= "2"/>
+                </View>
+                <View style = {{paddingTop: 5}}>
+                    <Text> 
+                        3 members
+                    </Text>
+                </View>
+                <View style = {{paddingTop: 18}}>
+                    <ArrowRight stroke = "black" style = {[styles.arrow]}/>
+                </View>
             </View>
-            <View style = {{paddingTop: 5}}>
-                <Text> 
-                    3 members
-                </Text>
-            </View>
-            <View style = {{paddingTop: 18}}>
-                <ArrowRight stroke = "black" style = {[styles.arrow]}/>
-            </View>
-        </View>
+        </Pressable>
     );
 }
 

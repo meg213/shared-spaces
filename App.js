@@ -15,36 +15,40 @@ const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <MySpacesPage/>
-  //   <NavigationContainer>
-  //     <Stack.Navigator>
-  //       <Stack.Screen
-  //         name="SpacePage"
-  //         component={SpacePage}
-  //         options={{ headerShown: false}}
-  //       />
-  //       <Stack.Screen
-  //         name="ItemList"
-  //         component={ItemListPage}
-  //         options={{ headerShown: false}}
-  //       />
-  //       <Stack.Screen
-  //         name="MyItemList"
-  //         component={MyItemsPage}
-  //         options={{ headerShown: false}}
-  //       />
-  //       <Stack.Screen
-  //         name="ListsList"
-  //         component={ListsPage}
-  //         options={{ headerShown: false}}
-  //       />
-  //       <Stack.Screen
-  //       name="AllItems"
-  //       component={AllItemsPage}
-  //       options={{ headerShown: false}}
-  //     />
-  //     </Stack.Navigator>
-  // </NavigationContainer>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+            name="MySpacesPage"
+            component={MySpacesPage}
+            options={{ headerShown: false}}
+          />
+        <Stack.Screen
+          name="SpacePage"
+          component={SpacePage}
+          options={{ headerShown: false}}
+        />
+        <Stack.Screen
+          name="ItemList"
+          component={ItemListPage}
+          options={{ headerShown: false}}
+        />
+        <Stack.Screen
+          name="MyItemList"
+          component={MyItemsPage}
+          options={{ headerShown: false}}
+        />
+        <Stack.Screen
+          name="ListsList"
+          component={ListsPage}
+          options={{ headerShown: false}}
+        />
+        <Stack.Screen
+        name="AllItems"
+        component={AllItemsPage}
+        options={{ headerShown: false}}
+      />
+      </Stack.Navigator>
+  </NavigationContainer>
 
   );
 }

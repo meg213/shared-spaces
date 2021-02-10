@@ -13,8 +13,16 @@ export default function MySpacesPage({navigation}){
                 </Text>
             </View>
             <ScrollView>
-                <SpaceCard/>
-                <SpaceCard/>
+                <SpaceCard
+                    onClick={() => {
+                        navigation.navigate('SpacePage');
+                    }}
+                />
+                <SpaceCard
+                    onClick={() => {
+                        navigation.navigate('SpacePage');
+                    }}
+                />
                 <Button/>
             </ScrollView>
         </SafeAreaView>

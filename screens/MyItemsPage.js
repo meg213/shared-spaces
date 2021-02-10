@@ -16,14 +16,34 @@ export default function SpacePage({navigation}) {
                 <Text style={styles.headerTitle}>My Items</Text>
                 <Text>35 Items</Text>
             </View>
+            <Text style={styles.sortedLetters}>B</Text>
             <Item
-                listPage
+              listPage
+              itemName="Blender"
             />
             <Item
-                listPage
+              listPage
+              itemName="Broom"
+            />
+            <Text style={styles.sortedLetters}>C</Text>
+            <Item
+              listPage
+              itemName="Chair"
+            />
+            <Text style={styles.sortedLetters}>L</Text>
+           <Item
+              listPage
+              itemName="Light"
+            />
+            <Item
+              listPage
+            />
+            <Item
+              listPage
             />
             <Button
                 onClick={()=> {navigation.navigate('SpacePage')}}
+                name="Back"
             />
         </ScrollView>
     </SafeAreaView>
@@ -51,5 +71,11 @@ const styles = StyleSheet.create({
       color: '#184254',
       fontWeight: '500',
       paddingBottom: 12,
+  },
+  sortedLetters: {
+    fontSize: 22,
+    color: '#4E7580',
+    paddingHorizontal: 12,
+    paddingVertical: 6
   }
 });

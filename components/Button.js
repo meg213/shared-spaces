@@ -10,7 +10,6 @@ Takes in:
 */
 const styles = StyleSheet.create({
     button: {
-      backgroundColor: '#D9BD4B',
       minWidth: '90%',
       borderRadius: 20,
       padding: 12,
@@ -31,7 +30,7 @@ const styles = StyleSheet.create({
       <Pressable 
         onPress={ props.onClick }
         style={({ pressed }) => [{opacity: pressed ? 0.6 : 1}]} >
-        <View style={[styles.button ]}>
+        <View style={[{backgroundColor: props.color}, styles.button, ]}>
           <Text style={styles.text}>{props.name}</Text>
         </View>
       </Pressable>
@@ -41,10 +40,12 @@ const styles = StyleSheet.create({
   Button.propTypes = {
     name: PropTypes.string,
     onClick: PropTypes.func,
+    color: PropTypes.string,
   };
 
   Button.defaultProps = {
     name: "Button",
+    color: "#D9BD4B",
     onClick: () => {}
   }
   

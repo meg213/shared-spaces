@@ -2,7 +2,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Input from "../components/Input";
-
+import Button from "../components/Button";
 
 export default function ProfilePage({navigation}) {
     return (
@@ -12,13 +12,12 @@ export default function ProfilePage({navigation}) {
                 <Text style={styles.subtext}>Basic Information</Text>
                 <Input
                     label={'first Name'}
-                    value={'Morgan'}
                 />
                 <Input
                     label={'last Name'}
                 />
             </View>              
-            <View>
+            <View style={styles.subcontainer}>
                 <Text style={styles.subtext}>Account Info</Text>
                 <Input
                     label={'email'}
@@ -29,7 +28,13 @@ export default function ProfilePage({navigation}) {
                 <Input
                     label={'password'}
                 />
-            </View>       
+            </View>  
+            <View>
+                <Button
+                    name="Delete Account"
+                    color="#EB5757"
+                />    
+            </View> 
       </SafeAreaView>
     );
   }
@@ -42,7 +47,7 @@ export default function ProfilePage({navigation}) {
       justifyContent: 'center',
     },
     subcontainer: {
-        marginVertical: 18
+        marginVertical: 12
     },
     profile: {
         fontSize: 30,

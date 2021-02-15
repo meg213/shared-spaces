@@ -1,0 +1,59 @@
+import React from 'react';
+import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import { Icon } from 'react-native-elements';
+import Input from "../components/Input";
+
+
+export default function ProfilePage({navigation}) {
+    return (
+      <SafeAreaView style={styles.container}>
+            <Text style={styles.profile}>My Profile</Text>
+            <View style={styles.subcontainer}>
+                <Text style={styles.subtext}>Basic Information</Text>
+                <Input
+                    label={'first Name'}
+                    value={'Morgan'}
+                />
+                <Input
+                    label={'last Name'}
+                />
+            </View>              
+            <View>
+                <Text style={styles.subtext}>Account Info</Text>
+                <Input
+                    label={'email'}
+                />
+                <Input
+                    label={'phone'}
+                />
+                <Input
+                    label={'password'}
+                />
+            </View>       
+      </SafeAreaView>
+    );
+  }
+  
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#F2F0EB',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    subcontainer: {
+        marginVertical: 18
+    },
+    profile: {
+        fontSize: 30,
+        color: '#184254',
+        fontWeight: '500',
+        paddingBottom: 12,
+    },
+    subtext: {
+        fontSize: 18,
+        color: '#4E7580',
+        marginHorizontal: 12,
+    }
+  });
+  

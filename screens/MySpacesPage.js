@@ -23,7 +23,11 @@ export default function MySpacesPage({navigation}){
                         navigation.navigate('SpacePage');
                     }}
                 />
-                <Button/>
+                <Button
+                    onClick={() => {
+                        navigation.navigate('ProfilePage');
+                    }}
+                />
             </ScrollView>
         </SafeAreaView>
         

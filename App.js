@@ -6,6 +6,7 @@ import ItemListPage from './screens/itemListPage'
 import MyItemsPage from './screens/MyItemsPage'
 import ListsPage from './screens/ListsPage'
 import AllItemsPage from './screens/AllItemsPage'
+import ProfilePage from './screens/ProfilePage'
 import SpaceCard from './components/SpaceCard'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -25,6 +26,11 @@ export default function App() {
         <Stack.Screen
           name="SpacePage"
           component={SpacePage}
+          options={{ headerShown: false}}
+        />
+        <Stack.Screen
+          name="ProfilePage"
+          component={ProfilePage}
           options={{ headerShown: false}}
         />
         <Stack.Screen

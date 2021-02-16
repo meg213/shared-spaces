@@ -42,10 +42,11 @@ const styles = StyleSheet.create({
             label={props.label}
             value={text}
             onChangeText={text => setText(text)}
-            selectionColor={"#184254"}
-            underlineColor={"#FFFFFF"}
+            selectionColor={'#D9BD4B'}
+            underlineColor={'rgba(0, 0, 0, 0)'}
             secureTextEntry={props.password}
             dataDetectorTypes={props.dataDetectorTypes}
+            theme={{colors: {primary: '#184254'}}}
         />
     </View>
     );

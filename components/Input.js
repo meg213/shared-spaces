@@ -13,7 +13,12 @@ const styles = StyleSheet.create({
     input: {
       backgroundColor: '#FFFFFF',
       minWidth: '95%',
-    //   borderRadius: 12,
+      borderTopLeftRadius: 16,
+      borderTopRightRadius: 16,
+      borderBottomRightRadius: 16,
+      borderBottomLeftRadius: 16,
+      height: 60,
+      color: '#000000',
     },
     inputStyle: {
         color: "#184254"
@@ -28,6 +33,7 @@ const styles = StyleSheet.create({
 
     const [text, setText] = React.useState('');
 
+    //keyboard type?
     return (
     <View style={styles.container}>
         <TextInput
@@ -38,6 +44,8 @@ const styles = StyleSheet.create({
             onChangeText={text => setText(text)}
             selectionColor={"#184254"}
             underlineColor={"#FFFFFF"}
+            secureTextEntry={props.password}
+            dataDetectorTypes={props.dataDetectorTypes}
         />
     </View>
     );
@@ -47,11 +55,15 @@ const styles = StyleSheet.create({
     label: PropTypes.string,
     value: PropTypes.string,
     onClick: PropTypes.func,
+    password: PropTypes.bool,
+    dataDetectorTypes: PropTypes.string
   };
 
   Button.defaultProps = {
     label: "Name",  
     value: "Morgan",
+    password: false,
+    dataDetectorTypes: 'all',
     onClick: () => {}
   }
   

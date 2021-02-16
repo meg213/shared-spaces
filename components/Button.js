@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
       <Pressable 
         onPress={ props.onClick }
         style={({ pressed }) => [{opacity: pressed ? 0.6 : 1}]} >
-        <View style={[{backgroundColor: props.color}, styles.button, ]}>
+        <View style={[{backgroundColor: props.color}, styles.button ]}>
           <Text style={styles.text}>{props.name}</Text>
         </View>
       </Pressable>

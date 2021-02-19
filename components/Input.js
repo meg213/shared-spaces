@@ -8,6 +8,7 @@ Input is a generic button for major actions such as creating a space, list, or i
 Takes in:
     name: {string} text for button
     onClick: {func} button pressed function
+    //TODO: add the rest of the props
 */
 const styles = StyleSheet.create({
     input: {
@@ -47,6 +48,7 @@ const styles = StyleSheet.create({
             secureTextEntry={props.password}
             dataDetectorTypes={props.dataDetectorTypes}
             theme={{colors: {primary: '#184254'}}}
+            {...props}
         />
     </View>
     );
@@ -62,8 +64,8 @@ const styles = StyleSheet.create({
 
   Button.defaultProps = {
     label: "Name",  
-    value: "Morgan",
-    password: false,
+    // value: "Morgan",
+    password: false, //if the input is a password
     dataDetectorTypes: 'all',
     onClick: () => {}
   }

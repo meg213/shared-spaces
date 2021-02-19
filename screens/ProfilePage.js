@@ -8,7 +8,9 @@ import User from "../components/User";
 export default function ProfilePage({navigation}) {
     return (
       <SafeAreaView style={styles.container}>
+        <View>
             <Text style={styles.profile}>My Profile</Text>
+        </View>
             <User
                 size="large"
             />

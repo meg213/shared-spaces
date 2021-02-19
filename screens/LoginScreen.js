@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import FormInput from '../components/FormInput';
-import FormButton from '../components/FormButton';
+import Button from '../components/Button';
 import { AuthContext } from '../navigation/AuthProvider';
 
 const LoginScreen = ({navigation}) => {
@@ -34,9 +34,10 @@ const LoginScreen = ({navigation}) => {
         secureTextEntry={true}
       />
 
-      <FormButton
-        buttonTitle="Sign In"
+      <Button
+        name="Sign In"
         onPress={() => login(email, password)}
+        color="#184254"
       />
 
       <TouchableOpacity style={styles.forgotButton} onPress={() => navigation.navigate('ForgotPassword')}>
@@ -58,7 +59,7 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#f9fafd',
+    backgroundColor: '#F2F0EB',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -72,19 +73,22 @@ const styles = StyleSheet.create({
   text: {
     // fontFamily: 'Kufam-SemiBoldItalic',
     fontSize: 28,
-    marginBottom: 10,
-    color: '#051d5f',
+    marginTop: 12,
+    marginBottom: 18,
+    color: '#184254',
+    fontWeight: "300"
   },
   navButton: {
     marginTop: 15,
   },
   forgotButton: {
-    marginVertical: 35,
+    marginBottom: 35,
+    marginTop: 12,
   },
   navButtonText: {
     fontSize: 18,
     fontWeight: '500',
-    color: '#2e64e5',
+    color: '#184254',
     // fontFamily: 'Lato-Regular',
   },
 });

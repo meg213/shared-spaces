@@ -10,7 +10,7 @@ Takes in:
 */
 const styles = StyleSheet.create({
     button: {
-      minWidth: '95%',
+      minWidth: '98%',
       borderRadius: 20,
       padding: 12,
       justifyContent: 'center',

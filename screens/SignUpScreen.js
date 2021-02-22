@@ -5,6 +5,7 @@ import Button from '../components/Button';
 import { AuthContext } from '../navigation/AuthProvider';
 
 const SignupScreen = ({navigation}) => {
+  const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
@@ -18,8 +19,8 @@ const SignupScreen = ({navigation}) => {
 
 
       <FormInput
-        labelValue={email}
-        onChangeText={(userEmail) => setEmail(userEmail)}
+        labelValue={name}
+        onChangeText={(userName) => setName(userName)}
         placeholderText="Name"
         iconType="user"
         keyboardType="email-address"

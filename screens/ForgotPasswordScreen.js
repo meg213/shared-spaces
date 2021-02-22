@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     subtext: {
         fontSize: 18,
         paddingTop: 12,
-        paddingBottom: 48,
+        paddingBottom: 60,
         color: '#4E7580'
     }
   });

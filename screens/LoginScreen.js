@@ -48,7 +48,8 @@ const LoginScreen = ({navigation}) => {
         style={styles.forgotButton}
         onPress={() => navigation.navigate('Signup')}>
         <Text style={styles.navButtonText}>
-          Don't have an acount? Create here
+          Don't have an acount? 
+          <Text style={[styles.navButtonText, {fontWeight: '600'}]}> Create here</Text>
         </Text>
       </TouchableOpacity>
     </View>
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
   },
   navButtonText: {
     fontSize: 18,
-    fontWeight: '500',
+    fontWeight: '300',
     color: '#184254',
     // fontFamily: 'Lato-Regular',
   },

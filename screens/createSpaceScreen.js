@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, Component } from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView, Button } from 'react-native';
-import { Icon } from 'react-native-elements';
 import FormButton from '../components/FormButton';
 import FormInput from '../components/FormInput';
-import SpaceCard from '../components/SpaceCard';
+import { createSpaces } from '../utils/createSpaces';
 
 const CreateSpaceScreen = ({navigation}) => {
     const [name, setName] = useState("");
+    const [type, setType] = useState("");
     return(
         <SafeAreaView style = {[styles.container]}>
             <View>
@@ -21,31 +21,23 @@ const CreateSpaceScreen = ({navigation}) => {
                 autoCapitalize="none"
                 autoCorrect={false}
             />
+            <FormInput
+                labelValue={type}
+                onChangeText={(spaceType) => setType(spaceType)}
+                placeholderText="Space Type"
+                autoCapitalize="none"
+                autoCorrect={false}
+            />
             <FormButton
                 buttonTitle="Create Space"
+                onPress={() => createSpaces(name, type)}
             />
-            {/* <ScrollView>
-                <SpaceCard
-                    onClick={() => {
-                        navigation.navigate('SpacePage');
-                    }}
-                />
-                <SpaceCard
-                    onClick={() => {
-                        navigation.navigate('SpacePage');
-                    }}
-                />
-                <Button
-                    onClick={() => {
-                        navigation.navigate('ProfilePage');
-                    }}
-                />
-            </ScrollView> */}
         </SafeAreaView>
         
     );
 }
 export default CreateSpaceScreen;
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

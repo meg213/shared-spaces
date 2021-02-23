@@ -20,7 +20,12 @@ export const AuthProvider = ({children}) => {
           },
           register: async (email, password) => {
             try {
-              await firebase.auth().createUserWithEmailAndPassword(email, password);
+              await firebase.auth().createUserWithEmailAndPassword(email, password).then(cred => {
+                return firebase.collection('users').doc(cred.user.uid).set({
+                  firstname: "George Burdell",
+                  email: email 
+                })
+              });
             } catch (e) {
               console.log(e);
             }

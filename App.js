@@ -54,7 +54,19 @@ export default function App() {
   );
 }
 
-
+// HIEU's branch
+// export default class App extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     if (firebase.apps.length == 0) {
+//       firebase.initializeApp(firebaseConfig.FirebaseConfig);
+//     }
+    
+//   }
+//   render() {
+//     return <Providers />
+//   }
+// }
 
 // const styles = StyleSheet.create({
 //   container: {

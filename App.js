@@ -8,10 +8,18 @@ import ListsPage from './screens/ListsPage'
 import AllItemsPage from './screens/AllItemsPage'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import firebase from 'firebase/app';
+import firebaseConfig from './config/keys';
+import Providers from './navigation'
 
 const Stack = createStackNavigator();
+let firebaseApp
 
 export default function App() {
+  if (firebase.apps.length == 0) {
+    firebase.initializeApp(firebaseConfig.FirebaseConfig);
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -46,11 +54,11 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#D9DED8',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#D9DED8',
+//     alignItems: 'center',
+//     justifyContent: 'center'
+//   },
+// });

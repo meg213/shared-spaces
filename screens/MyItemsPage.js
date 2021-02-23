@@ -8,7 +8,7 @@ import Button from "../components/Button";
 import RecentMessageShow from "../components/RecentMessageShow"
 
 
-export default function SpacePage({navigation}) {
+export default function MyItemsPage({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
         <ScrollView scrollEventThrottle={16}>

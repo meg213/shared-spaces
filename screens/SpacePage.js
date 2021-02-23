@@ -15,7 +15,7 @@ export default function SpacePage({navigation}) {
             alignItems: 'center',        
         }}>
             <Icon style={{
-                justifyContent: 'left'
+                justifyContent: 'center'
             }} size={50} name='arrow-left' />
             <Text style={{
                 flex: 1,

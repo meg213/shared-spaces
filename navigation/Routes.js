@@ -2,14 +2,12 @@ import React, {useContext, useState, useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import {AuthContext} from './AuthProvider';
-
 import AuthStack from './AuthStack';
 import AppStack from './AppStack';
 
 
 const Routes = () => {
-    const {user, setUser} = useContext(AuthContext);
+    const [user, setUser] = useState();
     const [initializing, setInitializing] = useState(true);
   
     const onAuthStateChanged = (user) => {
@@ -31,3 +29,19 @@ const Routes = () => {
     );
 };
 export default Routes;
+
+// export default function Routes({ navigation }) {
+//   useEffect(() => {
+//     firebase.auth().onAuthStateChanged((user) => {
+//       if (user) {
+//         return <NavigationContainer>
+//             <AppStack />
+//         </NavigationContainer>
+//       } else {
+//         return <NavigationContainer>
+//             <AuthStack />
+//         </NavigationContainer>
+//       }
+//     });
+//   });
+// }

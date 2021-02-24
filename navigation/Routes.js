@@ -29,19 +29,3 @@ const Routes = () => {
     );
 };
 export default Routes;
-
-// export default function Routes({ navigation }) {
-//   useEffect(() => {
-//     firebase.auth().onAuthStateChanged((user) => {
-//       if (user) {
-//         return <NavigationContainer>
-//             <AppStack />
-//         </NavigationContainer>
-//       } else {
-//         return <NavigationContainer>
-//             <AuthStack />
-//         </NavigationContainer>
-//       }
-//     });
-//   });
-// }

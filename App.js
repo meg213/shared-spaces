@@ -7,8 +7,7 @@ let firebaseApp
 
 export default class App extends React.Component {
   render() {
-    // return <Providers />
-    return <CreateSpaceScreen />
+    return <Providers />
   }
 }
 

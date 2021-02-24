@@ -2,18 +2,35 @@ import React, {useContext, useState} from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
-import { AuthContext } from '../navigation/AuthProvider';
+import { signUp } from '../utils/firebaseMethod';
 
 const SignupScreen = ({navigation}) => {
+  const [lname, setLName] = useState();
+  const [fname, setFName] = useState();
+  const [phone, setPhone] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
 
-  const {register} = useContext(AuthContext);
-
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Create an account</Text>
+
+      <FormInput
+        labelValue={fname}
+        onChangeText={(userFirstName) => setFName(userFirstName)}
+        placeholderText="first name"
+        autoCapitalize="none"
+        autoCorrect={false}
+      />
+
+      <FormInput
+        labelValue={lname}
+        onChangeText={(userLastName) => setLName(userLastName)}
+        placeholderText="last name"
+        autoCapitalize="none"
+        autoCorrect={false}
+      />
 
       <FormInput
         labelValue={email}
@@ -21,6 +38,14 @@ const SignupScreen = ({navigation}) => {
         placeholderText="Email"
         iconType="user"
         keyboardType="email-address"
+        autoCapitalize="none"
+        autoCorrect={false}
+      />
+
+      <FormInput
+        labelValue={phone}
+        onChangeText={(phoneNumber) => setPhone(phoneNumber)}
+        placeholderText="phone"
         autoCapitalize="none"
         autoCorrect={false}
       />
@@ -35,7 +60,7 @@ const SignupScreen = ({navigation}) => {
       
       <FormInput
         labelValue={confirmPassword}
-        onChangeText={(userPassword) => setPassword(userPassword)}
+        onChangeText={(userPassword) => setConfirmPassword(userPassword)}
         placeholderText="Confirm Password"
         iconType="lock"
         secureTextEntry={true}
@@ -43,7 +68,7 @@ const SignupScreen = ({navigation}) => {
 
       <FormButton
         buttonTitle="Sign Up"
-        onPress={() => register(email, password)}
+        onPress={() => signUp(lname, fname, email, phone, password, confirmPassword)}
       />
 
       <View style={styles.textPrivate}>

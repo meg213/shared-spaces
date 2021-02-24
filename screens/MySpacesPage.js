@@ -25,8 +25,9 @@ export default function MySpacesPage({navigation}){
                     }}
                 />
                 <Button
+                    name = "Create Space"
                     onClick={() => {
-                        navigation.navigate('ProfilePage');
+                        navigation.navigate('createSpaceScreen');
                     }}
                 />
             </ScrollView>

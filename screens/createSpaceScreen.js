@@ -2,7 +2,7 @@ import React, { useState, Component } from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView, Button } from 'react-native';
 import FormButton from '../components/FormButton';
 import FormInput from '../components/FormInput';
-import { createSpaces } from '../utils/createSpaces';
+import { createSpaces } from '../utils/firebaseMethod';
 
 const CreateSpaceScreen = ({navigation}) => {
     const [name, setName] = useState("");

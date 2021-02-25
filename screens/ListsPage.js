@@ -18,7 +18,7 @@ export default function SpacePage({navigation}) {
             </View>
             <List></List>
             <Button
-                onClick={()=> {navigation.navigate('SpacePage')}}
+              onClick={()=> {navigation.navigate('SpacePage')}}
             />
         </ScrollView>
     </SafeAreaView>

@@ -5,7 +5,8 @@ import Button from '../components/Button';
 import { AuthContext } from '../navigation/AuthProvider';
 
 const SignupScreen = ({navigation}) => {
-  const [name, setName] = useState();
+  const [firstname, setFirstName] = useState();
+  const [lastname, setLastName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
@@ -19,14 +20,25 @@ const SignupScreen = ({navigation}) => {
 
 
       <FormInput
-        labelValue={name}
-        onChangeText={(userName) => setName(userName)}
-        placeholderText="Name"
+        labelValue={firstname}
+        onChangeText={(firstName) => setFirstName(firstName)}
+        placeholderText="First Name"
         iconType="user"
         keyboardType="email-address"
         autoCapitalize="none"
         autoCorrect={false}
       />
+
+      <FormInput
+        labelValue={lastname}
+        onChangeText={(lastName) => setLastName(lastName)}
+        placeholderText="Last Name"
+        iconType="user"
+        keyboardType="email-address"
+        autoCapitalize="none"
+        autoCorrect={false}
+      />
+      
       
       <FormInput
         labelValue={email}
@@ -48,7 +60,12 @@ const SignupScreen = ({navigation}) => {
       
       <FormInput
         labelValue={confirmPassword}
-        onChangeText={(userPassword) => setPassword(userPassword)}
+        onChangeText={(confirmPassword) => { 
+          // do the passwords match? In future replace console log with modal
+          setConfirmPassword(confirmPassword);
+          console.log(confirmPassword);
+          console.log(password)
+          password === confirmPassword ? setPassword(confirmPassword) : console.log('mismatch password')}}
         placeholderText="Confirm Password"
         iconType="lock"
         secureTextEntry={true}
@@ -101,7 +118,7 @@ const styles = StyleSheet.create({
   },
   subtext: {
     fontSize: 20,
-    marginBottom: 48,
+    marginBottom: 24,
     textAlign: 'left',
     alignSelf: 'stretch',
     color: '#184254',

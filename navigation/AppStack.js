@@ -18,7 +18,7 @@ const AppStack = () => {
           name="MySpacesPage"
           component={MySpacesPage}
           options={{ headerShown: false}}
-        />
+      />
       <Stack.Screen
         name="SpacePage"
         component={SpacePage}

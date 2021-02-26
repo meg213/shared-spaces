@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Button from '../components/Button';
 import SpaceCard from '../components/SpaceCard';
+import ProfilePage from '../screens/ProfilePage';
 
 export default function MySpacesPage({navigation}){
     return(
@@ -24,8 +25,9 @@ export default function MySpacesPage({navigation}){
                     }}
                 />
                 <Button
+                    name = "Create Space"
                     onClick={() => {
-                        navigation.navigate('ProfilePage');
+                        navigation.navigate('createSpaceScreen');
                     }}
                 />
             </ScrollView>

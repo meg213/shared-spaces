@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { View, Button } from 'react-native'; 
 import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from '../screens/HomeScreen';
 import SpacePage from './../screens/SpacePage'
 import ItemListPage from './../screens/itemListPage'
 import MyItemsPage from './../screens/MyItemsPage'

@@ -1,12 +1,11 @@
 import React, {useContext, useState} from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import FormInput from '../components/FormInput';
-import Button from '../components/Button';
-import { AuthContext } from '../navigation/AuthProvider';
+import FormButton from '../components/FormButton';
+import { resetPassword } from '../utils/firebaseMethod';
 
 const ForgotPasswordScreen  = ({navigation}) => {
-    const[email, setEmail] = useState()
-    const{resetPassword} = useContext(AuthContext);
+    const[email, setEmail] = useState();
 
     return (
         <View style={styles.container}>

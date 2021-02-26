@@ -18,15 +18,15 @@ const SignupScreen = ({navigation}) => {
       <Text style={styles.subtext}>Tell us a bit about yourself</Text>
 
 
-      <FormInput
-        labelValue={firstname}
-        onChangeText={(firstName) => setFirstName(firstName)}
+      {/* <FormInput
+        labelValue={fname}
+        onChangeText={(fname) => setFirstName(fname)}
         placeholderText="First Name"
         iconType="user"
         keyboardType="email-address"
         autoCapitalize="none"
         autoCorrect={false}
-      />
+      /> */}
 
       <FormInput
         labelValue={fname}

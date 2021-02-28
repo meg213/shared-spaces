@@ -3,10 +3,13 @@ import { ScrollView, StyleSheet, Text, View, SafeAreaView, Button } from 'react-
 import FormButton from '../components/FormButton';
 import FormInput from '../components/FormInput';
 import { createSpaces } from '../utils/firebaseMethod';
+import firebase from 'firebase/app';
 
 const CreateSpaceScreen = ({navigation}) => {
     const [name, setName] = useState("");
     const [type, setType] = useState("");
+    const currentUser = firebase.auth().currentUser;
+    
     return(
         <SafeAreaView style = {[styles.container]}>
             <View>
@@ -30,7 +33,7 @@ const CreateSpaceScreen = ({navigation}) => {
             />
             <FormButton
                 buttonTitle="Create Space"
-                onPress={() => createSpaces(name, type)}
+                onPress={() => createSpaces(currentUser, name, type)}
             />
         </SafeAreaView>
         

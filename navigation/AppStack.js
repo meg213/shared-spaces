@@ -8,6 +8,7 @@ import ListsPage from './../screens/ListsPage'
 import AllItemsPage from './../screens/AllItemsPage'
 import ProfilePage from './../screens/ProfilePage'
 import MySpacesPage from './../screens/MySpacesPage';
+import CreateSpaceScreen from './../screens/createSpaceScreen';
 
 const Stack = createStackNavigator();
 
@@ -49,6 +50,12 @@ const AppStack = () => {
       component={AllItemsPage}
       options={{ headerShown: false}}
     /> 
+      <Stack.Screen
+      name="CreateSpaceScreen"
+      component={CreateSpaceScreen}
+      options={{ headerShown: false}}
+    /> 
+    
   </Stack.Navigator>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useState, Component } from 'react';
+import { Alert } from 'react-native';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView, Button } from 'react-native';
 import FormButton from '../components/FormButton';
 import FormInput from '../components/FormInput';
@@ -14,23 +15,27 @@ const CreateSpaceScreen = ({navigation}) => {
                     Create a Shared Space
                 </Text>
             </View>
-            <FormInput
-                labelValue={name}
-                onChangeText={(spaceName) => setName(spaceName)}
-                placeholderText="Space Name"
-                autoCapitalize="none"
-                autoCorrect={false}
-            />
-            <FormInput
-                labelValue={type}
-                onChangeText={(spaceType) => setType(spaceType)}
-                placeholderText="Space Type"
-                autoCapitalize="none"
-                autoCorrect={false}
-            />
+            <View style={{
+                    padding:12
+                }}>
+                <FormInput
+                    labelValue={name}
+                    onChangeText={(spaceName) => setName(spaceName)}
+                    placeholderText="Space Name"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                />
+                <FormInput
+                    labelValue={type}
+                    onChangeText={(spaceType) => setType(spaceType)}
+                    placeholderText="Space Type"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                />
+            </View>
             <FormButton
                 buttonTitle="Create Space"
-                onPress={() => createSpaces(name, type)}
+                onPress={() => {Alert.alert('Space Created')}}
             />
         </SafeAreaView>
         
@@ -51,6 +56,5 @@ const styles = StyleSheet.create({
         textAlign: "left",
         fontWeight: "500",
         color: "#184254",
-    }
-
+    },
 })

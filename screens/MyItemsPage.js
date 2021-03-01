@@ -6,6 +6,7 @@ import User from "../components/User";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import RecentMessageShow from "../components/RecentMessageShow"
+import { SearchBar } from 'react-native-elements';
 
 
 export default function MyItemsPage({navigation}) {
@@ -16,14 +17,41 @@ export default function MyItemsPage({navigation}) {
                 <Text style={styles.headerTitle}>My Items</Text>
                 <Text>35 Items</Text>
             </View>
+            <View style={styles.search}>
+            <SearchBar
+                    placeholder="Type Here..."
+                    // onChangeText={this.updateSearch}
+                    // value={search}
+                    lightTheme
+                />
+        </View>
             <Item
-                listPage
+              listPage
+              itemName="Blender"
             />
             <Item
-                listPage
+              listPage
+              itemName="Broom"
+            />
+            <Text style={styles.sortedLetters}>C</Text>
+            <Item
+              listPage
+              itemName="Chair"
+            />
+            <Text style={styles.sortedLetters}>L</Text>
+           <Item
+              listPage
+              itemName="Light"
+            />
+            <Item
+              listPage
+            />
+            <Item
+              listPage
             />
             <Button
                 onClick={()=> {navigation.navigate('SpacePage')}}
+                name="Back"
             />
         </ScrollView>
     </SafeAreaView>
@@ -51,5 +79,11 @@ const styles = StyleSheet.create({
       color: '#184254',
       fontWeight: '500',
       paddingBottom: 12,
+  },
+  sortedLetters: {
+    fontSize: 22,
+    color: '#4E7580',
+    paddingHorizontal: 12,
+    paddingVertical: 6
   }
 });

@@ -5,7 +5,7 @@ import List from "../components/List";
 import User from "../components/User";
 import Card from "../components/Card";
 import Button from "../components/Button";
-import RecentMessageShow from "../components/RecentMessageShow"
+import { SearchBar } from 'react-native-elements';
 
 
 export default function ListsPage({navigation}) {

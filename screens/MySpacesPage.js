@@ -4,7 +4,6 @@ import { Icon } from 'react-native-elements';
 import Button from '../components/Button';
 import SpaceCard from '../components/SpaceCard';
 import ProfilePage from '../screens/ProfilePage';
-// import { createSpaceCard } from '../utils/createSpaceCard';
 import firebase from 'firebase/app';
 import { db } from '../config/keys';
 
@@ -13,26 +12,28 @@ const spaceRef = db.collection('spaces');
 
 export default function MySpacesPage({navigation}){
     const currUser = firebase.auth().currentUser;
-    console.log("user: " + currUser.uid);
-    const[spaceNames, setSpaceNames] = useState([])
+    console.log(currUser.uid);
+    const[spaceNames, setSpaceNames] = useState([]);
 
     const componentIsMounted = useRef(true);
+
     useEffect(() => {
         return () => {
           componentIsMounted.current = false;
         };
       }, []);
-
-
+      
     useEffect(() => {
         async function createSpaceCard(currentUser) {
             var spaces = [];
-            var names = []
+            var names = [];
     
             await userRef.doc(currentUser.uid)
             .get()
             .then(documentSnapshot => spaces = documentSnapshot.get('spaces'));
             
+            console.log(spaces);
+
             for (let i = 0; i < spaces.length; i++) {
                 let spaceData = (await spaceRef.doc(spaces[i].substring(7)).get()).data();
                 names.push({name: spaceData.name});
@@ -41,10 +42,9 @@ export default function MySpacesPage({navigation}){
                 setSpaceNames(names)
             }
         }
+
         createSpaceCard(currUser)
     }, []);
-
-    console.log(spaceNames);
 
     return (
         <SafeAreaView style = {[styles.container]}>
@@ -55,8 +55,7 @@ export default function MySpacesPage({navigation}){
             </View>
             <ScrollView>
                 <div>
-                    {spaceNames.map((name, index) => <SpaceCard key={index} name={name.name}/>
-                    )}
+                    {spaceNames.map((name, index) => <SpaceCard key={index} name={name.name}/>)}
                 </div>
                 <Button
                     name = "Create Space"

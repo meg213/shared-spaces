@@ -10,13 +10,12 @@ Takes in:
 */
 const styles = StyleSheet.create({
     button: {
-      minWidth: '98%',
+      minWidth: '95%',
       borderRadius: 20,
       padding: 12,
       justifyContent: 'center',
       alignItems: 'center',
       alignSelf: 'center',
-      margin: 6,
     },
     text: {
       fontSize: 20,  

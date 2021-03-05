@@ -4,10 +4,19 @@ import { ScrollView, StyleSheet, Text, View, SafeAreaView, Button } from 'react-
 import FormButton from '../components/FormButton';
 import FormInput from '../components/FormInput';
 import { createSpaces } from '../utils/firebaseMethod';
+import { ButtonGroup } from 'react-native-elements';
 
 const CreateSpaceScreen = ({navigation}) => {
     const [name, setName] = useState("");
     const [type, setType] = useState("");
+    const [index, setIndex] = useState(0);
+    const buttons = ['Home', 'Office', 'Other']
+
+    const updateIndex = (selectedIndex) => {
+        setIndex(selectedIndex);
+        setType(buttons[selectedIndex]);
+    }
+
     return(
         <SafeAreaView style = {[styles.container]}>
             <View>
@@ -25,13 +34,18 @@ const CreateSpaceScreen = ({navigation}) => {
                     autoCapitalize="none"
                     autoCorrect={false}
                 />
-                <FormInput
-                    labelValue={type}
-                    onChangeText={(spaceType) => setType(spaceType)}
-                    placeholderText="Space Type"
-                    autoCapitalize="none"
-                    autoCorrect={false}
+                <ButtonGroup
+                    buttons={buttons}
+                    selectedIndex={index}
+                    onPress={updateIndex}
+                    selectedButtonStyle={styles.buttonGroupSelected}
+                    containerStyle={styles.containerStyle}
+                    buttonStyle={styles.buttonGroupStyle}
+                    innerBorderStyle={styles.innerBorderStyle}
                 />
+            </View>
+            <View>
+             <Text>Members</Text>
             </View>
             <FormButton
                 buttonTitle="Create Space"
@@ -57,4 +71,23 @@ const styles = StyleSheet.create({
         fontWeight: "500",
         color: "#184254",
     },
+    buttonGroupSelected: {
+        backgroundColor: '#184254'
+    },
+    containerStyle: {
+        borderRadius: 6,
+        height: 60,
+        padding: 8,
+        width: "100%"
+    },
+    buttonGroupStyle: {
+        height: 30,
+        padding: 6,
+        borderRadius: 12,
+    },
+    innerBorderStyle: {
+        color: '#FFFFFF',
+        backgroundColor: '#FFFFFF'
+    }
+
 })

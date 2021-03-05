@@ -16,6 +16,7 @@ export async function createSpaces(currentUser, spaceName, spaceType) {
         .update({
             spaces: firebase.firestore.FieldValue.arrayUnion((await currSpace).path)
         });
+        alert("Space created!");
     } catch (e) {
         alert(e.message);
     }

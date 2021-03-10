@@ -34,6 +34,7 @@ const CreateSpaceScreen = ({navigation}) => {
                     autoCapitalize="none"
                     autoCorrect={false}
                 />
+                <Text>Space Type</Text>
                 <ButtonGroup
                     buttons={buttons}
                     selectedIndex={index}

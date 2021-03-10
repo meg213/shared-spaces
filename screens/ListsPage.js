@@ -16,7 +16,7 @@ export default function ListsPage({navigation}) {
                 <Text style={styles.headerTitle}>Lists</Text>
                 <Text>6 Lists</Text>
             </View>
-            <List></List>
+            <List/>
             <Button
                 onClick={()=> {navigation.navigate('SpacePage')}}
             />

@@ -8,6 +8,7 @@ import Button from "../components/Button";
 import { SearchBar } from 'react-native-elements';
 
 
+
 export default function ListsPage({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
@@ -18,7 +19,8 @@ export default function ListsPage({navigation}) {
             </View>
             <List/>
             <Button
-                onClick={()=> {navigation.navigate('SpacePage')}}
+                name="Create List"
+                onClick={()=> {navigation.navigate('CreateList')}}
             />
         </ScrollView>
     </SafeAreaView>

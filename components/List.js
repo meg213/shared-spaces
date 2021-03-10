@@ -65,7 +65,7 @@ const List = (props) => {
 List.propTypes = {
     listName: PropTypes.string,
     numItems: PropTypes.number,
-    icon: PropTypes.object.isRequired,
+    icon: PropTypes.any,
 };
 
 List.defaultProps = {

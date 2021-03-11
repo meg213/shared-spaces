@@ -12,7 +12,8 @@ export default function SpacePage({navigation}) {
     <SafeAreaView style={styles.container}>
         <View style ={{
             flexDirection: 'row',
-            alignItems: 'center',        
+            alignItems: 'center',  
+            backgroundColor: '#F2F0EB',      
         }}>
             <Icon style={{
                 justifyContent: 'center'
@@ -82,7 +83,6 @@ export default function SpacePage({navigation}) {
                             }}/>
                 </ScrollView>
             </View>
-            <Button name="Add an Item"/>
             <View style={{
                 backgroundColor: 'white',
                 borderRadius: 12,
@@ -107,6 +107,11 @@ export default function SpacePage({navigation}) {
                 <Item/>
             </View>
         </ScrollView>
+        <View style={styles.buttonView}>
+            <Button 
+                width="75%"
+                name="Add an Item"/>
+        </View>
     </SafeAreaView>
   );
 }
@@ -119,4 +124,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop:50
   },
+  buttonView: {
+    backgroundColor: 'rgba(0,0,0,)',
+  }
 });

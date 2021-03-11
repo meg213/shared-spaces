@@ -12,17 +12,21 @@ import { SearchBar } from 'react-native-elements';
 export default function ListsPage({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
-        <ScrollView scrollEventThrottle={16}>
-            <View style={styles.header}>
+        <View style={styles.header}>
                 <Text style={styles.headerTitle}>Lists</Text>
                 <Text>6 Lists</Text>
             </View>
+        <ScrollView scrollEventThrottle={16}>
             <List/>
+            <List/>
+        </ScrollView>
+        <View style={styles.fab}>
             <Button
+                width='80%'
                 name="Create List"
                 onClick={()=> {navigation.navigate('CreateList')}}
             />
-        </ScrollView>
+        </View>
     </SafeAreaView>
   );
 }
@@ -48,5 +52,13 @@ const styles = StyleSheet.create({
       color: '#184254',
       fontWeight: '500',
       paddingBottom: 12,
+  },
+  fab: {
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginBottom: 40
   }
 });

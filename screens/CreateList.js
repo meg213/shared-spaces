@@ -1,14 +1,26 @@
 import React, { useState, Component } from 'react';
 import { Alert } from 'react-native';
-import { ScrollView, StyleSheet, Text, View, SafeAreaView , Pressable, Image } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, SafeAreaView , Pressable, Image} from 'react-native';
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
-import { CheckBox } from 'react-native-elements'
+import { CheckBox, BottomSheet } from 'react-native-elements'
 import User from '../components/User';
 
 const CreateList= ({navigation}) => {
     const [name, setName] = useState("");
     const [icon, setIcon] = useState(require('../assets/kitchen.png'))
+    const [isVisible, setIsVisible] = useState(false);
+    const list = [
+        { title: 'List Item 1' },
+        { title: 'List Item 2' },
+        {
+          title: 'Cancel',
+          containerStyle: { backgroundColor: 'red' },
+          titleStyle: { color: 'white' },
+          onPress: () => setIsVisible(false),
+        },
+      ];
+      
     
 
     return(
@@ -47,6 +59,18 @@ const CreateList= ({navigation}) => {
                     onPress={() => {Alert.alert('Space Created')}}
                 />
             </View>
+            {/* <BottomSheet
+            isVisible={isVisible}
+            containerStyle={{ backgroundColor: 'rgba(0.5, 0.25, 0, 0.2)' }}
+            >
+            {list.map((l, i) => (
+                <ListItem key={i} containerStyle={l.containerStyle} onPress={l.onPress}>
+                <ListItem.Content>
+                    <ListItem.Title style={l.titleStyle}>{l.title}</ListItem.Title>
+                </ListItem.Content>
+                </ListItem>
+            ))}
+            </BottomSheet>; */}
         </SafeAreaView>
         
     );

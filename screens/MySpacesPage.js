@@ -47,6 +47,7 @@ export default function MySpacesPage({navigation}){
                 />
                 <Button
                     name = "Create Space"
+                    width ="95%"
                     onClick={() => {
                         navigation.navigate('CreateSpaceScreen');
                     }}

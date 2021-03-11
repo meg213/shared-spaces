@@ -1,20 +1,15 @@
 import React, { useState, Component } from 'react';
 import { Alert } from 'react-native';
-import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, SafeAreaView , Pressable, Image } from 'react-native';
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
 import { CheckBox } from 'react-native-elements'
+import User from '../components/User';
 
 const CreateList= ({navigation}) => {
     const [name, setName] = useState("");
-    const [type, setType] = useState("");
-    const [index, setIndex] = useState(0);
-    const buttons = ['Home', 'Office', 'Other']
-
-    const updateIndex = (selectedIndex) => {
-        setIndex(selectedIndex);
-        setType(buttons[selectedIndex]);
-    }
+    const [icon, setIcon] = useState(require('../assets/kitchen.png'))
+    
 
     return(
         <SafeAreaView style = {[styles.container]}>
@@ -33,15 +28,16 @@ const CreateList= ({navigation}) => {
                         autoCorrect={false}
                     />
                 </View>
-                <View style={styles.itemList}>
-                <Text style={styles.itemTitle}>Select Icon</Text>
-                </View>
+                <Pressable style={({ pressed }) => [{opacity: pressed ? 0.6 : 1}]} >
+                    <View style={[styles.itemList, {flexDirection:'row', justifyContent:'space-between', alignItems:'center'}]}>
+                        <Text style={styles.itemTitle}>Select Icon</Text> 
+                        <Image source={icon} style={styles.icon}/>
+                    </View>
+                </Pressable>
                 <View style={styles.itemList}>
                     <Text style={styles.itemTitle}>Add Items</Text>
                     {/* number of checkboxes per number of items */}
-                    <CheckBox
-
-                    />
+                    <CheckBox />
                 </View>
             </ScrollView>
             <View style={{  alignSelf: 'center' }}>
@@ -82,6 +78,13 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         padding: 12,
         width: '100%',
-        marginVertical: 6
+        marginVertical: 6,
+    },
+    icon: {
+        width: 50,
+        height: 50,
+        color: "#000000",
+        marginLeft: 12,
+        marginRight: 18
     },
 })

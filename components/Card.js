@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Pressable, Text, View, StyleSheet, Image } from 'react-native';
+import { Icon } from 'react-native-elements';
 
 /*
 Card is one of the clickable squares to select a category of item
@@ -27,10 +28,14 @@ const styles = StyleSheet.create({
       paddingTop: 8
     },
     image: {
-        height: 45,
-        width: 45,
+        height: 50,
+        width: 50,
         alignSelf: 'center',
         paddingTop: 12,
+    },
+    icon: {
+      padding: 2,
+      borderRadius: 6
     }
  })
 
@@ -41,7 +46,10 @@ const styles = StyleSheet.create({
         style={({ pressed }) => [{opacity: pressed ? 0.6 : 1}]}
         >
         <View style={[styles.card ]}>
-          <Image source={props.source} style={[styles.image]}/>
+          <View style={[{backgroundColor: props.backgroundColor}, (props.icon === null) ? null : styles.icon]}>
+            {(props.icon === null) ? <Image source={props.source} style={[styles.image]}/> :
+             <Icon name={props.icon} size={45} color="#FFFFFF" /> }
+          </View>
           <Text style={styles.text}>{props.name}</Text>
         </View>
       </Pressable>
@@ -52,6 +60,8 @@ const styles = StyleSheet.create({
   Card.propTypes = {
     name: PropTypes.string,
     source: PropTypes.any,
+    backgroundColor: PropTypes.string,
+    icon: PropTypes.string,
 
     onClick: PropTypes.func,
   };
@@ -59,6 +69,8 @@ const styles = StyleSheet.create({
   Card.defaultProps = {
     name: "Shared",
     source: require('../assets/logo.png'),
+    color: 'rgba(0, 0, 0, 0)', //transparent by default
+    icon: null,
 
     onClick: () => {}
   }

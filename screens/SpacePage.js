@@ -63,14 +63,20 @@ export default function SpacePage({navigation}) {
                             navigation.navigate('ItemList');
                             }}/>
                     <Card name="My Items"
+                        icon='account-circle'
+                        backgroundColor="#6FCF97"
                         onClick={() => {
                             navigation.navigate('MyItemList');
                             }}/>
                     <Card name="Lists"
+                        icon='list'
+                        backgroundColor="#D9DED8"
                         onClick={() => {
                             navigation.navigate('ListsList');
                             }}/>
                     <Card name="All Items"
+                        icon='group'
+                        backgroundColor="#F2994A"
                         onClick={() => {
                             navigation.navigate('AllItems');
                             }}/>

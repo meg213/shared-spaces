@@ -23,8 +23,8 @@ const AuthStack = () => {
         options={({navigation}) => ({
           title: '',
           headerStyle: {
-            backgroundColor: '#f9fafd',
-            shadowColor: '#f9fafd',
+            backgroundColor: '#F2F0EB',
+            shadowColor: '#F2F0EB',
             elevation: 0,
           },
           headerLeft: () => (
@@ -32,7 +32,7 @@ const AuthStack = () => {
               <FontAwesome.Button 
                 name="long-arrow-left"
                 size={25}
-                backgroundColor="#f9fafd"
+                backgroundColor="#F2F0EB"
                 color="#333"
                 onPress={() => navigation.navigate('Login')}
               />
@@ -46,8 +46,8 @@ const AuthStack = () => {
         options={({navigation}) => ({
           title: '',
           headerStyle: {
-            backgroundColor: '#f9fafd',
-            shadowColor: '#f9fafd',
+            backgroundColor: '#F2F0EB',
+            shadowColor: '#F2F0EB',
             elevation: 0,
           },
           headerLeft: () => (
@@ -55,7 +55,7 @@ const AuthStack = () => {
               <FontAwesome.Button 
                 name="long-arrow-left"
                 size={25}
-                backgroundColor="#f9fafd"
+                backgroundColor="#F2F0EB"
                 color="#333"
                 onPress={() => navigation.navigate('Login')}
               />

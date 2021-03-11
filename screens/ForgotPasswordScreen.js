@@ -12,6 +12,7 @@ const ForgotPasswordScreen  = ({navigation}) => {
             <Text style={styles.text}>
                 Reset Password
             </Text>
+            <Text style={styles.subtext}>Enter the email associated with your account and we'll send instructions to reset your password</Text>
             <FormInput
                 labelValue={email}
                 onChangeText={(userEmail) => setEmail(userEmail)}
@@ -21,8 +22,8 @@ const ForgotPasswordScreen  = ({navigation}) => {
                 autoCapitalize="none"
                 autoCorrect={false}
             />
-            <FormButton
-                buttonTitle = "Send a reset link"
+            <Button
+                name = "Send Reset Link"
                 onPress={() => resetPassword(email)}
             />
         </View>
@@ -33,16 +34,22 @@ export default ForgotPasswordScreen;
 
 const styles = StyleSheet.create({
     container: {
-      backgroundColor: '#f9fafd',
+      backgroundColor: '#F2F0EB',
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: 'flex-start',
       padding: 20,
     },
     text: {
-      // fontFamily: 'Kufam-SemiBoldItalic',
-      fontSize: 28,
-      marginBottom: 10,
-      color: '#051d5f',
+      fontSize: 30,
+      color: '#184254',
+      fontWeight: '500',
+      textAlign:'left',
+      marginTop: 24
     },
+    subtext: {
+        fontSize: 18,
+        paddingTop: 12,
+        paddingBottom: 60,
+        color: '#4E7580'
+    }
   });

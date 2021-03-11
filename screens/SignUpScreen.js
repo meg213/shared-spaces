@@ -14,7 +14,19 @@ const SignupScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Create an account</Text>
+      <Text style={styles.text}>Let's get started</Text>
+      <Text style={styles.subtext}>Tell us a bit about yourself</Text>
+
+
+      {/* <FormInput
+        labelValue={fname}
+        onChangeText={(fname) => setFirstName(fname)}
+        placeholderText="First Name"
+        iconType="user"
+        keyboardType="email-address"
+        autoCapitalize="none"
+        autoCorrect={false}
+      /> */}
 
       <FormInput
         labelValue={fname}
@@ -60,7 +72,12 @@ const SignupScreen = ({navigation}) => {
       
       <FormInput
         labelValue={confirmPassword}
-        onChangeText={(userPassword) => setConfirmPassword(userPassword)}
+        onChangeText={(confirmPassword) => { 
+          // do the passwords match? In future replace console log with modal
+          setConfirmPassword(confirmPassword);
+          console.log(confirmPassword);
+          console.log(password)
+          password === confirmPassword ? setPassword(confirmPassword) : console.log('mismatch password')}}
         placeholderText="Confirm Password"
         iconType="lock"
         secureTextEntry={true}
@@ -84,7 +101,8 @@ const SignupScreen = ({navigation}) => {
         style={styles.navButton}
         onPress={() => navigation.navigate('Login')}>
         <Text style={styles.navButtonText}>
-          Have an account? Sign In
+          Already have an account?
+          <Text style={[styles.navButtonText, {fontWeight: '600'}]}> Sign In</Text>
         </Text>
       </TouchableOpacity>
     </View>
@@ -95,25 +113,36 @@ export default SignupScreen;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#f9fafd',
+    backgroundColor: '#F2F0EB',
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     padding: 20,
   },
   text: {
     // fontFamily: 'Kufam-SemiBoldItalic',
-    fontSize: 28,
-    marginBottom: 10,
-    color: '#051d5f',
+    fontSize: 36,
+    textAlign: 'left',
+    alignSelf: 'stretch',
+    marginBottom: 12,
+    color: '#184254',
+    fontWeight: '500'
+  },
+  subtext: {
+    fontSize: 20,
+    marginBottom: 24,
+    textAlign: 'left',
+    alignSelf: 'stretch',
+    color: '#184254',
+    fontWeight: '300'
   },
   navButton: {
-    marginTop: 15,
+    marginTop: 24,
   },
   navButtonText: {
     fontSize: 18,
-    fontWeight: '500',
-    color: '#2e64e5',
+    fontWeight: '300',
+    color: '#184254',
     // fontFamily: 'Lato-Regular',
   },
   textPrivate: {

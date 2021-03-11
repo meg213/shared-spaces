@@ -9,7 +9,7 @@ import RecentMessageShow from "../components/RecentMessageShow"
 import { SearchBar } from 'react-native-elements';
 
 
-export default function SpacePage({navigation}) {
+export default function MyItemsPage({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
         <ScrollView scrollEventThrottle={16}>

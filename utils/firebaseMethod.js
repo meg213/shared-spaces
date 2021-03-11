@@ -1,5 +1,6 @@
 import { db } from '../config/keys';
 import firebase from 'firebase/app';
+import { Alert } from 'react-native';
 
 const spaceRef = db.collection("spaces")
 const userRef = db.collection("users")
@@ -16,7 +17,7 @@ export async function createSpaces(currentUser, spaceName, spaceType) {
         .update({
             spaces: firebase.firestore.FieldValue.arrayUnion((await currSpace).path)
         });
-        alert("Space created!");
+        Alert.alert("Space created!");
     } catch (e) {
         alert(e.message);
     }

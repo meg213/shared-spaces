@@ -7,8 +7,7 @@ import Card from "../components/Card";
 import Button from "../components/Button";
 import { SearchBar } from 'react-native-elements';
 
-
-export default function SpacePage({navigation}) {
+export default function ListsPage({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
         <ScrollView scrollEventThrottle={16}>
@@ -16,9 +15,11 @@ export default function SpacePage({navigation}) {
                 <Text style={styles.headerTitle}>Lists</Text>
                 <Text>6 Lists</Text>
             </View>
-            <List></List>
+            <List/>
             <Button
               onClick={()=> {navigation.navigate('SpacePage')}}
+                name="Create List"
+                onClick={()=> {navigation.navigate('CreateList')}}
             />
         </ScrollView>
     </SafeAreaView>

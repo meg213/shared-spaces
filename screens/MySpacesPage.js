@@ -48,7 +48,28 @@ export default function MySpacesPage({navigation}){
 
     return (
         <SafeAreaView style = {[styles.container]}>
-            <View>
+            <View style ={{
+                flexDirection: 'row',
+                marginLeft: 'auto',
+                marginRight: 18
+
+            }}>
+                <Icon style={{
+                    alignSelf: 'center',
+                    marginLeft: 40
+                    }} 
+                    size={50} name='account-circle' color= '#79AAB5'
+                    onPress={() => {
+                        navigation.navigate('ProfilePage');
+                    }}
+                />
+            </View>
+            <View style ={{
+                flexDirection: 'row',
+                marginRight: 'auto',
+                marginLeft: 18,
+                paddingBottom: 6   
+            }}>
                 <Text style = {[styles.text]}>
                     My Spaces
                 </Text>
@@ -60,7 +81,7 @@ export default function MySpacesPage({navigation}){
                 <Button
                     name = "Create Space"
                     onClick={() => {
-                        navigation.navigate('createSpaceScreen');
+                        navigation.navigate('CreateSpaceScreen');
                     }}
                 />
             </ScrollView>

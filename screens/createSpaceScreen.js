@@ -3,13 +3,26 @@ import { ScrollView, StyleSheet, Text, View, SafeAreaView, Button } from 'react-
 import FormButton from '../components/FormButton';
 import FormInput from '../components/FormInput';
 import { createSpaces } from '../utils/firebaseMethod';
+
 import firebase from 'firebase/app';
+
+import { ButtonGroup } from 'react-native-elements';
 
 const CreateSpaceScreen = ({navigation}) => {
     const [name, setName] = useState("");
     const [type, setType] = useState("");
+
     const currentUser = firebase.auth().currentUser;
     
+    const [index, setIndex] = useState(0);
+    const buttons = ['Home', 'Office', 'Other']
+
+    const updateIndex = (selectedIndex) => {
+        setIndex(selectedIndex);
+        setType(buttons[selectedIndex]);
+    }
+
+
     return(
         <SafeAreaView style = {[styles.container]}>
             <View>
@@ -17,20 +30,30 @@ const CreateSpaceScreen = ({navigation}) => {
                     Create a Shared Space
                 </Text>
             </View>
-            <FormInput
-                labelValue={name}
-                onChangeText={(spaceName) => setName(spaceName)}
-                placeholderText="Space Name"
-                autoCapitalize="none"
-                autoCorrect={false}
-            />
-            <FormInput
-                labelValue={type}
-                onChangeText={(spaceType) => setType(spaceType)}
-                placeholderText="Space Type"
-                autoCapitalize="none"
-                autoCorrect={false}
-            />
+            <View style={{
+                    padding:12
+                }}>
+                <FormInput
+                    labelValue={name}
+                    onChangeText={(spaceName) => setName(spaceName)}
+                    placeholderText="Space Name"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                />
+                <Text>Space Type</Text>
+                <ButtonGroup
+                    buttons={buttons}
+                    selectedIndex={index}
+                    onPress={updateIndex}
+                    selectedButtonStyle={styles.buttonGroupSelected}
+                    containerStyle={styles.containerStyle}
+                    buttonStyle={styles.buttonGroupStyle}
+                    innerBorderStyle={styles.innerBorderStyle}
+                />
+            </View>
+            <View>
+             <Text>Members</Text>
+            </View>
             <FormButton
                 buttonTitle="Create Space"
                 onPress={() => createSpaces(currentUser, name, type)}
@@ -54,6 +77,24 @@ const styles = StyleSheet.create({
         textAlign: "left",
         fontWeight: "500",
         color: "#184254",
+    },
+    buttonGroupSelected: {
+        backgroundColor: '#184254'
+    },
+    containerStyle: {
+        borderRadius: 6,
+        height: 60,
+        padding: 8,
+        width: "100%"
+    },
+    buttonGroupStyle: {
+        height: 30,
+        padding: 6,
+        borderRadius: 12,
+    },
+    innerBorderStyle: {
+        color: '#FFFFFF',
+        backgroundColor: '#FFFFFF'
     }
 
 })

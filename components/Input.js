@@ -8,11 +8,12 @@ Input is a generic button for major actions such as creating a space, list, or i
 Takes in:
     name: {string} text for button
     onClick: {func} button pressed function
+    //TODO: add the rest of the props
 */
 const styles = StyleSheet.create({
     input: {
       backgroundColor: '#FFFFFF',
-      minWidth: '95%',
+      minWidth: '100%',
       borderTopLeftRadius: 16,
       borderTopRightRadius: 16,
       borderBottomRightRadius: 16,
@@ -29,43 +30,23 @@ const styles = StyleSheet.create({
     }
  })
 
-  const Button = (props) => {
-
-    const [text, setText] = React.useState('');
-
-    //keyboard type?
+const Input = (({labelValue, placeholderText, iconType, ...rest}) => {
     return (
     <View style={styles.container}>
         <TextInput
             style={styles.input}
             inputStyle={styles.inputStyle}
-            label={props.label}
-            value={text}
+            numberOfLines={1}
+            value={labelValue}
+            placeholder={placeholderText}
             onChangeText={text => setText(text)}
             selectionColor={'#D9BD4B'}
             underlineColor={'rgba(0, 0, 0, 0)'}
-            secureTextEntry={props.password}
-            dataDetectorTypes={props.dataDetectorTypes}
             theme={{colors: {primary: '#184254'}}}
+            {...rest}
         />
     </View>
     );
-  }
-
-  Button.propTypes = {
-    label: PropTypes.string,
-    value: PropTypes.string,
-    onClick: PropTypes.func,
-    password: PropTypes.bool,
-    dataDetectorTypes: PropTypes.string
-  };
-
-  Button.defaultProps = {
-    label: "Name",  
-    value: "Morgan",
-    password: false,
-    dataDetectorTypes: 'all',
-    onClick: () => {}
-  }
+  })
   
-  export default Button;
+  export default Input;

@@ -17,13 +17,12 @@ export default function SpacePage({navigation}) {
             <Icon style={{
                 justifyContent: 'center'
             }} size={50} name='arrow-left' 
-                onPress={() => {
+             onPress={() => {
                 navigation.navigate('MySpacesPage');
-                }}
+            }}
             />
             <Text style={{
                 flex: 1,
-                paddingRight: 50,
                 textAlign: 'center',
                 alignContent: 'center',
                 fontSize: 30, 

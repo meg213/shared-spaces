@@ -1,10 +1,15 @@
 import React, { useContext } from 'react';
 import { View, Button } from 'react-native'; 
 import { createStackNavigator } from '@react-navigation/stack';
-import MySpacesPage  from '../screens/MySpacesPage';
-import createSpaceScreen from '../screens/createSpaceScreen';
-import { logout } from '../utils/firebaseMethod';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import SpacePage from './../screens/SpacePage'
+import ItemListPage from './../screens/itemListPage'
+import MyItemsPage from './../screens/MyItemsPage'
+import ListsPage from './../screens/ListsPage'
+import AllItemsPage from './../screens/AllItemsPage'
+import ProfilePage from './../screens/ProfilePage'
+import MySpacesPage from './../screens/MySpacesPage';
+import CreateSpaceScreen from './../screens/createSpaceScreen';
+import CreateList from './../screens/CreateList';
 
 const Stack = createStackNavigator();
 
@@ -12,52 +17,52 @@ const AppStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="SpacesPage"
-        component={MySpacesPage}
-        options={({navigation}) => ({
-          title: '',
-          headerStyle: {
-            backgroundColor: '#f9fafd',
-            shadowColor: '#f9fafd',
-            elevation: 0,
-          },
-          headerLeft: () => (
-            <View style={{marginLeft: 10}}>
-              <FontAwesome.Button
-                name="long-arrow-left"
-                size={25}
-                backgroundColor="#f9fafd"
-                color="#333"
-                onPress={() => logout()}
-              />
-            </View>
-          ),
-        })}
+          name="MySpacesPage"
+          component={MySpacesPage}
+          options={{ headerShown: false}}
       />
       <Stack.Screen
-        name="createSpaceScreen"
-        component={createSpaceScreen}
-        options={({navigation}) => ({
-          title: '',
-          headerStyle: {
-            backgroundColor: '#f9fafd',
-            shadowColor: '#f9fafd',
-            elevation: 0,
-          },
-          headerLeft: () => (
-            <View style={{marginLeft: 10}}>
-              <FontAwesome.Button 
-                name="long-arrow-left"
-                size={25}
-                backgroundColor="#f9fafd"
-                color="#333"
-                onPress={() => navigation.navigate('SpacesPage')}
-              />
-            </View>
-          ),
-        })}
+        name="SpacePage"
+        component={SpacePage}
+        options={{ headerShown: false}}
       />
-    </Stack.Navigator>
+      <Stack.Screen
+        name="ProfilePage"
+        component={ProfilePage}
+        options={{ headerShown: false}}
+      />
+      <Stack.Screen
+        name="ItemList"
+        component={ItemListPage}
+        options={{ headerShown: false}}
+      />
+      <Stack.Screen
+        name="MyItemList"
+        component={MyItemsPage}
+        options={{ headerShown: false}}
+      />
+      <Stack.Screen
+        name="ListsList"
+        component={ListsPage}
+        options={{ headerShown: false}}
+      />
+      <Stack.Screen
+      name="AllItems"
+      component={AllItemsPage}
+      options={{ headerShown: false}}
+    /> 
+      <Stack.Screen
+      name="CreateSpaceScreen"
+      component={CreateSpaceScreen}
+      options={{ headerShown: false}}
+    /> 
+    <Stack.Screen
+      name="CreateList"
+      component={CreateList}
+      options={{ headerShown: false}}
+    /> 
+    
+  </Stack.Navigator>
   );
 }
 

@@ -17,16 +17,32 @@ const styles = StyleSheet.create({
     list: {
         borderRadius: 6,
         padding: 12,
-        minWidth: '80%',
+        minWidth: '90%',
         marginHorizontal: 12,
-        marginVertical: 6
+        marginVertical: 6,
+        backgroundColor: '#FFFFFF',
+        minHeight: 70,
     },    
+    pressable: {
+        flexDirection: 'row',
+    },
     icon: {
-        width: 24,
-        height: 24,
+        width: 50,
+        height: 50,
+        color: "#000000",
+        marginLeft: 12,
+        marginRight: 18
     },
     listHeaderSection: {
         flexDirection: 'column'    
+    },
+    listName: {
+        fontSize: 22,
+        color: "#184254"
+    },
+    numItems: {
+        fontSize: 18,
+        color:'#4E7580'
     }
 })
 
@@ -35,11 +51,11 @@ const List = (props) => {
         <View style={styles.list}>
             <Pressable
                 onPress={console.log('Pressed List Component')}
-                style={({ pressed }) => [{opacity: pressed ? 0.6 : 1}]}>
-                <Image source={require("../assets/icon.png")} styles={styles.icon}/>
+                style={[styles.pressable, ({ pressed }) => [{opacity: pressed ? 0.6 : 1}]]}>
+                <Image source={props.icon} style={styles.icon}/>
                 <View style={styles.listHeaderSection}>
-                    <Text>{props.listName}</Text>
-                    <Text>{props.numItems}</Text>
+                    <Text style={styles.listName}>{props.listName}</Text>
+                    <Text style={styles.numItems}>{props.numItems} items</Text>
                 </View>
             </Pressable>
         </View>
@@ -49,12 +65,13 @@ const List = (props) => {
 List.propTypes = {
     listName: PropTypes.string,
     numItems: PropTypes.number,
-    //icon: PropTypes.object,
+    icon: PropTypes.any,
 };
 
 List.defaultProps = {
     listName: 'Test List',
     numItems: 0,
+    icon: require('../assets/kitchen.png')
 };
 
 

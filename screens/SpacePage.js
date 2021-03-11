@@ -125,6 +125,6 @@ const styles = StyleSheet.create({
     paddingTop:50
   },
   buttonView: {
-    backgroundColor: 'rgba(0,0,0,)',
+    backgroundColor: 'rgba(0,0,0,0)',
   }
 });

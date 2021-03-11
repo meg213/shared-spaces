@@ -3,8 +3,7 @@ import { Alert } from 'react-native';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView , Pressable, Image} from 'react-native';
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
-import { CheckBox, BottomSheet } from 'react-native-elements'
-import User from '../components/User';
+import { CheckBox, BottomSheet , Icon} from 'react-native-elements'
 
 const CreateList= ({navigation}) => {
     const [name, setName] = useState("");
@@ -20,8 +19,6 @@ const CreateList= ({navigation}) => {
           onPress: () => setIsVisible(false),
         },
       ];
-      
-    
 
     return(
         <SafeAreaView style = {[styles.container]}>
@@ -40,7 +37,9 @@ const CreateList= ({navigation}) => {
                         autoCorrect={false}
                     />
                 </View>
-                <Pressable style={({ pressed }) => [{opacity: pressed ? 0.6 : 1}]} >
+                <Pressable style={({ pressed }) => [{opacity: pressed ? 0.6 : 1}]}
+                    onPress={()=> {setIsVisible(!isVisible)}}
+                >
                     <View style={[styles.itemList, {flexDirection:'row', justifyContent:'space-between', alignItems:'center'}]}>
                         <Text style={styles.itemTitle}>Select Icon</Text> 
                         <Image source={icon} style={styles.icon}/>
@@ -59,18 +58,37 @@ const CreateList= ({navigation}) => {
                     onPress={() => {Alert.alert('Space Created')}}
                 />
             </View>
-            {/* <BottomSheet
-            isVisible={isVisible}
-            containerStyle={{ backgroundColor: 'rgba(0.5, 0.25, 0, 0.2)' }}
+            <BottomSheet
+                 isVisible={isVisible}
+                 style={styles.modalContainer}
             >
-            {list.map((l, i) => (
-                <ListItem key={i} containerStyle={l.containerStyle} onPress={l.onPress}>
-                <ListItem.Content>
-                    <ListItem.Title style={l.titleStyle}>{l.title}</ListItem.Title>
-                </ListItem.Content>
-                </ListItem>
-            ))}
-            </BottomSheet>; */}
+                <View style={styles.modal}>
+                    <View style={styles.modalHeader}>
+                        <Text style={[styles.itemTitle, {padding: 18}]}>Select Icon</Text>
+                        <Icon
+                            name="close"
+                            size={35}
+                            onPress={()=> {setIsVisible(false)}}
+                            style={{padding: 12}}
+                        />
+                    </View>
+                    <View style={styles.modalIcons}>
+                        <Image source={require('../assets/kitchen.png')} style={styles.icons}/>
+                        <Image source={require('../assets/chair.png')} style={styles.icons}/>
+                        <Image source={require('../assets/coffee-shop.png')} style={styles.icons}/>
+                        <Image source={require('../assets/relax.png')} style={styles.icons}/>
+                        <Image source={require('../assets/toilet.png')} style={styles.icons}/>
+                        <Image source={require('../assets/wardrobe.png')} style={styles.icons}/>
+                        <Image source={require('../assets/warehouse.png')} style={styles.icons}/>
+                        <Image source={require('../assets/warehouse.png')} style={styles.icons}/>
+                        <Image source={require('../assets/warehouse.png')} style={styles.icons}/>
+                        <Image source={require('../assets/warehouse.png')} style={styles.icons}/>
+                        <Image source={require('../assets/warehouse.png')} style={styles.icons}/>
+                        <Image source={require('../assets/warehouse.png')} style={styles.icons}/>
+                        
+                    </View>
+                </View>
+            </BottomSheet>
         </SafeAreaView>
         
     );
@@ -111,4 +129,36 @@ const styles = StyleSheet.create({
         marginLeft: 12,
         marginRight: 18
     },
+    modalContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0.5, 0.25, 0, 0.2)' ,
+        height: '100%'
+    },
+    modal: {
+        backgroundColor: '#fff',
+        height: 400,
+        width: 350,
+        borderRadius: 12,
+    },
+    modalHeader: {
+        flexDirection:'row',
+        justifyContent: 'space-between',
+        alignItems: 'stretch',
+    },
+    modalIcons: {
+        paddingHorizontal: 12,
+        flexDirection:'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-evenly',
+    },
+    icons: {
+        margin: 12,
+        width: 60,
+        height: 60,
+        color: "#000000",
+        
+    }
+
 })

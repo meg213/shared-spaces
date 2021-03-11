@@ -23,28 +23,34 @@ const CreateList= ({navigation}) => {
                     Create a List
                 </Text>
             </View>
-            <View style={{
-                    paddingVertical:12
-                }}>
-                <FormInput
-                    labelValue={name}
-                    onChangeText={(spaceName) => setName(spaceName)}
-                    placeholderText="List Name"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                />
-            </View>
-            <View style={styles.itemList}>
-                <Text style={styles.itemTitle}>Add Items</Text>
-                {/* number of checkboxes per number of items */}
-                <CheckBox
+            <ScrollView style={{  width: "100%" }}>
+                <View style={{  paddingVertical: 12 }}>
+                    <FormInput
+                        labelValue={name}
+                        onChangeText={(spaceName) => setName(spaceName)}
+                        placeholderText="List Name"
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                    />
+                </View>
+                <View style={styles.itemList}>
+                <Text style={styles.itemTitle}>Select Icon</Text>
+                </View>
+                <View style={styles.itemList}>
+                    <Text style={styles.itemTitle}>Add Items</Text>
+                    {/* number of checkboxes per number of items */}
+                    <CheckBox
 
+                    />
+                </View>
+            </ScrollView>
+            <View style={{  alignSelf: 'center' }}>
+                <Button
+                    name="Create List"
+                    width="75%"
+                    onPress={() => {Alert.alert('Space Created')}}
                 />
             </View>
-            <Button
-                name="Create List"
-                onPress={() => {Alert.alert('Space Created')}}
-            />
         </SafeAreaView>
         
     );
@@ -73,10 +79,9 @@ const styles = StyleSheet.create({
     },
     itemList: {
         backgroundColor: '#FFFFFF',
-        borderRadius: 6,
+        borderRadius: 12,
         padding: 12,
         width: '100%',
         marginVertical: 6
-    }
-
+    },
 })

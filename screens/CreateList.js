@@ -3,7 +3,8 @@ import { Alert } from 'react-native';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView , Pressable, Image} from 'react-native';
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
-import { CheckBox, BottomSheet , Icon} from 'react-native-elements'
+import CheckBox from '../components/Checkbox';
+import { BottomSheet , Icon} from 'react-native-elements'
 
 
 const CreateList= ({navigation}) => {
@@ -51,6 +52,16 @@ const CreateList= ({navigation}) => {
                 <View style={styles.itemList}>
                     <Text style={styles.itemTitle}>Add Items</Text>
                     {/* number of checkboxes per number of items */}
+                    <CheckBox 
+                    title="test"
+                        />
+                    <CheckBox />
+                    <CheckBox />
+                    <CheckBox />
+                    <CheckBox />
+                    <CheckBox />
+                    <CheckBox />
+                    <CheckBox />
                     <CheckBox />
                 </View>
             </ScrollView>
@@ -58,7 +69,7 @@ const CreateList= ({navigation}) => {
                 <Button
                     name="Create List"
                     width="75%"
-                    onPress={() => {Alert.alert('Space Created')}}
+                    onPress={() => {console.log('clicked')}}
                 />
             </View>
             <BottomSheet
@@ -67,7 +78,7 @@ const CreateList= ({navigation}) => {
             >
                 <View style={styles.modal}>
                     <View style={styles.modalHeader}>
-                        <Text style={[styles.itemTitle, {padding: 18}]}>Select Icon</Text>
+                        <Text style={[styles.modalText]}>Select Icon</Text>
                         <Icon
                             name="close"
                             size={35}
@@ -136,18 +147,24 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'rgba(0.5, 0.25, 0, 0.2)' ,
-        height: '100%'
     },
     modal: {
         backgroundColor: '#fff',
         height: 400,
         width: 350,
         borderRadius: 12,
+        marginVertical: 150, //might need to be changed, had trouble getting vertically centered
     },
     modalHeader: {
         flexDirection:'row',
         justifyContent: 'space-between',
         alignItems: 'stretch',
+    },
+    modalText: {
+        fontSize: 24,
+        color: '#4E7580',
+        paddingHorizontal: 20,
+        paddingTop: 16
     },
     modalIcons: {
         paddingHorizontal: 12,

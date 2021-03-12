@@ -5,20 +5,23 @@ import Button from '../components/Button';
 import FormInput from '../components/FormInput';
 import { CheckBox, BottomSheet , Icon} from 'react-native-elements'
 
+
 const CreateList= ({navigation}) => {
     const [name, setName] = useState("");
     const [icon, setIcon] = useState(require('../assets/kitchen.png'))
     const [isVisible, setIsVisible] = useState(false);
-    const list = [
-        { title: 'List Item 1' },
-        { title: 'List Item 2' },
-        {
-          title: 'Cancel',
-          containerStyle: { backgroundColor: 'red' },
-          titleStyle: { color: 'white' },
-          onPress: () => setIsVisible(false),
-        },
-      ];
+
+
+    const ImageItem = (props) => {
+        return (
+            <Pressable onPress={()=> {
+                setIsVisible(false)
+                setIcon(props.src)
+            }}>
+                <Image source={props.src} style={styles.icons}/>
+            </Pressable>
+        )
+    }
 
     return(
         <SafeAreaView style = {[styles.container]}>
@@ -73,19 +76,18 @@ const CreateList= ({navigation}) => {
                         />
                     </View>
                     <View style={styles.modalIcons}>
-                        <Image source={require('../assets/kitchen.png')} style={styles.icons}/>
-                        <Image source={require('../assets/chair.png')} style={styles.icons}/>
-                        <Image source={require('../assets/coffee-shop.png')} style={styles.icons}/>
-                        <Image source={require('../assets/relax.png')} style={styles.icons}/>
-                        <Image source={require('../assets/toilet.png')} style={styles.icons}/>
-                        <Image source={require('../assets/wardrobe.png')} style={styles.icons}/>
-                        <Image source={require('../assets/warehouse.png')} style={styles.icons}/>
-                        <Image source={require('../assets/warehouse.png')} style={styles.icons}/>
-                        <Image source={require('../assets/warehouse.png')} style={styles.icons}/>
-                        <Image source={require('../assets/warehouse.png')} style={styles.icons}/>
-                        <Image source={require('../assets/warehouse.png')} style={styles.icons}/>
-                        <Image source={require('../assets/warehouse.png')} style={styles.icons}/>
-                        
+                        <ImageItem src={require('../assets/kitchen.png')} />
+                        <ImageItem src={require('../assets/chair.png')} />
+                        <ImageItem src={require('../assets/coffee-shop.png')} />
+                        <ImageItem src={require('../assets/relax.png')} />
+                        <ImageItem src={require('../assets/toilet.png')} />
+                        <ImageItem src={require('../assets/wardrobe.png')} />
+                        <ImageItem src={require('../assets/chair.png')} />
+                        <ImageItem src={require('../assets/warehouse.png')} />
+                        <ImageItem src={require('../assets/house.png')} />
+                        <ImageItem src={require('../assets/cleaning.png')} />    
+                        <ImageItem src={require('../assets/box.png')} />
+                        <ImageItem src={require('../assets/desk.png')} />           
                     </View>
                 </View>
             </BottomSheet>

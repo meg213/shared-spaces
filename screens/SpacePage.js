@@ -5,21 +5,25 @@ import Item from "../components/Item";
 import User from "../components/User";
 import Card from "../components/Card";
 import Button from "../components/Button";
-import RecentMessageShow from "../components/RecentMessageShow"
+import RecentMessageShow from "../components/RecentMessageShow";
 
-export default function SpacePage({navigation}) {
+export default function SpacePage({route, navigation}){
+
   return (
     <SafeAreaView style={styles.container}>
         <View style ={{
             flexDirection: 'row',
             alignItems: 'center',        
         }}>
-            <Icon style={{
-                justifyContent: 'center'
-            }} size={50} name='arrow-left' 
-             onPress={() => {
-                navigation.navigate('MySpacesPage');
-            }}
+            <Icon 
+                style={{
+                    justifyContent: 'center'
+                }} 
+                size={50} 
+                name='arrow-left' 
+                onPress={() => {
+                    navigation.navigate('MySpacesPage')
+                }}
             />
             <Text style={{
                 flex: 1,
@@ -76,7 +80,7 @@ export default function SpacePage({navigation}) {
                             }}/>
                 </ScrollView>
             </View>
-            <Button name="Add an Item"/>
+            <Button name="Add an Item" onClick={() => {navigation.navigate('CreateItem', {data:route.params.data})}}/>
             <View style={{
                 backgroundColor: 'white',
                 borderRadius: 12,

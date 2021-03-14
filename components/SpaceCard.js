@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
 
 })
 
-const SpaceCard = ({name}, props) => {              //TO-DO: make props
+const SpaceCard = (props) => {              //TO-DO: make props
     return(
         <Pressable
              style={({ pressed }) => [{opacity: pressed ? 0.6 : 1}]} 
@@ -40,7 +40,7 @@ const SpaceCard = ({name}, props) => {              //TO-DO: make props
             <View style = {[styles.card]}>
                 <View style = {[styles.row]}>
                     <Text style = {[styles.text]}>
-                        {name}
+                        {props.name}
                     </Text>
                     <Circle num= "2"/>
                 </View>

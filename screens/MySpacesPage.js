@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { Icon } from 'react-native-elements';
+import SpacePage from './SpacePage';
 import Button from '../components/Button';
 import SpaceCard from '../components/SpaceCard';
-import ProfilePage from '../screens/ProfilePage';
 import firebase from 'firebase/app';
 import { db } from '../config/keys';
 
@@ -12,7 +12,6 @@ const spaceRef = db.collection('spaces');
 
 export default function MySpacesPage({navigation}){
     const currUser = firebase.auth().currentUser;
-    console.log(currUser.uid);
     const[spaceNames, setSpaceNames] = useState([]);
 
     const componentIsMounted = useRef(true);
@@ -31,12 +30,10 @@ export default function MySpacesPage({navigation}){
             await userRef.doc(currentUser.uid)
             .get()
             .then(documentSnapshot => spaces = documentSnapshot.get('spaces'));
-            
-            console.log(spaces);
-
             for (let i = 0; i < spaces.length; i++) {
                 let spaceData = (await spaceRef.doc(spaces[i].substring(7)).get()).data();
-                names.push({name: spaceData.name});
+                //SpaceData: name, spaceType, items, users
+                names.push({currentUser: currUser, spaceData: spaceData, spaceId: spaces[i]});
             }
             if (componentIsMounted.current) {
                 setSpaceNames(names)
@@ -45,7 +42,6 @@ export default function MySpacesPage({navigation}){
 
         createSpaceCard(currUser)
     }, []);
-
     return (
         <SafeAreaView style = {[styles.container]}>
             <View style ={{
@@ -76,12 +72,14 @@ export default function MySpacesPage({navigation}){
             </View>
             <ScrollView>
                 <div>
-                    {spaceNames.map((name, index) => <SpaceCard key={index} name={name.name}/>)}
+                    {spaceNames.map((space, index) => 
+                        <SpaceCard key={index} name={space.spaceData.name} onClick={() => {navigation.navigate('SpacePage', {data:space})}}/>
+                    )}
                 </div>
                 <Button
                     name = "Create Space"
                     onClick={() => {
-                        navigation.navigate('CreateSpaceScreen');
+                        navigation.navigate('CreateSpaceScreen', {currUser: currUser});
                     }}
                 />
             </ScrollView>

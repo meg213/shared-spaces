@@ -4,24 +4,21 @@ import FormButton from '../components/FormButton';
 import FormInput from '../components/FormInput';
 import { createSpaces } from '../utils/firebaseMethod';
 
-import firebase from 'firebase/app';
-
 import { ButtonGroup } from 'react-native-elements';
 
-const CreateSpaceScreen = ({navigation}) => {
+const CreateSpaceScreen = ({route}) => {
     const [name, setName] = useState("");
     const [type, setType] = useState("");
 
-    const currentUser = firebase.auth().currentUser;
+    const currentUser = route.params.currUser;
     
     const [index, setIndex] = useState(0);
-    const buttons = ['Home', 'Office', 'Other']
+    const buttons = ['Home', 'Office', 'Other'];
 
     const updateIndex = (selectedIndex) => {
         setIndex(selectedIndex);
         setType(buttons[selectedIndex]);
     }
-
 
     return(
         <SafeAreaView style = {[styles.container]}>

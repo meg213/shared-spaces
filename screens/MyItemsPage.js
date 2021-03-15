@@ -15,15 +15,27 @@ const userRef = db.collection('users');
 const spaceRef = db.collection('spaces');
 const itemRef = db.collection('items');
 
-class Cell extends Component {
+class SectionHeader extends Component {
   render() {
+    // inline styles used for brevity, use a stylesheet when possible
+    var textStyle = {
+      textAlign:'center',
+      color:'#fff',
+      fontWeight:'700',
+      fontSize:16
+    };
+
+    var viewStyle = {
+      backgroundColor: '#ccc'
+    };
     return (
-      <View style={{height:30}}>
-        <Text>{this.props.item}</Text>
+      <View style={viewStyle}>
+        <Text style={textStyle}>{this.props.title}</Text>
       </View>
     );
   }
 }
+
 
 export default function MyItemsPage({route, navigation}) {
   const[myItems, setItems] = useState([])
@@ -53,41 +65,11 @@ export default function MyItemsPage({route, navigation}) {
     }
     getAllItemsBelongToCurrentUser(route.params.data.currentUser)
   }, []);
-  
-  // let data = [
-  //   {key: 'A', data:[]},
-  //   {key: 'B', data:[]},
-  //   {key: 'C', data:[]},
-  //   {key: 'D', data:[]},
-  //   {key: 'E', data:[]},
-  //   {key: 'F', data:[]},
-  //   {key: 'G', data:[]},
-  //   {key: 'H', data:[]},
-  //   {key: 'I', data:[]},
-  //   {key: 'J', data:[]},
-  //   {key: 'K', data:[]},
-  //   {key: 'L', data:[]},
-  //   {key: 'M', data:[]},
-  //   {key: 'N', data:[]},
-  //   {key: 'O', data:[]},
-  //   {key: 'P', data:[]},
-  //   {key: 'Q', data:[]},
-  //   {key: 'R', data:[]},
-  //   {key: 'S', data:[]},
-  //   {key: 'T', data:[]},
-  //   {key: 'U', data:[]},
-  //   {key: 'V', data:[]},
-  //   {key: 'W', data:[]},
-  //   {key: 'Z', data:[]},
-  //   {key: 'Y', data:[]},
-  //   {key: 'Z', data:[]},
-  // ];
+
   let data = []
-  
   for (let i = 0; i < myItems.length; i++) {
-    data.push({value: myItems[i].name, key: i})
+    data.push({value: myItems[i].name, key: myItems[i]})
   }
-  console.log(data)
 
   return (
     <SafeAreaView style={styles.container}>
@@ -106,31 +88,17 @@ export default function MyItemsPage({route, navigation}) {
         </View>
             <AlphabetList
               data = {data}
+              renderSectionHeader={SectionHeader}
+              renderCustomItem={(item) => (
+                <Item
+                  listPage
+                  itemName={item.value}
+                  list={item.key.category}
+                  shared={item.key.isShared}
+                  owner={null}
+                />
+              )}
             />
-            {/* <Item
-              listPage
-              itemName="Blender"
-            />
-            <Item
-              listPage
-              itemName="Broom"
-            />
-            <Text style={styles.sortedLetters}>C</Text>
-            <Item
-              listPage
-              itemName="Chair"
-            />
-            <Text style={styles.sortedLetters}>L</Text>
-           <Item
-              listPage
-              itemName="Light"
-            />
-            <Item
-              listPage
-            />
-            <Item
-              listPage
-            /> */}
             <Button
                 onClick={()=> {navigation.navigate('SpacePage')}}
                 name="Back"

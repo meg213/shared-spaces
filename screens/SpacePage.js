@@ -68,7 +68,7 @@ export default function SpacePage({route, navigation}){
                             }}/>
                     <Card name="My Items"
                         onClick={() => {
-                            navigation.navigate('MyItemList');
+                            navigation.navigate('MyItemList', {data:route.params.data});
                             }}/>
                     <Card name="Lists"
                         onClick={() => {

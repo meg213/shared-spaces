@@ -8,6 +8,7 @@ import Button from "../components/Button";
 import RecentMessageShow from "../components/RecentMessageShow";
 
 export default function SpacePage({route, navigation}){
+    console.log(route)
 
   return (
     <SafeAreaView style={styles.container}>
@@ -76,7 +77,7 @@ export default function SpacePage({route, navigation}){
                             }}/>
                     <Card name="All Items"
                         onClick={() => {
-                            navigation.navigate('AllItems');
+                            navigation.navigate('AllItems', {data:route.params.data});
                             }}/>
                 </ScrollView>
             </View>

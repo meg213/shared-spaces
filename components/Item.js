@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
           <View style={styles.subSectionGroup}>
               {props.list ? <SubSection text={props.list} /> : null}
               {props.owner? <SubSection text={props.owner}/> : null}
-              {props.shared ? <SubSection text="Shared" image={logo}/> : null}
+              {props.shared? <SubSection text="Shared" image={logo}/> : null}
           </View>
         </Pressable>
       </View>

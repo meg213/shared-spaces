@@ -1,23 +1,14 @@
 import React, {useState, useEffect, useRef, Component} from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
-import { Icon } from 'react-native-elements';
 import Item from "../components/Item";
-import User from "../components/User";
-import Card from "../components/Card";
 import Button from "../components/Button";
-import RecentMessageShow from "../components/RecentMessageShow";
 import { SearchBar } from 'react-native-elements';
-import firebase from 'firebase/app';
-import {AlphabetList} from 'react-native-section-alphabet-list'
+import {AlphabetList} from 'react-native-section-alphabet-list';
 import { db } from '../config/keys';
 
-const userRef = db.collection('users');
-const spaceRef = db.collection('spaces');
-const itemRef = db.collection('items');
 
 class SectionHeader extends Component {
   render() {
-    // inline styles used for brevity, use a stylesheet when possible
     var textStyle = {
       textAlign:'center',
       color:'#fff',
@@ -36,7 +27,7 @@ class SectionHeader extends Component {
   }
 }
 
-
+const itemRef = db.collection('items');
 export default function MyItemsPage({route, navigation}) {
   const[myItems, setItems] = useState([])
   
@@ -58,7 +49,6 @@ export default function MyItemsPage({route, navigation}) {
           currentUserItems.push(itemData)
         }
       }
-      currentUserItems.sort((a, b) => {return a.name.toLowerCase().localeCompare(b.name.toLowerCase())})
       if (componentIsMounted.current) {
         setItems(currentUserItems)
       }

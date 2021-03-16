@@ -23,6 +23,8 @@ const styles = StyleSheet.create({
             containerStyle={styles.container}
             textStyle={styles.textStyle}
             uncheckedColor="#4E7580"
+            checkedColor="#4E7580"
+            checkedIcon='square'
             {...props}
         />
     );

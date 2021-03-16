@@ -5,6 +5,7 @@ import Button from '../components/Button';
 import FormInput from '../components/FormInput';
 import CheckBox from '../components/Checkbox';
 import { BottomSheet , Icon} from 'react-native-elements'
+import { getItems } from '../utils/firebaseMethod';
 
 
 const CreateList= ({navigation}) => {
@@ -26,10 +27,11 @@ const CreateList= ({navigation}) => {
 
     return(
         <SafeAreaView style = {[styles.container]}>
-            <View>
-                <Text style = {[styles.text]}>
-                    Create a List
-                </Text>
+            <View  style = {{ flexDirection: 'row', justifyContent: 'center'}}>
+                <Icon name='arrow-left' size={40}   onPress={() => {
+                navigation.navigate('ListsList');
+            }}/>
+                <Text style = {[styles.text]}> Create a List </Text>
             </View>
             <ScrollView style={{  width: "100%" }}>
                 <View style={{  paddingVertical: 12 }}>
@@ -53,8 +55,10 @@ const CreateList= ({navigation}) => {
                     <Text style={styles.itemTitle}>Add Items</Text>
                     {/* number of checkboxes per number of items */}
                     <CheckBox 
-                    title="test"
-                        />
+                        title='test'
+                        checked
+                        onPress={()=> {console.log('hi')}}
+                    />
                     <CheckBox />
                     <CheckBox />
                     <CheckBox />
@@ -69,7 +73,7 @@ const CreateList= ({navigation}) => {
                 <Button
                     name="Create List"
                     width="75%"
-                    onPress={() => {console.log('clicked')}}
+                    onClick={() => {console.log(getItems())}}
                 />
             </View>
             <BottomSheet
@@ -138,7 +142,6 @@ const styles = StyleSheet.create({
     icon: {
         width: 50,
         height: 50,
-        color: "#000000",
         marginLeft: 12,
         marginRight: 18
     },
@@ -175,9 +178,7 @@ const styles = StyleSheet.create({
     icons: {
         margin: 12,
         width: 60,
-        height: 60,
-        color: "#000000",
-        
+        height: 60,    
     }
 
 })

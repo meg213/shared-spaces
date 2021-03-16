@@ -68,3 +68,23 @@ export async function resetPassword(email) {
         console.log(e);
     }
 }
+
+export async function getItems() {
+    try {
+        const list = [];
+        await firebase.firestore().collection('items').
+        onSnapshot((snap) => {
+            snap.forEach((document) => {
+               var item = document.data().name
+            //    console.log('item:', item);
+               list.push(item);
+            //    console.log('list1', list);
+               return list;
+            })
+        })
+        // console.log('list', list);
+        return list;
+    } catch (e) {
+        console.log(e);
+    }
+}

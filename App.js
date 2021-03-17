@@ -1,9 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
 import Providers from './navigation';
-import CreateSpaceScreen from './screens/createSpaceScreen';
-
-let firebaseApp
 
 export default class App extends React.Component {
   render() {
@@ -11,6 +7,7 @@ export default class App extends React.Component {
   }
 }
 
+<<<<<<< HEAD
 // const styles = StyleSheet.create({
 //   container: {
 //     flex: 1,
@@ -19,3 +16,5 @@ export default class App extends React.Component {
 //     justifyContent: 'center'
 //   },
 // });
+=======
+>>>>>>> hieubranch

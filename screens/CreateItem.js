@@ -1,31 +1,23 @@
 import React, { useState, Component } from 'react';
-import { ScrollView, StyleSheet, Text, View, SafeAreaView, Button } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, SafeAreaView, Switch} from 'react-native';
 import FormButton from '../components/FormButton';
 import FormInput from '../components/FormInput';
-import { createSpaces } from '../utils/firebaseMethod';
+import { createItems } from '../utils/firebaseMethod';
 
-import { ButtonGroup } from 'react-native-elements';
-
-const CreateSpaceScreen = ({route}) => {
-    //route params: currUser
+export default function createItem({route, navigation}) {
+    //route params: spaceID, currUser
     const [name, setName] = useState("");
-    const [type, setType] = useState("");
-
+    const [category, setCategory] = useState("");
+    const [shared, setShared] = useState(false);
+    const toggleShared = () => setShared(previousState => ! previousState);
     const currentUser = route.params.currUser;
-    
-    const [index, setIndex] = useState(0);
-    const buttons = ['Home', 'Office', 'Other'];
-
-    const updateIndex = (selectedIndex) => {
-        setIndex(selectedIndex);
-        setType(buttons[selectedIndex]);
-    }
+    const currentSpaceId = route.params.spaceID;
 
     return(
         <SafeAreaView style = {[styles.container]}>
             <View>
                 <Text style = {[styles.text]}>
-                    Create a Shared Space
+                    Add Item
                 </Text>
             </View>
             <View style={{
@@ -33,34 +25,36 @@ const CreateSpaceScreen = ({route}) => {
                 }}>
                 <FormInput
                     labelValue={name}
-                    onChangeText={(spaceName) => setName(spaceName)}
-                    placeholderText="Space Name"
+                    onChangeText={(itemName) => setName(itemName)}
+                    placeholderText="Name"
                     autoCapitalize="none"
                     autoCorrect={false}
                 />
-                <Text>Space Type</Text>
-                <ButtonGroup
-                    buttons={buttons}
-                    selectedIndex={index}
-                    onPress={updateIndex}
-                    selectedButtonStyle={styles.buttonGroupSelected}
-                    containerStyle={styles.containerStyle}
-                    buttonStyle={styles.buttonGroupStyle}
-                    innerBorderStyle={styles.innerBorderStyle}
+                <FormInput
+                    labelValue={category}
+                    onChangeText={(itemCategory) => setCategory(itemCategory)}
+                    placeholderText="Category"
+                    autoCapitalize="none"
+                    autoCorrect={false}
                 />
-            </View>
-            <View>
-             <Text>Members</Text>
+                <Text>Is this item is shared?</Text>
+                <Switch
+                    trackColor={{ false: "#767577", true: "#81b0ff" }}
+                    thumbColor={shared ? "#f5dd4b" : "#f4f3f4"}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={toggleShared}
+                    value={shared}
+                />
+                
             </View>
             <FormButton
-                buttonTitle="Create Space"
-                onPress={() => createSpaces(currentUser, name, type)}
+                buttonTitle="Create Item"
+                onPress={() => createItems(currentUser, currentSpaceId, name, category, shared)}
             />
         </SafeAreaView>
         
     );
 }
-export default CreateSpaceScreen;
 
 const styles = StyleSheet.create({
     container: {

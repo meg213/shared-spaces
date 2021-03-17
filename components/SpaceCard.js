@@ -40,7 +40,7 @@ const SpaceCard = (props) => {              //TO-DO: make props
             <View style = {[styles.card]}>
                 <View style = {[styles.row]}>
                     <Text style = {[styles.text]}>
-                        My Apartment
+                        {props.name}
                     </Text>
                     <Circle num= "2"/>
                 </View>

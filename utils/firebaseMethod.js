@@ -1,20 +1,51 @@
 import { db } from '../config/keys';
 import firebase from 'firebase/app';
+import { Alert } from 'react-native';
+import Item from '../components/Item';
 
-const spaceCollection = "spaces"
+const spaceRef = db.collection("spaces")
+const userRef = db.collection("users")
+const itemRef = db.collection("items")
 
-export async function createSpaces(spaceName, spaceType) {
+export async function createItems(currentUser, currentSpaceId, itemName, itemCategory, isShared) {
+    // console.log(currentUser)
     try {
-        db.collection(spaceCollection).doc(spaceName).set({name: spaceName, type: spaceType});
+        const currItem = itemRef.add({
+            category: itemCategory,
+            isShared: isShared,
+            name: itemName,
+            spaceID: currentSpaceId,
+            userID: "users/" + currentUser.uid
+        });
+        spaceRef.doc(currentSpaceId.substring(7))
+        .update({
+            items: firebase.firestore.FieldValue.arrayUnion((await currItem).path)
+        })
+        Alert.alert("Item Created");
+    } catch (e) {
+        Alert.alert(e.message)
+    }
+}
+
+export async function createSpaces(currentUser, spaceName, spaceType) {
+    try {
+        const currSpace = spaceRef.add({
+            name: spaceName,
+            spaceType: spaceType,
+            items: [],
+            user: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+        });
+        userRef.doc(currentUser.uid)
+        .update({
+            spaces: firebase.firestore.FieldValue.arrayUnion((await currSpace).path)
+        });
+        Alert.alert("Space created!");
     } catch (e) {
         alert(e.message);
     }
 }
 
-const userCollection = "users";
-
 export async function signUp(lastName, firstName, email, phone, password, confirmPassword) {
-    console.log("clicked");
     if (!lastName) {
         alert('First name is required');
     } else if (!firstName) {
@@ -32,12 +63,12 @@ export async function signUp(lastName, firstName, email, phone, password, confir
         try {
             await firebase.auth().createUserWithEmailAndPassword(email, password);
             const currUser = firebase.auth().currentUser;
-            console.log(currUser.uid);
-            db.collection(userCollection).doc(currUser.uid).set({
+            userRef.doc(currUser.uid).set({
                 email: currUser.email,
                 firstname: firstName,
                 lastname: lastName,
-                phone: phone
+                phone: phone,
+                spaces: []
             });
         } catch (e) {
             alert(e.message);
@@ -64,26 +95,6 @@ export async function logout() {
 export async function resetPassword(email) {
     try {
         await firebase.auth().resetPassword(email);
-    } catch (e) {
-        console.log(e);
-    }
-}
-
-export async function getItems() {
-    try {
-        const list = [];
-        await firebase.firestore().collection('items').
-        onSnapshot((snap) => {
-            snap.forEach((document) => {
-               var item = document.data().name
-            //    console.log('item:', item);
-               list.push(item);
-            //    console.log('list1', list);
-               return list;
-            })
-        })
-        // console.log('list', list);
-        return list;
     } catch (e) {
         console.log(e);
     }

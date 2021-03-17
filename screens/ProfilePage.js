@@ -4,6 +4,7 @@ import { Icon } from 'react-native-elements';
 import Input from "../components/Input";
 import Button from "../components/Button";
 import User from "../components/User";
+import { logout } from '../utils/firebaseMethod';
 
 export default function ProfilePage({navigation}) {
     return (
@@ -37,6 +38,13 @@ export default function ProfilePage({navigation}) {
                 />
             </View>  
             <View>
+                <View style={{marginBottom: 12}}>
+                    <Button
+                        name="Logout"
+                        color="#F2994A"
+                        onClick={() => logout()}
+                    />
+                </View>
                 <Button
                     name="Delete Account"
                     color="#EB5757"

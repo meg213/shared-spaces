@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef, Component} from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import Item from "../components/Item";
 import Button from "../components/Button";
-import { SearchBar } from 'react-native-elements';
+import { SearchBar } from '../components/SearchBar';
 import {AlphabetList} from 'react-native-section-alphabet-list';
 import { db } from '../config/keys';
 

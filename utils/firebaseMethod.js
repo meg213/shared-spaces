@@ -6,6 +6,7 @@ import Item from '../components/Item';
 const spaceRef = db.collection("spaces")
 const userRef = db.collection("users")
 const itemRef = db.collection("items")
+const listRef = db.collection("lists")
 
 export async function createItems(currentUser, currentSpaceId, itemName, itemCategory, isShared) {
     // console.log(currentUser)
@@ -22,6 +23,25 @@ export async function createItems(currentUser, currentSpaceId, itemName, itemCat
             items: firebase.firestore.FieldValue.arrayUnion((await currItem).path)
         })
         Alert.alert("Item Created");
+    } catch (e) {
+        Alert.alert(e.message)
+    }
+}
+
+export async function createList(currentSpaceId, listName, listCategory) {
+    try {
+        const currList = listRef.add({
+            name: listName,
+            category: listCategory,
+            spaceID: currentSpaceId
+        });
+
+        spaceRef.doc(currentSpaceId.substring(7))
+        .update({
+            lists: firebase.firestore.FieldValue.arrayUnion((await currList).path)
+        })
+        
+        Alert.alert("List Created");
     } catch (e) {
         Alert.alert(e.message)
     }

@@ -5,11 +5,13 @@ import Button from '../components/Button';
 import FormInput from '../components/FormInput';
 import { CheckBox } from 'react-native-elements'
 
-const CreateList= ({navigation}) => {
+const CreateList= ({route, navigation}) => {
     const [name, setName] = useState("");
     const [type, setType] = useState("");
     const [index, setIndex] = useState(0);
     const buttons = ['Home', 'Office', 'Other']
+    // TODO: how do I check for spaceID??
+    const currentSpaceId = route.params.spaceID;
 
     const updateIndex = (selectedIndex) => {
         setIndex(selectedIndex);
@@ -43,7 +45,8 @@ const CreateList= ({navigation}) => {
             </View>
             <Button
                 name="Create List"
-                onPress={() => {Alert.alert('Space Created')}}
+                // onPress={() => {Alert.alert('Space Created')}}
+                onPress={() => CreateList(currentSpaceId, name, type)}
             />
         </SafeAreaView>
         

@@ -81,14 +81,7 @@ export default function SpacePage({route, navigation}){
                             }}/>
                 </ScrollView>
             </View>
-<<<<<<< HEAD
-            <Button name="Add an Item"
-                    onClick={()=> {console.log('add item click test');
-                    navigation.navigate('AddItemScreen');
-                    }}/>
-=======
             <Button name="Add an Item" onClick={() => {navigation.navigate('CreateItem', {spaceID: route.params.data, currUser: route.params.currUser})}}/>
->>>>>>> hieubranch
             <View style={{
                 backgroundColor: 'white',
                 borderRadius: 12,

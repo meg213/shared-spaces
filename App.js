@@ -7,14 +7,3 @@ export default class App extends React.Component {
   }
 }
 
-<<<<<<< HEAD
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#D9DED8',
-//     alignItems: 'center',
-//     justifyContent: 'center'
-//   },
-// });
-=======
->>>>>>> hieubranch

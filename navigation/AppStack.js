@@ -10,13 +10,9 @@ import ProfilePage from './../screens/ProfilePage';
 import MySpacesPage from './../screens/MySpacesPage';
 import CreateSpaceScreen from './../screens/createSpaceScreen';
 import CreateList from './../screens/CreateList';
-<<<<<<< HEAD
-import AddItemScreen from './../screens/AddItemScreen';
-=======
 import CreateItem from '../screens/CreateItem';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { logout } from '../utils/firebaseMethod';
->>>>>>> hieubranch
 
 const Stack = createStackNavigator();
 

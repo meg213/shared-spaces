@@ -1,16 +1,20 @@
 import React, { useState, Component } from 'react';
-import { Alert } from 'react-native';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView, Button } from 'react-native';
 import FormButton from '../components/FormButton';
 import FormInput from '../components/FormInput';
 import { createSpaces } from '../utils/firebaseMethod';
+
 import { ButtonGroup } from 'react-native-elements';
 
-const CreateSpaceScreen = ({navigation}) => {
+const CreateSpaceScreen = ({route, navigation}) => {
+    //route params: currUser
     const [name, setName] = useState("");
     const [type, setType] = useState("");
+
+    //const currentUser = route.params.currUser;
+    
     const [index, setIndex] = useState(0);
-    const buttons = ['Home', 'Office', 'Other']
+    const buttons = ['Home', 'Office', 'Other'];
 
     const updateIndex = (selectedIndex) => {
         setIndex(selectedIndex);
@@ -50,7 +54,11 @@ const CreateSpaceScreen = ({navigation}) => {
             </View>
             <FormButton
                 buttonTitle="Create Space"
-                onPress={() => {Alert.alert('Space Created')}}
+                onPress={() => {
+                   // createSpaces(currentUser, name, type);
+                    navigation.navigate('MySpacesPage');
+                    }
+                }
             />
         </SafeAreaView>
         

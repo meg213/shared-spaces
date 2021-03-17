@@ -6,7 +6,7 @@ import FormInput from '../components/FormInput';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 
-export default AddItemScreen = ({navigation}) =>  {
+const AddItemScreen = ({navigation}) =>  {
     const [name, setName] = useState("");
     const [list, setList] = useState("");
     const [isEnabled, setIsEnabled] = useState(false);
@@ -87,6 +87,8 @@ export default AddItemScreen = ({navigation}) =>  {
     )
 
 }
+
+export default AddItemScreen;
 
 const styles = StyleSheet.create({
     container: {

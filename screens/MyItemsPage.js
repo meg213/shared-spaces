@@ -28,32 +28,43 @@ class SectionHeader extends Component {
 }
 
 const itemRef = db.collection('items');
+const spaceRef = db.collection('spaces');
+
 export default function MyItemsPage({route, navigation}) {
+  console.log(route)
+  //route params: spaceID
   const[myItems, setItems] = useState([])
-  
-  const items = route.params.data.spaceData.items
   const componentIsMounted = useRef(true);
+  const currSpaceID = route.params.data.substring(7);
+  const ownerID = route.params.currUser.uid;
 
   useEffect(() => {
     return () => {
       componentIsMounted.current = false;
     };
   }, []);
-  
+
   useEffect(() => {
-    async function getAllItemsBelongToCurrentUser(currentUser) {
-      var currentUserItems = [];
-      for (let i = 0; i < items.length; i++) {
-        let itemData = (await itemRef.doc(items[i].substring(6)).get()).data();
-        if (itemData.userID.substring(6) == currentUser.uid) {
-          currentUserItems.push(itemData)
+    const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {createItemsData(documentSnapshot)});
+    async function createItemsData(documentSnapshot) {
+        console.log(documentSnapshot.data())
+        var currentUserItems = documentSnapshot.data().items;
+        var data = []
+        for (let i = 0; i < currentUserItems.length; i++) {
+            let itemData = (await itemRef.doc(currentUserItems[i].substring(6)).get()).data();
+            console.log(itemData)
+            if (itemData == undefined) {
+                continue
+            }
+            if (itemData.userID.substring(6) == ownerID) {
+              data.push(itemData)
+            }
         }
-      }
-      if (componentIsMounted.current) {
-        setItems(currentUserItems)
-      }
+        if (componentIsMounted.current) {
+            setItems(data)
+        }
     }
-    getAllItemsBelongToCurrentUser(route.params.data.currentUser)
+    return () => subscriber;
   }, []);
 
   let data = []
@@ -69,13 +80,13 @@ export default function MyItemsPage({route, navigation}) {
                 <Text> {myItems.length} </Text>
             </View>
             <View style={styles.search}>
-            <SearchBar
-                    placeholder="Type Here..."
-                    // onChangeText={this.updateSearch}
-                    // value={search}
-                    lightTheme
-                />
-        </View>
+              <SearchBar
+                  placeholder="Type Here..."
+                  // onChangeText={this.updateSearch}
+                  // value={search}
+                  lightTheme
+              />
+            </View>
             <AlphabetList
               data = {data}
               renderSectionHeader={SectionHeader}

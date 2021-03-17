@@ -23,24 +23,23 @@ export default function MySpacesPage({navigation}){
       }, []);
       
     useEffect(() => {
-        async function createSpaceCard(currentUser) {
-            var spaces = [];
+        const subscriber = userRef.doc(currUser.uid).onSnapshot(documentSnapshot => {createSpaceCard(documentSnapshot)});
+        async function createSpaceCard(documentSnapshot) {
+            console.log(documentSnapshot.data())
+            var spaces = documentSnapshot.data().spaces;
             var names = [];
-    
-            await userRef.doc(currentUser.uid)
-            .get()
-            .then(documentSnapshot => spaces = documentSnapshot.get('spaces'));
             for (let i = 0; i < spaces.length; i++) {
-                let spaceData = (await spaceRef.doc(spaces[i].substring(7)).get()).data();
-                //SpaceData: name, spaceType, items, users
-                names.push({currentUser: currUser, spaceData: spaceData, spaceId: spaces[i]});
+                let spaceData = (await spaceRef.doc(documentSnapshot.data().spaces[i].substring(7)).get()).data();
+                if (spaceData == undefined) {
+                    continue
+                }
+                names.push({spaceData: spaceData, spaceId: spaces[i]});
             }
             if (componentIsMounted.current) {
                 setSpaceNames(names)
             }
         }
-
-        createSpaceCard(currUser)
+        return () => subscriber;
     }, []);
     return (
         <SafeAreaView style = {[styles.container]}>
@@ -71,11 +70,9 @@ export default function MySpacesPage({navigation}){
                 </Text>
             </View>
             <ScrollView>
-                <div>
-                    {spaceNames.map((space, index) => 
-                        <SpaceCard key={index} name={space.spaceData.name} onClick={() => {navigation.navigate('SpacePage', {data:space})}}/>
-                    )}
-                </div>
+                {spaceNames.map((space, index) => 
+                    <SpaceCard key={index} name={space.spaceData.name} onClick={() => {navigation.navigate('SpacePage', {data:space.spaceId, currUser:currUser})}}/>
+                )}
                 <Button
                     name = "Create Space"
                     onClick={() => {

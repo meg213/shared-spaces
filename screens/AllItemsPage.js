@@ -5,9 +5,6 @@ import Button from "../components/Button";
 import {AlphabetList} from 'react-native-section-alphabet-list';
 import { db } from '../config/keys';
 
-const itemRef = db.collection('items');
-const userRef = db.collection('users');
-
 class SectionHeader extends Component {
   render() {
     var textStyle = {
@@ -28,11 +25,16 @@ class SectionHeader extends Component {
   }
 }
 
+const itemRef = db.collection('items');
+const userRef = db.collection('users');
+const spaceRef = db.collection('spaces');
+
 export default function AllItemsPage({route, navigation}) {
-  const[allItems, setItems] = useState([])
-  
-  const items = route.params.data.spaceData.items
+  //route params: spaceID
+  console.log(route)
+  const[allItems, setItems] = useState([]);
   const componentIsMounted = useRef(true);
+  const currSpaceID = route.params.data.substring(7);
 
   useEffect(() => {
     return () => {
@@ -41,33 +43,37 @@ export default function AllItemsPage({route, navigation}) {
   }, []);
 
   useEffect(() => {
-    async function getAllItems() {
-      var all_items = [];
-      for (let i = 0; i < items.length; i++) {
-        let itemData = (await itemRef.doc(items[i].substring(6)).get()).data();
-        let owner = (await userRef.doc(itemData.userID.substring(6)).get()).data().firstname;
-        all_items.push({owner: owner, item: itemData})
-      }
-      // currentUserItems.sort((a, b) => {return a.name.toLowerCase().localeCompare(b.name.toLowerCase())})
-      if (componentIsMounted.current) {
-        setItems(all_items)
-      }
+    const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {createItemsData(documentSnapshot)});
+    async function createItemsData(documentSnapshot) {
+        console.log(documentSnapshot.data())
+        var all_items = documentSnapshot.data().items;
+        var data = [];
+        for (let i = 0; i < all_items.length; i++) {
+            let itemData = (await itemRef.doc(all_items[i].substring(6)).get()).data();
+            let owner = (await userRef.doc(itemData.userID.substring(6)).get()).data().firstname;
+            if (itemData == undefined || owner == undefined) {
+                continue
+            }
+            data.push({owner: owner, item: itemData})
+        }
+        if (componentIsMounted.current) {
+            setItems(data)
+        }
     }
-    getAllItems()
+    return () => subscriber;
   }, []);
 
   let data = []
   for (let i = 0; i < allItems.length; i++) {
     data.push({value: allItems[i].item.name, key: allItems[i]})
   }
-
-
+  
   return (
     <SafeAreaView style={styles.container}>
         <ScrollView scrollEventThrottle={16}>
             <View style={styles.header}>
                 <Text style={styles.headerTitle}>All Items</Text>
-                <Text>104 Total Items</Text>
+                <Text>{allItems.length} items</Text>
             </View>
             <AlphabetList
               data = {data}

@@ -8,8 +8,8 @@ import Button from "../components/Button";
 import RecentMessageShow from "../components/RecentMessageShow";
 
 export default function SpacePage({route, navigation}){
-    console.log(route)
-
+  console.log(route)
+  //route params: spaceId, currUser
   return (
     <SafeAreaView style={styles.container}>
         <View style ={{
@@ -69,7 +69,7 @@ export default function SpacePage({route, navigation}){
                             }}/>
                     <Card name="My Items"
                         onClick={() => {
-                            navigation.navigate('MyItemList', {data:route.params.data});
+                            navigation.navigate('MyItemList', {data:route.params.data, currUser: route.params.currUser});
                             }}/>
                     <Card name="Lists"
                         onClick={() => {
@@ -81,7 +81,7 @@ export default function SpacePage({route, navigation}){
                             }}/>
                 </ScrollView>
             </View>
-            <Button name="Add an Item" onClick={() => {navigation.navigate('CreateItem', {data:route.params.data})}}/>
+            <Button name="Add an Item" onClick={() => {navigation.navigate('CreateItem', {spaceID: route.params.data, currUser: route.params.currUser})}}/>
             <View style={{
                 backgroundColor: 'white',
                 borderRadius: 12,

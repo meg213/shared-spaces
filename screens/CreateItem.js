@@ -4,15 +4,14 @@ import FormButton from '../components/FormButton';
 import FormInput from '../components/FormInput';
 import { createItems } from '../utils/firebaseMethod';
 
-import firebase from 'firebase/app';
-
 export default function createItem({route, navigation}) {
+    //route params: spaceID, currUser
     const [name, setName] = useState("");
     const [category, setCategory] = useState("");
-    const [shared, setShared] = useState(false)
-    const toggleShared = () => setShared(previousState => ! previousState)
-    const currentUser = route.params.data.currentUser
-    const currentSpaceId = route.params.data.spaceId
+    const [shared, setShared] = useState(false);
+    const toggleShared = () => setShared(previousState => ! previousState);
+    const currentUser = route.params.currUser;
+    const currentSpaceId = route.params.spaceID;
 
     return(
         <SafeAreaView style = {[styles.container]}>

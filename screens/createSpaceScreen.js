@@ -7,6 +7,7 @@ import { createSpaces } from '../utils/firebaseMethod';
 import { ButtonGroup } from 'react-native-elements';
 
 const CreateSpaceScreen = ({route}) => {
+    //route params: currUser
     const [name, setName] = useState("");
     const [type, setType] = useState("");
 

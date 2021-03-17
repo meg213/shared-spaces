@@ -76,7 +76,10 @@ export default function SpacePage({navigation}) {
                             }}/>
                 </ScrollView>
             </View>
-            <Button name="Add an Item"/>
+            <Button name="Add an Item"
+                    onClick={()=> {console.log('add item click test');
+                    navigation.navigate('AddItemScreen');
+                    }}/>
             <View style={{
                 backgroundColor: 'white',
                 borderRadius: 12,

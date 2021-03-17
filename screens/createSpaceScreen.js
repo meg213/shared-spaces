@@ -7,11 +7,11 @@ import { createSpaces } from '../utils/firebaseMethod';
 import { ButtonGroup } from 'react-native-elements';
 
 const CreateSpaceScreen = ({route, navigation}) => {
-    //route params: currUser
+    // route params: currUser
     const [name, setName] = useState("");
     const [type, setType] = useState("");
 
-    //const currentUser = route.params.currUser;
+    const currentUser = route.params.currUser;
     
     const [index, setIndex] = useState(0);
     const buttons = ['Home', 'Office', 'Other'];
@@ -55,7 +55,7 @@ const CreateSpaceScreen = ({route, navigation}) => {
             <FormButton
                 buttonTitle="Create Space"
                 onPress={() => {
-                   // createSpaces(currentUser, name, type);
+                   createSpaces(currentUser, name, type);
                     navigation.navigate('MySpacesPage');
                     }
                 }

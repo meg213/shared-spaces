@@ -65,9 +65,9 @@ const styles = StyleSheet.create({
           style={({ pressed }) => [{opacity: pressed ? 0.6 : 1}]} >
           <Text style={styles.itemName}>{props.itemName}</Text>
           <View style={styles.subSectionGroup}>
-              {props.list ? <SubSection text={props.list} /> : null}  
-              {props.owner ? <SubSection text={props.owner}/> : null}  
-              {props.shared ? <SubSection text="Shared" image={logo}/> : null}  
+              {props.list ? <SubSection text={props.list} /> : null}
+              {props.owner? <SubSection text={props.owner}/> : null}
+              {props.shared? <SubSection text="Shared" image={logo}/> : null}
           </View>
         </Pressable>
       </View>

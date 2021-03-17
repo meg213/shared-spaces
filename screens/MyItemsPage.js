@@ -1,53 +1,104 @@
-import React from 'react';
+import React, {useState, useEffect, useRef, Component} from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
-import { Icon } from 'react-native-elements';
 import Item from "../components/Item";
-import User from "../components/User";
-import Card from "../components/Card";
 import Button from "../components/Button";
-import RecentMessageShow from "../components/RecentMessageShow"
 import { SearchBar } from 'react-native-elements';
+import {AlphabetList} from 'react-native-section-alphabet-list';
+import { db } from '../config/keys';
 
 
-export default function MyItemsPage({navigation}) {
+class SectionHeader extends Component {
+  render() {
+    var textStyle = {
+      textAlign:'center',
+      color:'#fff',
+      fontWeight:'700',
+      fontSize:16
+    };
+
+    var viewStyle = {
+      backgroundColor: '#ccc'
+    };
+    return (
+      <View style={viewStyle}>
+        <Text style={textStyle}>{this.props.title}</Text>
+      </View>
+    );
+  }
+}
+
+const itemRef = db.collection('items');
+const spaceRef = db.collection('spaces');
+
+export default function MyItemsPage({route, navigation}) {
+  console.log(route)
+  //route params: spaceID
+  const[myItems, setItems] = useState([])
+  const componentIsMounted = useRef(true);
+  const currSpaceID = route.params.data.substring(7);
+  const ownerID = route.params.currUser.uid;
+
+  useEffect(() => {
+    return () => {
+      componentIsMounted.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {createItemsData(documentSnapshot)});
+    async function createItemsData(documentSnapshot) {
+        console.log(documentSnapshot.data())
+        var currentUserItems = documentSnapshot.data().items;
+        var data = []
+        for (let i = 0; i < currentUserItems.length; i++) {
+            let itemData = (await itemRef.doc(currentUserItems[i].substring(6)).get()).data();
+            console.log(itemData)
+            if (itemData == undefined) {
+                continue
+            }
+            if (itemData.userID.substring(6) == ownerID) {
+              data.push(itemData)
+            }
+        }
+        if (componentIsMounted.current) {
+            setItems(data)
+        }
+    }
+    return () => subscriber;
+  }, []);
+
+  let data = []
+  for (let i = 0; i < myItems.length; i++) {
+    data.push({value: myItems[i].name, key: myItems[i]})
+  }
+
   return (
     <SafeAreaView style={styles.container}>
         <ScrollView scrollEventThrottle={16}>
             <View style={styles.header}>
                 <Text style={styles.headerTitle}>My Items</Text>
-                <Text>35 Items</Text>
+                <Text> {myItems.length} </Text>
             </View>
             <View style={styles.search}>
-            <SearchBar
-                    placeholder="Type Here..."
-                    // onChangeText={this.updateSearch}
-                    // value={search}
-                    lightTheme
+              <SearchBar
+                  placeholder="Type Here..."
+                  // onChangeText={this.updateSearch}
+                  // value={search}
+                  lightTheme
+              />
+            </View>
+            <AlphabetList
+              data = {data}
+              renderSectionHeader={SectionHeader}
+              renderCustomItem={(item) => (
+                <Item
+                  listPage
+                  itemName={item.value}
+                  list={item.key.category}
+                  shared={item.key.isShared}
+                  owner={null}
                 />
-        </View>
-            <Item
-              listPage
-              itemName="Blender"
-            />
-            <Item
-              listPage
-              itemName="Broom"
-            />
-            <Text style={styles.sortedLetters}>C</Text>
-            <Item
-              listPage
-              itemName="Chair"
-            />
-            <Text style={styles.sortedLetters}>L</Text>
-           <Item
-              listPage
-              itemName="Light"
-            />
-            <Item
-              listPage
-            />
-            <Item
-              listPage
+              )}
             />
             <Button
                 onClick={()=> {navigation.navigate('SpacePage')}}

@@ -5,9 +5,11 @@ import Item from "../components/Item";
 import User from "../components/User";
 import Card from "../components/Card";
 import Button from "../components/Button";
-import RecentMessageShow from "../components/RecentMessageShow"
+import RecentMessageShow from "../components/RecentMessageShow";
 
-export default function SpacePage({navigation}) {
+export default function SpacePage({route, navigation}){
+  console.log(route)
+  //route params: spaceId, currUser
   return (
     <SafeAreaView style={styles.container}>
         <View style ={{
@@ -15,12 +17,15 @@ export default function SpacePage({navigation}) {
             alignItems: 'center',  
             backgroundColor: '#F2F0EB',      
         }}>
-            <Icon style={{
-                justifyContent: 'center'
-            }} size={50} name='arrow-left' 
-             onPress={() => {
-                navigation.navigate('MySpacesPage');
-            }}
+            <Icon 
+                style={{
+                    justifyContent: 'center'
+                }} 
+                size={50} 
+                name='arrow-left' 
+                onPress={() => {
+                    navigation.navigate('MySpacesPage')
+                }}
             />
             <Text style={{
                 flex: 1,
@@ -67,7 +72,7 @@ export default function SpacePage({navigation}) {
                         icon='account-circle'
                         backgroundColor="#6FCF97"
                         onClick={() => {
-                            navigation.navigate('MyItemList');
+                            navigation.navigate('MyItemList', {data:route.params.data, currUser: route.params.currUser});
                             }}/>
                     <Card name="Lists"
                         icon='list'
@@ -79,10 +84,11 @@ export default function SpacePage({navigation}) {
                         icon='group'
                         backgroundColor="#F2994A"
                         onClick={() => {
-                            navigation.navigate('AllItems');
+                            navigation.navigate('AllItems', {data:route.params.data});
                             }}/>
                 </ScrollView>
             </View>
+            <Button name="Add an Item" onClick={() => {navigation.navigate('CreateItem', {spaceID: route.params.data, currUser: route.params.currUser})}}/>
             <View style={{
                 backgroundColor: 'white',
                 borderRadius: 12,
@@ -107,11 +113,6 @@ export default function SpacePage({navigation}) {
                 <Item/>
             </View>
         </ScrollView>
-        <View style={styles.buttonView}>
-            <Button 
-                width="75%"
-                name="Add an Item"/>
-        </View>
     </SafeAreaView>
   );
 }

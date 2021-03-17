@@ -4,7 +4,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import SignupScreen from '../screens/SignUpScreen';
 import LoginScreen from '../screens/LoginScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
-
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const Stack = createStackNavigator();
@@ -24,8 +23,8 @@ const AuthStack = () => {
         options={({navigation}) => ({
           title: '',
           headerStyle: {
-            backgroundColor: '#f9fafd',
-            shadowColor: '#f9fafd',
+            backgroundColor: '#F2F0EB',
+            shadowColor: '#F2F0EB',
             elevation: 0,
           },
           headerLeft: () => (
@@ -33,7 +32,7 @@ const AuthStack = () => {
               <FontAwesome.Button 
                 name="long-arrow-left"
                 size={25}
-                backgroundColor="#f9fafd"
+                backgroundColor="#F2F0EB"
                 color="#333"
                 onPress={() => navigation.navigate('Login')}
               />
@@ -47,8 +46,8 @@ const AuthStack = () => {
         options={({navigation}) => ({
           title: '',
           headerStyle: {
-            backgroundColor: '#f9fafd',
-            shadowColor: '#f9fafd',
+            backgroundColor: '#F2F0EB',
+            shadowColor: '#F2F0EB',
             elevation: 0,
           },
           headerLeft: () => (
@@ -56,7 +55,7 @@ const AuthStack = () => {
               <FontAwesome.Button 
                 name="long-arrow-left"
                 size={25}
-                backgroundColor="#f9fafd"
+                backgroundColor="#F2F0EB"
                 color="#333"
                 onPress={() => navigation.navigate('Login')}
               />

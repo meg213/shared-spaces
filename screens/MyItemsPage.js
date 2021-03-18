@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef, Component} from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import Item from "../components/Item";
 import Button from "../components/Button";
-import { SearchBar } from '../components/SearchBar';
+import Search from '../components/Search';
 import {AlphabetList} from 'react-native-section-alphabet-list';
 import { db } from '../config/keys';
 
@@ -80,12 +80,7 @@ export default function MyItemsPage({route, navigation}) {
                 <Text> {myItems.length} </Text>
             </View>
             <View style={styles.search}>
-              <SearchBar
-                  placeholder="Type Here..."
-                  // onChangeText={this.updateSearch}
-                  // value={search}
-                  lightTheme
-              />
+             <Search/>
             </View>
             <AlphabetList
               data = {data}

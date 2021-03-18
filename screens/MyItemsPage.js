@@ -80,7 +80,7 @@ export default function MyItemsPage({route, navigation}) {
                 <Text> {myItems.length} </Text>
             </View>
             <View style={styles.search}>
-             <Search/>
+              <Search/>
             </View>
             <AlphabetList
               data = {data}

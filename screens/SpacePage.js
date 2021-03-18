@@ -92,7 +92,7 @@ export default function SpacePage({route, navigation}){
             <View style={{
                 backgroundColor: 'white',
                 borderRadius: 12,
-                marginTop: 6
+                marginTop: 12
             }}>
                 <Text style={{
                     fontSize: 18, 

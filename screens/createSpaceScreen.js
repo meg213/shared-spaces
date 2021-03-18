@@ -1,6 +1,6 @@
 import React, { useState, Component } from 'react';
-import { ScrollView, StyleSheet, Text, View, SafeAreaView, Button } from 'react-native';
-import FormButton from '../components/FormButton';
+import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import Button from '../components/Button';
 import FormInput from '../components/FormInput';
 import { createSpaces } from '../utils/firebaseMethod';
 
@@ -29,7 +29,7 @@ const CreateSpaceScreen = ({route, navigation}) => {
                 </Text>
             </View>
             <View style={{
-                    padding:12
+                    paddingVertical:12
                 }}>
                 <FormInput
                     labelValue={name}
@@ -38,7 +38,7 @@ const CreateSpaceScreen = ({route, navigation}) => {
                     autoCapitalize="none"
                     autoCorrect={false}
                 />
-                <Text>Space Type</Text>
+                <Text style={styles.subText}>Space Type</Text>
                 <ButtonGroup
                     buttons={buttons}
                     selectedIndex={index}
@@ -50,16 +50,18 @@ const CreateSpaceScreen = ({route, navigation}) => {
                 />
             </View>
             <View>
-             <Text>Members</Text>
+             <Text style={styles.subText}>Members</Text>
             </View>
-            <FormButton
-                buttonTitle="Create Space"
-                onPress={() => {
-                   createSpaces(currentUser, name, type);
-                    navigation.navigate('MySpacesPage');
+            <View style={styles.buttonStyles}>
+                <Button
+                    name="Create Space"
+                    onClick={() => {
+                    createSpaces(currentUser, name, type);
+                        navigation.navigate('MySpacesPage');
+                        }
                     }
-                }
-            />
+                />
+            </View>
         </SafeAreaView>
         
     );
@@ -70,9 +72,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#F2F0EB',
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingTop:50
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        paddingTop:50,
+        marginHorizontal: 12
     },
     text: {
         fontSize: 30,
@@ -80,14 +83,18 @@ const styles = StyleSheet.create({
         fontWeight: "500",
         color: "#184254",
     },
+    subText: {
+        fontSize: 18,
+        color: '#4E7580'
+    },
     buttonGroupSelected: {
         backgroundColor: '#184254'
     },
     containerStyle: {
-        borderRadius: 6,
+        borderRadius: 16,
         height: 60,
         padding: 8,
-        width: "100%"
+        alignSelf: 'center',
     },
     buttonGroupStyle: {
         height: 30,
@@ -97,6 +104,11 @@ const styles = StyleSheet.create({
     innerBorderStyle: {
         color: '#FFFFFF',
         backgroundColor: '#FFFFFF'
+    },
+    buttonStyles: {
+        width: '100%',
+        position: 'absolute',
+        bottom: 38,
     }
 
 })

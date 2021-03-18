@@ -69,7 +69,7 @@ const CreateList= ({navigation}) => {
                     <CheckBox />
                 </View>
             </ScrollView>
-            <View style={{  alignSelf: 'center' }}>
+            <View style={{  alignSelf: 'center', position: 'absolute', bottom: 0, marginBottom: 18 }}>
                 <Button
                     name="Create List"
                     width="75%"

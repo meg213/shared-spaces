@@ -48,10 +48,12 @@ export default function createItem({route, navigation}) {
                     />
                 </View>
             </View>
-            <Button
-                name="Create Item"
-                onPress={() => createItems(currentUser, currentSpaceId, name, category, shared)}
-            />
+            <View style={{marginBottom: 50, width: '100%', position: 'absolute', bottom: 0}}>
+                <Button
+                    name="Create Item"
+                    onPress={() => createItems(currentUser, currentSpaceId, name, category, shared)}
+                />
+            </View>
         </SafeAreaView>
         
     );

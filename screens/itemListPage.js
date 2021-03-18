@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Item from "../components/Item";
 import Button from "../components/Button";
-import { SearchBar } from 'react-native-elements';
+import Search from '../components/Search';
 
 export default class ItemListPage extends React.Component {
   state = {
@@ -33,12 +33,7 @@ export default class ItemListPage extends React.Component {
             <Text style={styles.itemNumber}>24 Items</Text>
         </View>
         <View style={styles.search}>
-            <SearchBar
-                    placeholder="Type Here..."
-                    onChangeText={this.updateSearch}
-                    value={search}
-                    lightTheme
-                />
+            <Search/>
         </View>
         <ScrollView scrollEventThrottle={16}>
         <View>

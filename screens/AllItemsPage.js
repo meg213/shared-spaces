@@ -2,6 +2,7 @@ import React, {useState, useEffect, useRef, Component} from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import Item from "../components/Item";
 import Button from "../components/Button";
+import Search from '../components/Search';
 import {AlphabetList} from 'react-native-section-alphabet-list';
 import { db } from '../config/keys';
 
@@ -74,6 +75,9 @@ export default function AllItemsPage({route, navigation}) {
             <View style={styles.header}>
                 <Text style={styles.headerTitle}>All Items</Text>
                 <Text>{allItems.length} items</Text>
+            </View>
+            <View>
+              <Search/>
             </View>
             <AlphabetList
               data = {data}

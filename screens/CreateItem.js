@@ -1,6 +1,6 @@
 import React, { useState, Component } from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView, Switch} from 'react-native';
-import FormButton from '../components/FormButton';
+import Button from '../components/Button';
 import FormInput from '../components/FormInput';
 import { createItems } from '../utils/firebaseMethod';
 
@@ -21,7 +21,7 @@ export default function createItem({route, navigation}) {
                 </Text>
             </View>
             <View style={{
-                    padding:12
+                    paddingVertical:12
                 }}>
                 <FormInput
                     labelValue={name}
@@ -33,22 +33,23 @@ export default function createItem({route, navigation}) {
                 <FormInput
                     labelValue={category}
                     onChangeText={(itemCategory) => setCategory(itemCategory)}
-                    placeholderText="Category"
+                    placeholderText="Add to List"
                     autoCapitalize="none"
                     autoCorrect={false}
                 />
-                <Text>Is this item is shared?</Text>
-                <Switch
-                    trackColor={{ false: "#767577", true: "#81b0ff" }}
-                    thumbColor={shared ? "#f5dd4b" : "#f4f3f4"}
-                    ios_backgroundColor="#3e3e3e"
-                    onValueChange={toggleShared}
-                    value={shared}
-                />
-                
+                <View style={styles.shared}>
+                    <Text style={styles.subtext}>Is this item is shared?</Text>
+                    <Switch
+                        trackColor={{ false: "#000", true: "#79AAB5" }}
+                        thumbColor={ shared ? "#fff" : "#79AAB5"}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={toggleShared}
+                        value={shared}
+                    />
+                </View>
             </View>
-            <FormButton
-                buttonTitle="Create Item"
+            <Button
+                name="Create Item"
                 onPress={() => createItems(currentUser, currentSpaceId, name, category, shared)}
             />
         </SafeAreaView>
@@ -60,15 +61,26 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#F2F0EB',
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingTop:50
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        paddingTop:50,
+        marginHorizontal: 12,
     },
     text: {
         fontSize: 30,
         textAlign: "left",
         fontWeight: "500",
         color: "#184254",
+    },
+    subtext: {
+        fontSize: 18,
+        color: '#4E7580',
+    },
+    shared: {
+        paddingVertical: 12,
+        paddingHorizontal: 6,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
     buttonGroupSelected: {
         backgroundColor: '#184254'

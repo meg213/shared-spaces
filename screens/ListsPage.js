@@ -5,6 +5,7 @@ import List from "../components/List";
 import User from "../components/User";
 import Card from "../components/Card";
 import Button from "../components/Button";
+import Search from '../components/Search';
 import { SearchBar } from 'react-native-elements';
 
 export default function ListsPage({navigation}) {
@@ -13,6 +14,9 @@ export default function ListsPage({navigation}) {
         <View style={styles.header}>
                 <Text style={styles.headerTitle}>Lists</Text>
                 <Text>6 Lists</Text>
+            </View>
+            <View style={styles.search}>
+              <Search/>
             </View>
         <ScrollView scrollEventThrottle={16}>
             <List/>
@@ -58,5 +62,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     marginBottom: 40
+  },
+  search: {
+    width: '95%'
   }
 });

@@ -65,25 +65,7 @@ const AppStack = () => {
       <Stack.Screen
         name="MyItemList"
         component={MyItemsPage}
-        options={({navigation}) => ({
-          title: '',
-          headerStyle: {
-            backgroundColor: '#F2F0EB',
-            shadowColor: '#F2F0EB',
-            elevation: 0,
-          },
-          headerLeft: () => (
-            <View style={{marginLeft: 10}}>
-              <FontAwesome.Button 
-                name="long-arrow-left"
-                size={25}
-                backgroundColor="#F2F0EB"
-                color="#333"
-                onPress={() => navigation.navigate('SpacePage')}
-              />
-            </View>
-          ),
-        })}
+        options={{ headerShown: false}}
       />
       <Stack.Screen
         name="ListsList"
@@ -93,6 +75,7 @@ const AppStack = () => {
       <Stack.Screen
       name="AllItems"
       component={AllItemsPage}
+      options={{ headerShown: false}}
     /> 
       <Stack.Screen
       name="CreateSpaceScreen"

@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useRef, Component} from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import { Icon } from 'react-native-elements';
 import Item from "../components/Item";
 import Button from "../components/Button";
 import Search from '../components/Search';
@@ -74,11 +75,23 @@ export default function MyItemsPage({route, navigation}) {
 
   return (
     <SafeAreaView style={styles.container}>
-        <ScrollView scrollEventThrottle={16}>
+        <View style={styles.header}>
+          <Icon 
+            style={{
+                justifyContent: 'center'
+            }} 
+            size={50} 
+            name='arrow-left' 
+            onPress={() => {
+                navigation.navigate('MySpacesPage')
+            }}
+            />
             <View style={styles.header}>
-                <Text style={styles.headerTitle}>My Items</Text>
-                <Text> {myItems.length} </Text>
+              <Text style={styles.headerTitle}>My Items</Text>
+              <Text> {myItems.length} </Text>
             </View>
+        </View>
+        <ScrollView scrollEventThrottle={16}>
             <View style={styles.search}>
               <Search/>
             </View>
@@ -119,6 +132,12 @@ const styles = StyleSheet.create({
     width: '100%',
     borderBottomRightRadius: 12,
     borderBottomLeftRadius: 12,
+    flexDirection: 'row'
+  },
+  headerMain: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column'
   },
   headerTitle: {
       fontSize: 30,

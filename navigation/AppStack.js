@@ -171,7 +171,7 @@ const AppStack = () => {
               size={25}
               backgroundColor="#F2F0EB"
               color="#333"
-              onPress={() => navigation.navigate('CreateList')}
+              onPress={() => navigation.navigate('SpacePage')}
             />
           </View>
         ),

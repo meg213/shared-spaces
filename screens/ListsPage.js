@@ -17,7 +17,7 @@ export default function ListsPage({navigation}) {
             </View>
             <List/>
             <Button
-              onClick={()=> {navigation.navigate('SpacePage')}}
+              // onClick={()=> {navigation.navigate('SpacePage')}}
                 name="Create List"
                 onClick={()=> {navigation.navigate('CreateList')}}
             />

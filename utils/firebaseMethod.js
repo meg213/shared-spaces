@@ -28,25 +28,6 @@ export async function createItems(currentUser, currentSpaceId, itemName, itemCat
     }
 }
 
-export async function createList(currentSpaceId, listName, listCategory) {
-    try {
-        const currList = listRef.add({
-            name: listName,
-            category: listCategory,
-            spaceID: currentSpaceId
-        });
-
-        spaceRef.doc(currentSpaceId.substring(7))
-        .update({
-            lists: firebase.firestore.FieldValue.arrayUnion((await currList).path)
-        })
-        
-        Alert.alert("List Created");
-    } catch (e) {
-        Alert.alert(e.message)
-    }
-}
-
 export async function createSpaces(currentUser, spaceName, spaceType) {
     try {
         const currSpace = spaceRef.add({

@@ -4,6 +4,7 @@ import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
 import { CheckBox } from 'react-native-elements'
+import { createNewList } from '../utils/firebaseMethod';
 
 const CreateList= ({route, navigation}) => {
     const [name, setName] = useState("");
@@ -45,8 +46,7 @@ const CreateList= ({route, navigation}) => {
             </View>
             <Button
                 name="Create List"
-                // onPress={() => {Alert.alert('Space Created')}}
-                onPress={() => CreateList(currentSpaceId, name, type)}
+                onPress={() => {createNewList(currentSpaceId, name); navigation.navigate("ListsList")}}
             />
         </SafeAreaView>
         

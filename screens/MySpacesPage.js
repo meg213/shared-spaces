@@ -82,8 +82,6 @@ export default function MySpacesPage({navigation}){
             </ScrollView>
         </SafeAreaView>
     )
-        
-    
 }
 
 const styles = StyleSheet.create({

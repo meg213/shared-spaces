@@ -34,6 +34,7 @@ export async function createSpaces(currentUser, spaceName, spaceType) {
             name: spaceName,
             spaceType: spaceType,
             items: [],
+            lists: [],
             user: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
         });
         userRef.doc(currentUser.uid)
@@ -44,6 +45,26 @@ export async function createSpaces(currentUser, spaceName, spaceType) {
     } catch (e) {
         alert(e.message);
     }
+}
+
+export async function createNewList(currentSpaceID, listName) {
+    try {
+        const newList = listRef.add({
+            name: listName,
+            spaceID: currentSpaceID,
+            items: []
+        })
+
+        spaceRef.doc(currentSpaceID.substring(7)).update({
+            lists: firebase.firestore.FieldValue.arrayUnion((await newList).path)
+        })
+
+        Alert.alert("Created a new list!");
+    } catch (e) {
+        alert(e.message);
+    }
+
+
 }
 
 export async function signUp(lastName, firstName, email, phone, password, confirmPassword) {

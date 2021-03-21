@@ -32,9 +32,7 @@ class SectionHeader extends Component {
 }
 
 export default function ListsPage({navigation, route}) {
-  console.log(route);
-
-  const spaceRef = db.collection('spaces');
+    const spaceRef = db.collection('spaces');
   const listRef = db.collection('lists');
   const currSpaceID = route.params.data.substring(7);
 
@@ -56,6 +54,7 @@ export default function ListsPage({navigation, route}) {
 
       for (let i = 0; i < currentSpaceLists.length; i++) {
         let listData = (await listRef.doc(currentSpaceLists[i].substring(6)).get()).data();
+        console.log(listData)
         if (listData == undefined) {
           continue;
         }
@@ -84,22 +83,22 @@ export default function ListsPage({navigation, route}) {
                 {/* <Text>6 Lists</Text> */}
             </View>
 
+            <Button
+              // onClick={()=> {navigation.navigate('SpacePage')}}
+                name="Create List"
+                onClick={()=> {navigation.navigate("CreateListScreen", {spaceID:route.params.data})}}
+            />
+
             <AlphabetList
               data = {data}
               renderSectionHeader={SectionHeader}
               renderCustomItem={(item) => (
                 <List
                   listName={item.value}
-                  numItems={items.key.number}
+                  numItems={item.key.number}
                   // TODO: Create custom icon for lists
                 />
               )}
-            />
-
-            <Button
-              // onClick={()=> {navigation.navigate('SpacePage')}}
-                name="Create List"
-                onClick={()=> {navigation.navigate('CreateList')}}
             />
         </ScrollView>
     </SafeAreaView>

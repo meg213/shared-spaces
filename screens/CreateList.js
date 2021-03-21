@@ -1,7 +1,8 @@
 import React, { useState, Component } from 'react';
 import { Alert } from 'react-native';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
-import Button from '../components/Button';
+// import Button from '../components/Button';
+import FormButton from '../components/FormButton';
 import FormInput from '../components/FormInput';
 import { CheckBox } from 'react-native-elements'
 import { createNewList } from '../utils/firebaseMethod';
@@ -11,7 +12,6 @@ const CreateList= ({route, navigation}) => {
     const [type, setType] = useState("");
     const [index, setIndex] = useState(0);
     const buttons = ['Home', 'Office', 'Other']
-    // TODO: how do I check for spaceID??
     const currentSpaceId = route.params.spaceID;
 
     const updateIndex = (selectedIndex) => {
@@ -21,18 +21,16 @@ const CreateList= ({route, navigation}) => {
 
     return(
         <SafeAreaView style = {[styles.container]}>
-            <View>
-                <Text style = {[styles.text]}>
+            <Text style = {[styles.text]}>
                     Create a List
                 </Text>
-            </View>
             <View style={{
                     paddingVertical:12
-                }}>
+            }}>
                 <FormInput
                     labelValue={name}
-                    onChangeText={(spaceName) => setName(spaceName)}
-                    placeholderText="List Name"
+                    onChangeText={(name) => setName(name)}
+                    placeholderText="Type List Name Here"
                     autoCapitalize="none"
                     autoCorrect={false}
                 />
@@ -40,16 +38,18 @@ const CreateList= ({route, navigation}) => {
             <View style={styles.itemList}>
                 <Text style={styles.itemTitle}>Add Items</Text>
                 {/* number of checkboxes per number of items */}
-                <CheckBox
+                {/* <CheckBox
 
-                />
+                /> */}
             </View>
-            <Button
-                name="Create List"
-                onPress={() => {createNewList(currentSpaceId, name); navigation.navigate("ListsList")}}
+            <FormButton
+                buttonTitle="Create List"
+                onPress={() => { 
+                    createNewList(currentSpaceId, name); 
+                    navigation.navigate("ListsList")
+                }}
             />
         </SafeAreaView>
-        
     );
 }
 export default CreateList;

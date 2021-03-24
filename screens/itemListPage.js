@@ -29,11 +29,20 @@ export default class ItemListPage extends React.Component {
     return (
      <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-            <Text style={styles.headerTitle}>My Items</Text>
-            <Text style={styles.itemNumber}>24 Items</Text>
-        </View>
-        <View style={styles.search}>
-            <Search/>
+          <Icon 
+            style={{
+                justifyContent: 'center'
+            }} 
+            size={50} 
+            name='arrow-left' 
+            onPress={() => {
+                navigation.navigate('MySpacesPage')
+            }}
+            />
+            <View style={styles.headerMain}>
+              <Text style={styles.headerTitle}>Shared Items</Text>
+              <Text> 2</Text>
+            </View>
         </View>
         <ScrollView scrollEventThrottle={16}>
         <View>
@@ -62,12 +71,18 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#FFFFFF',
-    height: 90,
+    height: 80,
     width: '100%',
-    borderBottomRightRadius: 16,
-    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 12,
+    borderBottomLeftRadius: 12,
+    flexDirection: 'row'
+  },
+  headerMain: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    marginLeft: 60
   },
   headerTitle: {
       fontSize: 30,

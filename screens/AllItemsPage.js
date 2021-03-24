@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef, Component} from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import Item from "../components/Item";
+import { Icon } from 'react-native-elements';
 import Button from "../components/Button";
 import Search from '../components/Search';
 import {AlphabetList} from 'react-native-section-alphabet-list';
@@ -71,11 +72,23 @@ export default function AllItemsPage({route, navigation}) {
   
   return (
     <SafeAreaView style={styles.container}>
-        <ScrollView scrollEventThrottle={16}>
-            <View style={styles.header}>
-                <Text style={styles.headerTitle}>All Items</Text>
-                <Text>{allItems.length} items</Text>
+        <View style={styles.header}>
+          <Icon 
+            style={{
+                justifyContent: 'center'
+            }} 
+            size={50} 
+            name='arrow-left' 
+            onPress={() => {
+                navigation.navigate('MySpacesPage')
+            }}
+            />
+            <View style={styles.headerMain}>
+              <Text style={styles.headerTitle}>All Items</Text>
+              <Text> 2</Text>
             </View>
+        </View>
+        <ScrollView scrollEventThrottle={16}>
             <View>
               <Search/>
             </View>
@@ -109,17 +122,23 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#FFFFFF',
     height: 80,
     width: '100%',
     borderBottomRightRadius: 12,
     borderBottomLeftRadius: 12,
+    flexDirection: 'row'
+  },
+  headerMain: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    marginLeft: 85
   },
   headerTitle: {
       fontSize: 30,
       color: '#184254',
       fontWeight: '500',
       paddingBottom: 12,
-  }
+  },
 });

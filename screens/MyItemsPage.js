@@ -86,7 +86,7 @@ export default function MyItemsPage({route, navigation}) {
                 navigation.navigate('MySpacesPage')
             }}
             />
-            <View style={styles.header}>
+            <View style={styles.headerMain}>
               <Text style={styles.headerTitle}>My Items</Text>
               <Text> {myItems.length} </Text>
             </View>
@@ -126,7 +126,6 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#FFFFFF',
     height: 80,
     width: '100%',
@@ -137,7 +136,8 @@ const styles = StyleSheet.create({
   headerMain: {
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    marginLeft: 85
   },
   headerTitle: {
       fontSize: 30,

@@ -12,9 +12,21 @@ export default function ListsPage({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-                <Text style={styles.headerTitle}>Lists</Text>
-                <Text>6 Lists</Text>
+          <Icon 
+            style={{
+                justifyContent: 'center'
+            }} 
+            size={50} 
+            name='arrow-left' 
+            onPress={() => {
+                navigation.navigate('MySpacesPage')
+            }}
+            />
+            <View style={styles.headerMain}>
+              <Text style={styles.headerTitle}>Lists</Text>
+              <Text> 2</Text>
             </View>
+        </View>
             <View style={styles.search}>
               <Search/>
             </View>
@@ -42,12 +54,18 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#FFFFFF',
     height: 80,
     width: '100%',
     borderBottomRightRadius: 12,
     borderBottomLeftRadius: 12,
+    flexDirection: 'row'
+  },
+  headerMain: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    marginLeft: 110
   },
   headerTitle: {
       fontSize: 30,

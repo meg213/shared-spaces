@@ -66,7 +66,7 @@ export default function SpacePage({route, navigation}){
                     <Card name="Shared"
                         onClick={() => {
                             console.log('card click test');
-                            navigation.navigate('ItemList');
+                            navigation.navigate('SharedList');
                             }}/>
                     <Card name="My Items"
                         icon='account-circle'

@@ -6,7 +6,6 @@ import User from "../components/User";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import Search from '../components/Search';
-import { SearchBar } from 'react-native-elements';
 
 export default function ListsPage({navigation}) {
   return (

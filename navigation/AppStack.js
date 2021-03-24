@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { View, Button } from 'react-native'; 
 import { createStackNavigator } from '@react-navigation/stack';
 import SpacePage from './../screens/SpacePage';
-import ItemListPage from './../screens/itemListPage';
+import SharedPage from './../screens/SharedListPage';
 import MyItemsPage from './../screens/MyItemsPage';
 import ListsPage from './../screens/ListsPage';
 import AllItemsPage from './../screens/AllItemsPage';
@@ -58,8 +58,8 @@ const AppStack = () => {
         options={{ headerShown: false}}
       />
       <Stack.Screen
-        name="ItemList"
-        component={ItemListPage}
+        name="SharedList"
+        component={SharedPage}
         options={{ headerShown: false}}
       />
       <Stack.Screen

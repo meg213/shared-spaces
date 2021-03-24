@@ -1,32 +1,25 @@
-import React from 'react';
+import React, {useState, useEffect, useRef, Component} from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Item from "../components/Item";
 import Button from "../components/Button";
 import Search from '../components/Search';
 
-export default class ItemListPage extends React.Component {
-  state = {
-    search: '',
-  };
 
-  updateSearch = (search) => {
-    this.setState({ search });
-  };
+export default function SharedPage({navigation}) {
+  const [search, setSearch] = useState("");
 
-    itemList = (list) => {
+  const itemList = (list) => {
         //this is where all the items would be sorted
-     list.sort(function(a,b){
+    list.sort(function(a,b){
         if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
         if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
         return 0
         });
-    };
-
-  render() {
-    const { search } = this.state;
+  };
 
     return (
+
      <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <Icon 
@@ -44,6 +37,9 @@ export default class ItemListPage extends React.Component {
               <Text> 2</Text>
             </View>
         </View>
+        <View style={styles.search}>
+              <Search/>
+        </View>
         <ScrollView scrollEventThrottle={16}>
         <View>
             <Item
@@ -59,7 +55,6 @@ export default class ItemListPage extends React.Component {
         </ScrollView>
     </SafeAreaView> 
     );
-  }
 }
 
 const styles = StyleSheet.create({

@@ -6,6 +6,7 @@ import Item from '../components/Item';
 const spaceRef = db.collection("spaces")
 const userRef = db.collection("users")
 const itemRef = db.collection("items")
+const listRef = db.collection("lists")
 
 export async function createItems(currentUser, currentSpaceId, itemName, itemCategory, isShared) {
     // console.log(currentUser)
@@ -33,6 +34,7 @@ export async function createSpaces(currentUser, spaceName, spaceType) {
             name: spaceName,
             spaceType: spaceType,
             items: [],
+            lists: [],
             user: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
         });
         userRef.doc(currentUser.uid)
@@ -40,6 +42,29 @@ export async function createSpaces(currentUser, spaceName, spaceType) {
             spaces: firebase.firestore.FieldValue.arrayUnion((await currSpace).path)
         });
         Alert.alert("Space created!");
+    } catch (e) {
+        alert(e.message);
+    }
+}
+
+export async function createNewList(currentSpaceID, listName) {
+    try {
+        console.log("Creating new list!")
+
+        const newList = listRef.add({
+            name: listName,
+            spaceID: currentSpaceID,
+            items: [],
+            image: listImage
+        })
+
+        console.log(newList)
+
+        spaceRef.doc(currentSpaceID.substring(7)).update({
+            lists: firebase.firestore.FieldValue.arrayUnion((await newList).path)
+        })
+
+        Alert.alert("Created a new list!");
     } catch (e) {
         alert(e.message);
     }

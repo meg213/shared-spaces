@@ -3,13 +3,19 @@ import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 import { signIn } from '../utils/firebaseMethod';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   
   return (
-    <View style={styles.container}>
+    <KeyboardAwareScrollView 
+      resetScrollToCoords={{ x: 0, y: 0 }}
+      contentContainerStyle={styles.container}
+      scrollEnabled={true}
+      enableOnAndroid
+    >
       <Image
         source={require('../assets/logo.png')}
         style={styles.logo}
@@ -51,7 +57,7 @@ const LoginScreen = ({navigation}) => {
           <Text style={[styles.navButtonText, {fontWeight: '600'}]}> Create here</Text>
         </Text>
       </TouchableOpacity>
-    </View>
+    </KeyboardAwareScrollView>
   );
 };
 

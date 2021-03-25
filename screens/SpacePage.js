@@ -9,45 +9,56 @@ import RecentMessageShow from "../components/RecentMessageShow";
 import { db } from '../config/keys';
 import { FlatList } from 'react-native';
 import List from '../components/List';
-import { cos } from 'react-native-reanimated';
+import { cos, max } from 'react-native-reanimated';
 import { AlphabetList } from 'react-native-section-alphabet-list';
 
+// References to Firebase collections
 const itemRef = db.collection('items');
 const userRef = db.collection('users');
 const spaceRef = db.collection('spaces');
 
 export default function SpacePage({route, navigation}){
-  //route params: spaceId, currUser
-
-  const[recentItems, setItems] = useState([]);
-  const componentIsMounted = useRef(true);
+  // Tracks what Space we're in using "route"
   const currSpaceID = route.params.data.substring(7);
 
+  // Items array in reverse order; recently added items are first in array
+  const[recentItems, setItems] = useState([]);
+  const componentIsMounted = useRef(true);
+  
   useEffect(() => {
     return () => {
       componentIsMounted.current = false;
     };
   }, []);
 
+  // Updates recentItems on every new item instance
   useEffect(() => {
     const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {updateRecentItems(documentSnapshot)});
     async function updateRecentItems(documentSnapshot) {
+        // Return the Space data for the snapshot
         var space = documentSnapshot.data();
-        var items = space.items.reverse();
-
-        var recent_items_in_order = [];
+        // Return the items lists, not in chronological order
+        var items = space.items;
+        // Empty array of items in order
+        var data = [];
 
         for (let i = 0; i < items.length; i++) {
+            // Get item reference
             let itemData = (await itemRef.doc(items[i].substring(6)).get()).data();
+            console.log(itemData)
+            // Get corresponding item owner reference
             let owner = (await userRef.doc(itemData.userID.substring(6)).get()).data().firstname;
+            // Abort if either data is undefined
             if (itemData == undefined || owner == undefined) {
                 continue
             }
-            recent_items_in_order.push({owner: owner, item: itemData});
+
+            // Else push owner and item key-value pair into data
+            data.push({item: itemData, owner: owner});
         }
 
         if (componentIsMounted.current) {
-            setItems(recent_items_in_order)
+            setItems(data);
         }
     }
     return () => subscriber;
@@ -55,12 +66,21 @@ export default function SpacePage({route, navigation}){
 
   let recent_items_stack = []   // Stack representing the recent items page
   const max_items_shown = 5;    // How many items we want to show in "Recently Added Items"
-  for (let i = recentItems.length - 1; i > -1; i--) {
-    recent_items_stack.push({key: recentItems[i], value: recentItems[i].item.name})
-    
-    if (recent_items_stack.length > max_items_shown) {
-        recent_items_stack.shift();      // Remove first element of the array, in queue fashion
-        break;                         // Recent items stack is filled, exit loop
+
+  for (let i = recentItems.length - 1; i >= 0; i--) {
+    // Push most recent items onto the stack 
+    // Track total number of items added
+    let count = recent_items_stack.push({value: recentItems[i].item.name, key: recentItems[i]});
+
+    // Compare total items to constant maximum
+    if (count == max_items_shown) {
+        // Exit as we equal maximum items shown
+        break;
+    } else if (count > max_items_shown) {
+        // Delete the last item (which is least recently added)
+        recent_items_stack.pop();
+        // Exit as we equal maximum items shown
+        break;
     }
   }
 
@@ -152,11 +172,11 @@ export default function SpacePage({route, navigation}){
                     Recently Added Items 
                 </Text>
 
+                {/* List Containing Recently Added Items */}
                 <AlphabetList
                     data = {recent_items_stack}
                     renderCustomItem={(item) => (
                       <Item 
-                        listPage
                         itemName={item.value}
                         list={item.key.item.category}
                         owner={item.key.owner}

@@ -62,10 +62,6 @@ const CreateSpaceScreen = ({route, navigation}) => {
                     }
                 />
             </View>
-            <FormButton
-                buttonTitle="Create Space"
-                onPress={() => {createSpaces(currentUser, name, type); navigation.navigate('MySpacesPage')}}
-            />
         </SafeAreaView>
         
     );

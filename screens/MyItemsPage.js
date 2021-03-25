@@ -83,7 +83,7 @@ export default function MyItemsPage({route, navigation}) {
             size={50} 
             name='arrow-left' 
             onPress={() => {
-                navigation.navigate('MySpacesPage')
+              navigation.navigate('SpacePage')
             }}
             />
             <View style={styles.headerMain}>

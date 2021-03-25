@@ -83,7 +83,7 @@ export default function ListsPage({navigation, route}) {
             size={50} 
             name='arrow-left' 
             onPress={() => {
-                navigation.navigate('MySpacesPage')
+                navigation.navigate('SpacePage')
             }}
             />
             <View style={styles.headerMain}>
@@ -101,7 +101,6 @@ export default function ListsPage({navigation, route}) {
         <View style={styles.fab}>
             <Button
                 width='80%'
-              // onClick={()=> {navigation.navigate('SpacePage')}}
                 name="Create List"
                 onClick={()=> {navigation.navigate("CreateListScreen", {spaceID:route.params.data})}}
             />

@@ -1,8 +1,9 @@
-import React, { useState, Component } from 'react';
-import { ScrollView, StyleSheet, Text, View, SafeAreaView, Switch} from 'react-native';
+import React, { useState, Component, useEffect } from 'react';
+import { ScrollView, StyleSheet, Text, View, SafeAreaView, Switch, Image} from 'react-native';
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
 import { createItems } from '../utils/firebaseMethod';
+import * as ImagePicker from 'expo-image-picker'
 
 export default function createItem({route, navigation}) {
     //route params: spaceID, currUser
@@ -12,6 +13,33 @@ export default function createItem({route, navigation}) {
     const toggleShared = () => setShared(previousState => ! previousState);
     const currentUser = route.params.currUser;
     const currentSpaceId = route.params.spaceID;
+    const [image, setImage] = useState(null);    //image needs to be connected to backend
+
+    useEffect(() => {
+        (async () => {
+          if (Platform.OS !== 'web') {
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (status !== 'granted') {
+              alert('Sorry, we need camera roll permissions to make this work!');
+            }
+          }
+        })();
+      }, []);
+    
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowEditing: true,
+            aspect: [4,3],
+            quality: 1,
+        });
+
+        console.log(result);
+
+        if (!result.cancelled) {
+            setImage(result.uri);
+        }
+    }
 
     return(
         <SafeAreaView style = {[styles.container]}>
@@ -19,6 +47,12 @@ export default function createItem({route, navigation}) {
                 <Text style = {[styles.text]}>
                     Add Item
                 </Text>
+            </View>
+            <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 4 }}>
+                {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+                <View style={{ paddingVertical:6}} />
+                <Button name="Upload a Photo of Item" onClick={pickImage} />
+                
             </View>
             <View style={{
                     paddingVertical:12

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect, useRef, Component} from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { Icon } from 'react-native-elements';
 import Item from "../components/Item";
@@ -6,10 +6,84 @@ import User from "../components/User";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import RecentMessageShow from "../components/RecentMessageShow";
+import { db } from '../config/keys';
+import { FlatList } from 'react-native';
+import List from '../components/List';
+import { cos, max } from 'react-native-reanimated';
+import { AlphabetList } from 'react-native-section-alphabet-list';
+
+// References to Firebase collections
+const itemRef = db.collection('items');
+const userRef = db.collection('users');
+const spaceRef = db.collection('spaces');
 
 export default function SpacePage({route, navigation}){
-  console.log(route)
-  //route params: spaceId, currUser
+  // Tracks what Space we're in using "route"
+  const currSpaceID = route.params.data.substring(7);
+
+  // Items array in reverse order; recently added items are first in array
+  const[recentItems, setItems] = useState([]);
+  const componentIsMounted = useRef(true);
+  
+  useEffect(() => {
+    return () => {
+      componentIsMounted.current = false;
+    };
+  }, []);
+
+  // Updates recentItems on every new item instance
+  useEffect(() => {
+    const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {updateRecentItems(documentSnapshot)});
+    async function updateRecentItems(documentSnapshot) {
+        // Return the Space data for the snapshot
+        var space = documentSnapshot.data();
+        // Return the items lists, not in chronological order
+        var items = space.items;
+        // Empty array of items in order
+        var data = [];
+
+        for (let i = 0; i < items.length; i++) {
+            // Get item reference
+            let itemData = (await itemRef.doc(items[i].substring(6)).get()).data();
+            console.log(itemData)
+            // Get corresponding item owner reference
+            let owner = (await userRef.doc(itemData.userID.substring(6)).get()).data().firstname;
+            // Abort if either data is undefined
+            if (itemData == undefined || owner == undefined) {
+                continue
+            }
+
+            // Else push owner and item key-value pair into data
+            data.push({item: itemData, owner: owner});
+        }
+
+        if (componentIsMounted.current) {
+            setItems(data);
+        }
+    }
+    return () => subscriber;
+  }, []);
+
+  let recent_items_stack = []   // Stack representing the recent items page
+  const max_items_shown = 5;    // How many items we want to show in "Recently Added Items"
+
+  for (let i = recentItems.length - 1; i >= 0; i--) {
+    // Push most recent items onto the stack 
+    // Track total number of items added
+    let count = recent_items_stack.push({value: recentItems[i].item.name, key: recentItems[i]});
+
+    // Compare total items to constant maximum
+    if (count == max_items_shown) {
+        // Exit as we equal maximum items shown
+        break;
+    } else if (count > max_items_shown) {
+        // Delete the last item (which is least recently added)
+        recent_items_stack.pop();
+        // Exit as we equal maximum items shown
+        break;
+    }
+  }
+
   return (
     <SafeAreaView style={styles.container}>
         <View style ={{
@@ -78,7 +152,7 @@ export default function SpacePage({route, navigation}){
                         icon='list'
                         backgroundColor="#D9DED8"
                         onClick={() => {
-                            navigation.navigate('ListsList');
+                            navigation.navigate('ListsList', {data:route.params.data, currUser: route.params.currUser});
                             }}/>
                     <Card name="All Items"
                         icon='group'
@@ -104,13 +178,19 @@ export default function SpacePage({route, navigation}){
                 }}> 
                     Recently Added Items 
                 </Text>
-                <Item
-                    onClick={()=> {console.log('item click test')}}
+
+                {/* List Containing Recently Added Items */}
+                <AlphabetList
+                    data = {recent_items_stack}
+                    renderCustomItem={(item) => (
+                      <Item 
+                        itemName={item.value}
+                        list={item.key.item.category}
+                        owner={item.key.owner}
+                        shared={item.key.item.isShared}
+                      />
+                    )}
                 />
-                <Item/>
-                <Item/>
-                <Item/>
-                <Item/>
             </View>
         </ScrollView>
     </SafeAreaView>

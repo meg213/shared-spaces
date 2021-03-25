@@ -6,13 +6,18 @@ import FormInput from '../components/FormInput';
 import CheckBox from '../components/Checkbox';
 import { BottomSheet , Icon} from 'react-native-elements'
 import { getItems } from '../utils/firebaseMethod';
+// import { CheckBox } from 'react-native-elements'
+import { createNewList } from '../utils/firebaseMethod';
 
-
-const CreateList= ({navigation}) => {
+const CreateList= ({route, navigation}) => {
     const [name, setName] = useState("");
     const [icon, setIcon] = useState(require('../assets/kitchen.png'))
     const [isVisible, setIsVisible] = useState(false);
 
+    const [type, setType] = useState("");
+    const [index, setIndex] = useState(0);
+    const buttons = ['Home', 'Office', 'Other']
+    const currentSpaceId = route.params.spaceID;
 
     const ImageItem = (props) => {
         return (
@@ -107,7 +112,6 @@ const CreateList= ({navigation}) => {
                 </View>
             </BottomSheet>
         </SafeAreaView>
-        
     );
 }
 export default CreateList;

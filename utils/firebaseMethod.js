@@ -54,8 +54,7 @@ export async function createNewList(currentSpaceID, listName) {
         const newList = listRef.add({
             name: listName,
             spaceID: currentSpaceID,
-            items: [],
-            image: listImage
+            items: []
         })
 
         console.log(newList)

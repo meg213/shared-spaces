@@ -92,7 +92,7 @@ export default function MyItemsPage({route, navigation}) {
             </View>
         </View>
         <ScrollView scrollEventThrottle={16}>
-            <View style={styles.search}>
+            <View>
               <Search/>
             </View>
             <AlphabetList

@@ -3,6 +3,7 @@ import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 import { signUp } from '../utils/firebaseMethod';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const SignupScreen = ({navigation}) => {
   const [lname, setLName] = useState();
@@ -12,21 +13,18 @@ const SignupScreen = ({navigation}) => {
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
 
-  return (
-    <View style={styles.container}>
+  return (     
+
+    <KeyboardAwareScrollView 
+      resetScrollToCoords={{ x: 0, y: 0 }}
+      contentContainerStyle={styles.container}
+      scrollEnabled={false}
+      enableOnAndroid
+      extraHeight={180}   // TODO: Is there a better way than just adding random pixels??
+    >
+
       <Text style={styles.text}>Let's get started</Text>
       <Text style={styles.subtext}>Tell us a bit about yourself</Text>
-
-
-      {/* <FormInput
-        labelValue={fname}
-        onChangeText={(fname) => setFirstName(fname)}
-        placeholderText="First Name"
-        iconType="user"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        autoCorrect={false}
-      /> */}
 
       <FormInput
         labelValue={fname}
@@ -34,59 +32,59 @@ const SignupScreen = ({navigation}) => {
         placeholderText="first name"
         autoCapitalize="none"
         autoCorrect={false}
-      />
+        />
 
-      <FormInput
-        labelValue={lname}
-        onChangeText={(userLastName) => setLName(userLastName)}
-        placeholderText="last name"
-        autoCapitalize="none"
-        autoCorrect={false}
-      />
+        <FormInput
+          labelValue={lname}
+          onChangeText={(userLastName) => setLName(userLastName)}
+          placeholderText="last name"
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
 
-      <FormInput
-        labelValue={email}
-        onChangeText={(userEmail) => setEmail(userEmail)}
-        placeholderText="Email"
-        iconType="user"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        autoCorrect={false}
-      />
+        <FormInput
+          labelValue={email}
+          onChangeText={(userEmail) => setEmail(userEmail)}
+          placeholderText="Email"
+          iconType="user"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
 
-      <FormInput
-        labelValue={phone}
-        onChangeText={(phoneNumber) => setPhone(phoneNumber)}
-        placeholderText="phone"
-        autoCapitalize="none"
-        autoCorrect={false}
-      />
+        <FormInput
+          labelValue={phone}
+          onChangeText={(phoneNumber) => setPhone(phoneNumber)}
+          placeholderText="phone"
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
 
-      <FormInput
-        labelValue={password}
-        onChangeText={(userPassword) => setPassword(userPassword)}
-        placeholderText="Password"
-        iconType="lock"
-        secureTextEntry={true}
-      />
-      
-      <FormInput
-        labelValue={confirmPassword}
-        onChangeText={(confirmPassword) => { 
-          // do the passwords match? In future replace console log with modal
-          setConfirmPassword(confirmPassword);
-          console.log(confirmPassword);
-          console.log(password)
-          password === confirmPassword ? setPassword(confirmPassword) : console.log('mismatch password')}}
-        placeholderText="Confirm Password"
-        iconType="lock"
-        secureTextEntry={true}
-      />
+        <FormInput
+          labelValue={password}
+          onChangeText={(userPassword) => setPassword(userPassword)}
+          placeholderText="Password"
+          iconType="lock"
+          secureTextEntry={true}
+        />
+        
+        <FormInput
+          labelValue={confirmPassword}
+          onChangeText={(confirmPassword) => { 
+            // do the passwords match? In future replace console log with modal
+            setConfirmPassword(confirmPassword);
+            console.log(confirmPassword);
+            console.log(password)
+            password === confirmPassword ? setPassword(confirmPassword) : console.log('mismatch password')}}
+          placeholderText="Confirm Password"
+          iconType="lock"
+          secureTextEntry={true}
+        />
 
-      <FormButton
-        buttonTitle="Sign Up"
-        onPress={() => signUp(lname, fname, email, phone, password, confirmPassword)}
-      />
+        <FormButton
+          buttonTitle="Sign Up"
+          onPress={() => signUp(lname, fname, email, phone, password, confirmPassword)}
+        />
 
       <View style={styles.textPrivate}>
         <Text style={styles.color_textPrivate}>By registering, you confirm that you accept our </Text>
@@ -105,7 +103,8 @@ const SignupScreen = ({navigation}) => {
           <Text style={[styles.navButtonText, {fontWeight: '600'}]}> Sign In</Text>
         </Text>
       </TouchableOpacity>
-    </View>
+
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -118,6 +117,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     padding: 20,
+  },
+  keyboard_safe_view: {
+    backgroundColor: '#F2F0EB',
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
   text: {
     // fontFamily: 'Kufam-SemiBoldItalic',

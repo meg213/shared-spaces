@@ -88,13 +88,12 @@ export default function SpacePage({route, navigation}){
     <SafeAreaView style={styles.container}>
         <View style ={{
             flexDirection: 'row',
-            alignItems: 'center',  
-            backgroundColor: '#F2F0EB',      
+            alignItems: 'center',
+            backgroundColor: '#F2F0EB',
+            paddingRight: 12,
+            justifyContent: 'space-between'
         }}>
             <Icon 
-                style={{
-                    justifyContent: 'center'
-                }} 
                 size={50} 
                 name='arrow-left' 
                 onPress={() => {
@@ -111,6 +110,11 @@ export default function SpacePage({route, navigation}){
                 }}>
                 The Apartment
             </Text>
+            <Icon
+                size={40} 
+                name='more-horiz' 
+                onPress={() => {
+                   navigation.navigate('EditSpace', {spaceID: route.params.data, currUser: route.params.currUser})}}/>
         </View>
         <ScrollView scrollEventThrottle={16}>
             <View

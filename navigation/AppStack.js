@@ -10,6 +10,7 @@ import ProfilePage from './../screens/ProfilePage';
 import MySpacesPage from './../screens/MySpacesPage';
 import CreateSpaceScreen from './../screens/createSpaceScreen';
 import CreateList from './../screens/CreateList';
+import EditSpace from '../screens/EditSpace'
 import CreateItem from '../screens/CreateItem';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { logout } from '../utils/firebaseMethod';
@@ -29,6 +30,30 @@ const AppStack = () => {
         component={SpacePage}
         options={{ headerShown: false}}
       />
+      <Stack.Screen
+      name="EditSpace"
+      component={EditSpace}
+      options={({navigation}) => ({
+        title: '',
+        headerStyle: {
+          backgroundColor: '#F2F0EB',
+          shadowColor: '#F2F0EB',
+          elevation: 0,
+        },
+        headerLeft: () => (
+          <View style={{marginLeft: 10}}>
+            <FontAwesome.Button 
+              name="long-arrow-left"
+              size={25}
+              backgroundColor="#F2F0EB"
+              color="#333"
+              onPress={() => navigation.navigate('SpacePage')}
+            />
+          </View>
+        ),
+      })}
+      /> 
+
       <Stack.Screen
         name="CreateItem"
         component={CreateItem}
@@ -119,17 +144,11 @@ const AppStack = () => {
       })}
     /> 
 
-<Stack.Screen
+    <Stack.Screen
       name="CreateListScreen"
       component={CreateList}
       options={{ headerShown: false}}
     /> 
-    {/* <Stack.Screen
-      name="CreateList"
-      component={CreateList}
-      options={{ headerShown: false}}
-    />  */}
-
     {/* <Stack.Screen
       name="AddItemScreen"
       component={AddItemScreen}

@@ -20,7 +20,6 @@ const spaceRef = db.collection('spaces');
 export default function SpacePage({route, navigation}){
   // Tracks what Space we're in using "route"
   const currSpaceID = route.params.data.substring(7);
-
   // Items array in reverse order; recently added items are first in array
   const[recentItems, setItems] = useState([]);
   const componentIsMounted = useRef(true);
@@ -108,7 +107,7 @@ export default function SpacePage({route, navigation}){
                 fontWeight:'500',
                 color: "#184254"
                 }}>
-                The Apartment
+                {route.params.name}
             </Text>
             <Icon
                 size={40} 

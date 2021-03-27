@@ -24,8 +24,9 @@ export default function editSpace({route, navigation}) {
             <View style={{
                     paddingVertical:12
                 }}>
+                <Text style={styles.subtext}>Space Name</Text>
                 <FormInput
-                        labelValue='Group Name'
+                        labelValue={route.params.name}
                         onChangeText={(spaceName) => setName(spaceName)}
                         placeholderText="List Name"
                         autoCapitalize="none"

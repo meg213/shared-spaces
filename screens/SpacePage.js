@@ -113,7 +113,7 @@ export default function SpacePage({route, navigation}){
                 size={40} 
                 name='more-horiz' 
                 onPress={() => {
-                   navigation.navigate('EditSpace', {spaceID: route.params.data, currUser: route.params.currUser})}}/>
+                   navigation.navigate('EditSpace', {spaceID: route.params.data, currUser: route.params.currUser, name: route.params.name})}}/>
         </View>
         <ScrollView scrollEventThrottle={16}>
             <View

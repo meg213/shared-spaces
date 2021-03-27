@@ -33,9 +33,10 @@ export async function createSpaces(currentUser, spaceName, spaceType) {
         const currSpace = spaceRef.add({
             name: spaceName,
             spaceType: spaceType,
-            items: [],
+            owner: currentUser,
+            user: firebase.firestore.FieldValue.arrayUnion(currentUser.uid),
             lists: [],
-            user: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+            items: []
         });
         userRef.doc(currentUser.uid)
         .update({
@@ -43,6 +44,42 @@ export async function createSpaces(currentUser, spaceName, spaceType) {
         });
         Alert.alert("Space created!");
     } catch (e) {
+        alert(e.message);
+    }
+}
+
+export async function deleteSpace(currentUser, currentSpace) {
+    try {
+        // Authenticate owner is requesting deletion.
+        const spaceID = currentSpaceID.substring(7);
+        const owner = spaceRef.doc(spaceID).owner;
+
+        console.log("Owner: ", owner);
+        console.log("Current User: ", currentUser);
+
+        if (currentUser != owner) {
+            // Requesting user is not the owner, alert and exit.
+            Alert.alert("Invalid Permissions: Only the owner may delete the Space.");
+            return;
+        }
+
+        // User is authenticated. Delete the space.
+        // 1. Delete the lists.
+        // TODO: Delete list 
+
+        // 2. Delete the items.
+        const items = spaceRef.doc(spaceID).items;  // Items array in space's unnamed list
+        for (let i = 0; i < items.length; i++) {
+            let currItemID = items[i].substring(6);
+            itemsRef.doc(currItemID).delete();
+        }
+
+        // 3. Delete the space.
+        spaceRef.doc(spaceID).delete().then(() => {
+            console.log("Space sucessfully deleted!");
+        });
+    } catch (e) {
+        console.error("Error deleting space: ", e);
         alert(e.message);
     }
 }
@@ -56,15 +93,54 @@ export async function createNewList(currentSpaceID, listName) {
             spaceID: currentSpaceID,
             items: []
         })
-
-        console.log(newList)
-
         spaceRef.doc(currentSpaceID.substring(7)).update({
             lists: firebase.firestore.FieldValue.arrayUnion((await newList).path)
         })
 
         Alert.alert("Created a new list!");
     } catch (e) {
+        alert(e.message);
+    }
+}
+
+export async function deleteList(currentList, currentSpace) {
+    try {
+        // Verify given list to delete belongs to corresponding space.
+        const spaceID = currentSpace.substring(7);
+        const listID  = currentList.substring(6);
+
+        const availableLists = spaceRef.doc(spaceID).lists;
+        let canDeleteList = 0;
+        for (let i = 0; i < availableLists.length; i++) {
+            let currList = availableLists[i].subtring(6);
+            if (currList == listID) {
+                // Found list in corresponding space.
+                canDeleteList = 1;
+                break;
+            }
+        }
+
+        if (!canDeleteList) {
+            // Did not find list in corresponding space.
+            console.log("deleteList: Invalid Permissions");
+            console.log("deleteList: List must belong to corresponding Space");
+            return;
+        }
+
+        // NOTE: Deleting a list should move items to the unnamed list
+        // A.K.A Transfer all items from list's "items" to space's "items"
+        
+        // Add items to space's "items"
+        const listItems = listRef.doc(listID).items;
+
+        spaceRef.doc(currentSpaceID.substring(7)).update({
+            items: firebase.firestore.FieldValue.arrayUnion((await listItems).path)
+        })
+
+        // Delete reference to list.
+        listRef.doc(listID).delete();
+    } catch (e) {
+        console.error("Error deleting list: ", e);
         alert(e.message);
     }
 }

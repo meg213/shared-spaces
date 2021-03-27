@@ -88,24 +88,14 @@ export default function ListsPage({navigation, route}) {
             />
             <View style={styles.headerMain}>
               <Text style={styles.headerTitle}>Lists</Text>
-              <Text> 2</Text>
+              <Text> {myLists.length}</Text>
             </View>
         </View>
             <View style={styles.search}>
               <Search/>
             </View>
         <ScrollView scrollEventThrottle={16}>
-            <List/>
-            <List/>
-        </ScrollView>
-        <View style={styles.fab}>
-            <Button
-                width='80%'
-                name="Create List"
-                onClick={()=> {navigation.navigate("CreateListScreen", {spaceID:route.params.data})}}
-            />
-
-            <AlphabetList
+        <AlphabetList
               data = {data}
               renderSectionHeader={SectionHeader}
               renderCustomItem={(item) => (
@@ -115,6 +105,13 @@ export default function ListsPage({navigation, route}) {
                   // TODO: Create custom icon for lists
                 />
               )}
+            />
+        </ScrollView>
+        <View style={styles.fab}>
+            <Button
+                width='80%'
+                name="Create List"
+                onClick={()=> {navigation.navigate("CreateListScreen", {spaceID:route.params.data})}}
             />
         </View>
     </SafeAreaView>

@@ -30,7 +30,7 @@ class SectionHeader extends Component {
 }
 
 export default function ListsPage({navigation, route}) {
-    const spaceRef = db.collection('spaces');
+  const spaceRef = db.collection('spaces');
   const listRef = db.collection('lists');
   const currSpaceID = route.params.data.substring(7);
 

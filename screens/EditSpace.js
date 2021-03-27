@@ -1,5 +1,5 @@
 import React, { useState, Component } from 'react';
-import { ScrollView, StyleSheet, Text, View, SafeAreaView, Switch} from 'react-native';
+import { ScrollView, StyleSheet, Text, View, SafeAreaView, Modal} from 'react-native';
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
 import { Icon } from 'react-native-elements';

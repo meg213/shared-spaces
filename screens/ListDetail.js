@@ -32,46 +32,10 @@ class SectionHeader extends Component {
 export default function ListsPage({navigation, route}) {
   const spaceRef = db.collection('spaces');
   const listRef = db.collection('lists');
-  const currSpaceID = route.params.data.substring(7);
+//   const currSpaceID = route.params.data.substring(7);
 
-  const[myLists, setLists] = useState([])
-  const componentIsMounted = useRef(true);
-
-  useEffect(() => {
-    return () => {
-      componentIsMounted.current = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {createListsData(documentSnapshot)});
-    async function createListsData(documentSnapshot) {
-      console.log(documentSnapshot.data())
-      var currentSpaceLists = documentSnapshot.data().lists;
-      var data = [];
-
-      for (let i = 0; i < currentSpaceLists.length; i++) {
-        let listData = (await listRef.doc(currentSpaceLists[i].substring(6)).get()).data();
-        console.log(listData)
-        if (listData == undefined) {
-          continue;
-        }
-        if (listData.spaceID.substring(7) == currSpaceID) {
-          data.push(listData);
-        }
-      }
-
-      if (componentIsMounted.current) {
-        setLists(data);
-      }
-    }
-    return () => subscriber;
-  }, []);
-
-  let data = []
-  for (let i = 0; i < myLists.length; i++) {
-    data.push({value: myLists[i].name, key: myLists[i]})
-  }
+//   const[myLists, setLists] = useState([])
+//   const componentIsMounted = useRef(true);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -87,34 +51,14 @@ export default function ListsPage({navigation, route}) {
             }}
             />
             <View style={styles.headerMain}>
-              <Text style={styles.headerTitle}>Lists</Text>
-              <Text> {myLists.length}</Text>
+              <Text style={styles.headerTitle}>{route.params.name}</Text>
+              <Text> {route.params.numItems}</Text>
             </View>
         </View>
             <View style={styles.search}>
               <Search/>
             </View>
-        <ScrollView scrollEventThrottle={16}>
-        <AlphabetList
-              data = {data}
-              renderSectionHeader={SectionHeader}
-              renderCustomItem={(item) => (
-                <List
-                  listName={item.value}
-                  numItems={item.key.number}
-                  onPress={() => {navigation.navigate('ListDetail', { name: item.value, numItems: item.key.number })}}
-                  // TODO: Create custom icon for lists
-                />
-              )}
-            />
-        </ScrollView>
-        <View style={styles.fab}>
-            <Button
-                width='80%'
-                name="Create List"
-                onClick={()=> {navigation.navigate("CreateListScreen", {spaceID:route.params.data})}}
-            />
-        </View>
+
     </SafeAreaView>
   );
 }

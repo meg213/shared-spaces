@@ -12,6 +12,7 @@ import CreateSpaceScreen from './../screens/createSpaceScreen';
 import CreateList from './../screens/CreateList';
 import EditSpace from '../screens/EditSpace'
 import CreateItem from '../screens/CreateItem';
+import ListDetail from '../screens/ListDetail'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { logout } from '../utils/firebaseMethod';
 
@@ -149,11 +150,11 @@ const AppStack = () => {
       component={CreateList}
       options={{ headerShown: false}}
     /> 
-    {/* <Stack.Screen
-      name="AddItemScreen"
-      component={AddItemScreen}
+    <Stack.Screen
+      name="ListDetail"
+      component={ListDetail}
       options={{ headerShown: false}}
-    /> */}
+    />
     
   </Stack.Navigator>
   );

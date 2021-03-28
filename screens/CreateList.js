@@ -14,7 +14,6 @@ const CreateList= ({route, navigation}) => {
     const [icon, setIcon] = useState(require('../assets/kitchen.png'))
     const [isVisible, setIsVisible] = useState(false);
 
-    const [type, setType] = useState("");
     const [index, setIndex] = useState(0);
     const buttons = ['Home', 'Office', 'Other']
     const currentSpaceId = route.params.spaceID;
@@ -42,7 +41,7 @@ const CreateList= ({route, navigation}) => {
                 <View style={{  paddingVertical: 12 }}>
                     <FormInput
                         labelValue={name}
-                        onChangeText={(spaceName) => setName(spaceName)}
+                        onChangeText={(name) => setName(name)}
                         placeholderText="List Name"
                         autoCapitalize="none"
                         autoCorrect={false}
@@ -78,7 +77,10 @@ const CreateList= ({route, navigation}) => {
                 <Button
                     name="Create List"
                     width="75%"
-                    onClick={() => {console.log(getItems())}}
+                    onClick={() => {
+                        createNewList(currentSpaceId,name)
+                        navigation.navigate('ListsList');
+                    }}
                 />
             </View>
             <BottomSheet

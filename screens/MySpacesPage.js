@@ -71,7 +71,7 @@ export default function MySpacesPage({navigation}){
             </View>
             <ScrollView>
                 {spaceNames.map((space, index) => 
-                    <SpaceCard key={index} name={space.spaceData.name} onClick={() => {navigation.navigate('SpacePage', {data:space.spaceId, currUser:currUser})}}/>
+                    <SpaceCard key={index} name={space.spaceData.name} onClick={() => {navigation.navigate('SpacePage', {data:space.spaceId, currUser:currUser, name: space.spaceData.name})}}/>
                 )}
                 <Button
                     name = "Create Space"

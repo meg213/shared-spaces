@@ -20,7 +20,6 @@ const spaceRef = db.collection('spaces');
 export default function SpacePage({route, navigation}){
   // Tracks what Space we're in using "route"
   const currSpaceID = route.params.data.substring(7);
-
   // Items array in reverse order; recently added items are first in array
   const[recentItems, setItems] = useState([]);
   const componentIsMounted = useRef(true);
@@ -88,13 +87,12 @@ export default function SpacePage({route, navigation}){
     <SafeAreaView style={styles.container}>
         <View style ={{
             flexDirection: 'row',
-            alignItems: 'center',  
-            backgroundColor: '#F2F0EB',      
+            alignItems: 'center',
+            backgroundColor: '#F2F0EB',
+            paddingRight: 12,
+            justifyContent: 'space-between'
         }}>
             <Icon 
-                style={{
-                    justifyContent: 'center'
-                }} 
                 size={50} 
                 name='arrow-left' 
                 onPress={() => {
@@ -109,8 +107,13 @@ export default function SpacePage({route, navigation}){
                 fontWeight:'500',
                 color: "#184254"
                 }}>
-                The Apartment
+                {route.params.name}
             </Text>
+            <Icon
+                size={40} 
+                name='more-horiz' 
+                onPress={() => {
+                   navigation.navigate('EditSpace', {spaceID: route.params.data, currUser: route.params.currUser, name: route.params.name})}}/>
         </View>
         <ScrollView scrollEventThrottle={16}>
             <View

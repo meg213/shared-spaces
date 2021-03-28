@@ -8,8 +8,48 @@ const userRef = db.collection("users")
 const itemRef = db.collection("items")
 const listRef = db.collection("lists")
 
+/**
+ * 
+ * @param targetSpace Space ID new user wishes to join
+ * @param requestingUser User requesting to join space
+ */
+export async function addNewUser(targetSpace, requestingUser) {
+    const spaceID = targetSpace.substring(7);
+    const userID  = requestingUser.substring(6);
+
+    try {
+        // Check if user is already in space.
+        const currentUsers = spaceRef.doc(spaceID).user;
+        for (let i = 0; i < currentUsers.length; i++) {
+            if (currentUsers[i] == requestingUser) {
+                return;
+            }
+        }
+
+        // User is not in group. Add to target space.
+        spaceRef.doc(spaceID).update({
+            user: firebase.firestore.FieldValue.arrayUnion((await requestingUser).path)
+        });
+    } catch (e) {
+        console.error("addNewUser: Error in adding user");
+        Alert.alert(e.message);
+    }
+}
+
+export async function deleteUser(currentUser) {
+    const userID = currentUser.substring(6);
+
+    try {
+        userRef.doc(userID).delete().then(() => {
+            console.log("deleteUser: User deleted successfully!")
+        })
+    } catch (e) {
+        console.error("deleteUser: Error in deleting user");
+        Alert.alert(e.message);
+    }
+}
+
 export async function createItems(currentUser, currentSpaceId, itemName, itemCategory, isShared) {
-    // console.log(currentUser)
     try {
         const currItem = itemRef.add({
             category: itemCategory,

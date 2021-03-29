@@ -44,9 +44,11 @@ export default function SharedPage({navigation}) {
         <View>
             <Item
                 listPage
+                onClick={() => {navigation.navigate('ItemDetailScreen')}}
             />
             <Item
                 listPage
+                onClick={() => {navigation.navigavte('ItemDetailScreen')}}
             />
             <Button
                 onClick={()=> {navigation.navigate('SpacePage')}}

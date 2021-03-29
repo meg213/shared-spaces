@@ -108,6 +108,32 @@ export async function createItems(currentUser, currentSpaceId, itemName, itemCat
 }
 
 /**
+ * Moves item from space's items[] to target list's items[]
+ * @param currentItem   Item desired to move
+ * @param currentSpace  Space currently owning currentItem
+ * @param targetList    Desired destination list
+ */
+export async function moveItemToList(currentItem, currentSpace, targetList) {
+    const itemID  = item.substring(6);
+    const spaceID = currentSpace.substring(7);
+    const listID  = targetList.substring(6);
+
+    try {
+        let itemDoc = itemRef.doc(itemID); 
+
+        spaceRef.doc(spaceID).update({
+            items: firebase.firestore.FieldValue.arrayRemove((await itemDoc).path)
+        })
+
+        listRef.doc(listID).update({
+            items: firebase.firestore.FieldValue.arrayUnion((await itemDoc).path)
+        })
+    } catch (e) {
+        alert(e.message);
+    }
+}
+
+/**
  * Returns item data for given ID, or null if error occurs
  * @param item Firebase ID of desired item, assumed to be "items/..."
  */

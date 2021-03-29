@@ -14,6 +14,7 @@ import EditSpace from '../screens/EditSpace'
 import CreateItem from '../screens/CreateItem';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { logout } from '../utils/firebaseMethod';
+import ItemDetailScreen from '../screens/ItemDetailScreen';
 
 const Stack = createStackNavigator();
 
@@ -154,6 +155,12 @@ const AppStack = () => {
       component={AddItemScreen}
       options={{ headerShown: false}}
     /> */}
+
+    <Stack.Screen 
+      name="ItemDetailScreen"
+      component={ItemDetailScreen}
+      options={{ headerShown: false}}
+    />
     
   </Stack.Navigator>
   );

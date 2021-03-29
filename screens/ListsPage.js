@@ -102,7 +102,8 @@ export default function ListsPage({navigation, route}) {
                 <List
                   listName={item.value}
                   numItems={item.key.number}
-                  onPress={() => {navigation.navigate('ListDetail', { name: item.value, numItems: item.key.number })}}
+                  onPress={() => {
+                    navigation.navigate('ListDetail', { name: item.value, numItems: item.key.number })}}
                   // TODO: Create custom icon for lists
                 />
               )}

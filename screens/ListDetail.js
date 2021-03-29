@@ -47,18 +47,29 @@ export default function ListsPage({navigation, route}) {
             size={50} 
             name='arrow-left' 
             onPress={() => {
-                navigation.navigate('SpacePage')
+                navigation.navigate('ListsList')
             }}
             />
             <View style={styles.headerMain}>
               <Text style={styles.headerTitle}>{route.params.name}</Text>
-              <Text> {route.params.numItems}</Text>
+              <Text> {route.params.numItems} </Text>
             </View>
         </View>
-            <View style={styles.search}>
-              <Search/>
-            </View>
+        <View style={styles.search}>
+            <Search/>
+        </View>
+        <ScrollView>
+           {
+            route.params.numItems === 0 ? 
+            (
+                <Text>hi</Text>
+            ) : 
+                <View>
+                    <Text>hello</Text>
+                </View>
 
+           }
+        </ScrollView>
     </SafeAreaView>
   );
 }
@@ -83,13 +94,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'column',
-    marginLeft: 110
+    // marginLeft: 110
   },
   headerTitle: {
       fontSize: 30,
       color: '#184254',
       fontWeight: '500',
+      justifyContent: 'center',
       paddingBottom: 12,
+      alignItems: 'center'
   },
   fab: {
     position: 'absolute',

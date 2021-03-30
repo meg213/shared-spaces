@@ -45,8 +45,8 @@ export default function ItemDetailScreen ({route, navigation}) {
             </View>
 
             <View style={{flexDirection: 'row', paddingTop: 48, paddingHorizontal: 30, justifyContent: 'center'}}>
-                <Button name="edit" width="55%"/>       
-                <Button name="delete" width="55%"/>
+                <Button name="edit" width="55%" textColor="#184254" color="#ffffff" icon='edit' iconColor="#D9BD4B"/>       
+                <Button name="delete" width="55%" color="#ffffff" textColor="#184254" icon="close" iconColor="#EB5757"/>
             </View>
         </SafeAreaView>
     );

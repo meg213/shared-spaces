@@ -40,16 +40,15 @@ export default function ListsPage({navigation, route}) {
   return (
     <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <Icon 
-            style={{
-                justifyContent: 'center'
-            }} 
-            size={50} 
-            name='arrow-left' 
-            onPress={() => {
-                navigation.navigate('ListsList')
-            }}
-            />
+          <View style={styles.headerIcon}>
+            <Icon 
+              size={50} 
+              name='arrow-left' 
+              onPress={() => {
+                  navigation.navigate('ListsList')
+              }}
+              />
+            </View>
             <View style={styles.headerMain}>
               <Text style={styles.headerTitle}>{route.params.name}</Text>
               <Text> {route.params.numItems} </Text>
@@ -70,6 +69,13 @@ export default function ListsPage({navigation, route}) {
 
            }
         </ScrollView>
+        <View style={styles.fab}>
+            <Button
+                width='80%'
+                name="Add Item"
+                onClick={()=> {navigation.navigate("CreateItem", {spaceID:route.params.data})}}
+            />
+        </View>
     </SafeAreaView>
   );
 }
@@ -83,12 +89,20 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: '#FFFFFF',
     height: 80,
     width: '100%',
     borderBottomRightRadius: 12,
     borderBottomLeftRadius: 12,
     flexDirection: 'row'
+  },
+  headerIcon: {
+      // made this absolute bc list names will have 
+      // variable length and this button kept making it not centered
+      position: 'absolute',
+      top: 15,
+      right: 335
   },
   headerMain: {
     alignItems: 'center',
@@ -114,5 +128,16 @@ const styles = StyleSheet.create({
   },
   search: {
     width: '95%'
+  },
+  fab: {
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginBottom: 40
+  },
+  icon: {
+    
   }
 });

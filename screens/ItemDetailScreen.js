@@ -28,6 +28,7 @@ export default function ItemDetailScreen ({route, navigation}) {
                     list  {/*<--- placeholder for now*/ list}
                 </Text>
             </View>
+            { shared ?             
             <View style={{paddingVertical: 16, paddingHorizontal: 30, flexDirection: 'row', alignItems: 'center'}}>
                 <Image source={require('../assets/logo.png')} style={[styles.image]}/>
                 <View style={{paddingHorizontal: 6}}/>
@@ -35,7 +36,7 @@ export default function ItemDetailScreen ({route, navigation}) {
                     This item is {shared ? '' : "not "}
                     shared
                 </Text>
-            </View>
+            </View> : null}
             <View style={{paddingVertical: 16, paddingHorizontal: 30, flexDirection: 'row', alignItems: 'center'}}>
                 <User initials={initials}/>
                 <View style={{paddingHorizontal: 6}}/>
@@ -44,7 +45,7 @@ export default function ItemDetailScreen ({route, navigation}) {
                 </Text>
             </View>
 
-            <View style={{flexDirection: 'row', paddingTop: 48, paddingHorizontal: 30, justifyContent: 'center'}}>
+            <View style={{ position: 'absolute', bottom: 48, flexDirection: 'row', paddingTop: 48, paddingHorizontal: 30, justifyContent: 'center'}}>
                 <Button name="edit" width="55%" textColor="#184254" color="#ffffff" icon='edit' iconColor="#D9BD4B"/>       
                 <Button name="delete" width="55%" color="#ffffff" textColor="#184254" icon="close" iconColor="#EB5757"/>
             </View>

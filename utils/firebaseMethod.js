@@ -307,6 +307,23 @@ export async function deleteList(currentList, currentSpace) {
 }
 
 /**
+ * Return all lists belonging to corresponding page
+ * 
+ * @param space ID of the current space, should be of form spaces/...
+ * @returns [] of Firebase List objects
+ */
+export async function getAllLists(space) {
+    const spaceID = currentSpace.substring(7);
+
+    try {
+        return spaceRef.doc(spaceID).lists;
+    } catch (e) {
+        console.error("Error retrieivng lists from space: ", e);
+        alert(e.message);
+    }
+}
+
+/**
  * Returns list data for given ID, or null if error occurs
  * @param list Firebase ID of desired list, assumed to be "lists/..."
  */

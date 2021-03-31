@@ -1,12 +1,13 @@
 import React, {useState, useEffect, useRef, Component} from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { Icon } from 'react-native-elements';
-import List from "../components/List";
 import Search from "../components/Search"
 import Button from "../components/Button";
 import { db } from '../config/keys';
+import Item from "../components/Item";
 import {AlphabetList} from 'react-native-section-alphabet-list';
 import MyItemsPage from './MyItemsPage';
+import { getList } from '../utils/firebaseMethod';
 
 
 class SectionHeader extends Component {
@@ -32,10 +33,12 @@ class SectionHeader extends Component {
 export default function ListsPage({navigation, route}) {
   const spaceRef = db.collection('spaces');
   const listRef = db.collection('lists');
-//   const currSpaceID = route.params.data.substring(7);
+  const currSpaceID = route.params.data.substring(7);
 
-//   const[myLists, setLists] = useState([])
-//   const componentIsMounted = useRef(true);
+  const[myLists, setLists] = useState([])
+  const componentIsMounted = useRef(true);
+
+  // console.log(getList('lists/0jYR944RNWGKdJDc75fR'))
 
   return (
     <SafeAreaView style={styles.container}>
@@ -58,22 +61,33 @@ export default function ListsPage({navigation, route}) {
             <Search/>
         </View>
         <ScrollView>
-           {
-            route.params.numItems === 0 ? 
-            (
-                <Text>hi</Text>
-            ) : 
-                <View>
-                    <Text>hello</Text>
-                </View>
-
-           }
+          <Item
+            listPage
+          />
+              {/* <AlphabetList
+              data = {route.params.items}
+              renderSectionHeader={SectionHeader}
+              renderCustomItem={(item) => (
+                <Item
+                  itemName={item.name}
+                  listPage
+                  // numItems={item.key.number}
+                  // onPress={() => {
+                  //   navigation.navigate('ListDetail', { name: item.value, numItems: item.key.number })}}
+                  // TODO: Create custom icon for lists
+                />
+              )}
+            /> */}
         </ScrollView>
         <View style={styles.fab}>
             <Button
                 width='80%'
                 name="Add Item"
-                onClick={()=> {navigation.navigate("CreateItem", {spaceID:route.params.data})}}
+                onClick={()=> {
+                  console.log(route.params.items);
+                  // navigation.navigate("CreateItem", {spaceID:route.params.data})
+                }
+                }
             />
         </View>
     </SafeAreaView>
@@ -138,6 +152,6 @@ const styles = StyleSheet.create({
     marginBottom: 40
   },
   icon: {
-    
+
   }
 });

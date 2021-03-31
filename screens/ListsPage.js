@@ -46,13 +46,14 @@ export default function ListsPage({navigation, route}) {
   useEffect(() => {
     const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {createListsData(documentSnapshot)});
     async function createListsData(documentSnapshot) {
-      console.log(documentSnapshot.data())
+      console.log('snapshot:', documentSnapshot.data())
       var currentSpaceLists = documentSnapshot.data().lists;
       var data = [];
 
       for (let i = 0; i < currentSpaceLists.length; i++) {
+        console.log('currentSpaceLists', currentSpaceLists[i])
         let listData = (await listRef.doc(currentSpaceLists[i].substring(6)).get()).data();
-        console.log(listData)
+        console.log('currspace', currentSpaceLists[i])
         if (listData == undefined) {
           continue;
         }
@@ -103,7 +104,7 @@ export default function ListsPage({navigation, route}) {
                   listName={item.value}
                   numItems={item.key.number}
                   onPress={() => {
-                    navigation.navigate('ListDetail', { name: item.value, numItems: item.key.number })}}
+                    navigation.navigate('ListDetail', { items: item.key.items, data:route.params.data, name: item.value, numItems: item.key.number })}}
                   // TODO: Create custom icon for lists
                 />
               )}

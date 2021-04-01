@@ -46,7 +46,9 @@ export default function ListsPage({navigation, route}) {
   }, []);
 
   // replace with whatever list id given from route
-  const listID = '0jYR944RNWGKdJDc75fR'; 
+  //const listID = '0jYR944RNWGKdJDc75fR'; 
+
+  const listID = route.params.listID;
 
   useEffect(() => {
     const subscriber = listRef.doc(listID).onSnapshot(documentSnapshot => {createItemData(documentSnapshot)});

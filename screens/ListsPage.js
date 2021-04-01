@@ -9,7 +9,6 @@ import {AlphabetList} from 'react-native-section-alphabet-list';
 import MyItemsPage from './MyItemsPage';
 import { getList } from '../utils/firebaseMethod';
 
-
 class SectionHeader extends Component {
   render() {
     var textStyle = {
@@ -52,12 +51,17 @@ export default function ListsPage({navigation, route}) {
       var data = [];
 
       for (let i = 0; i < currentSpaceLists.length; i++) {
-        let listData = (await listRef.doc(currentSpaceLists[i].substring(6)).get()).data();
+        let listID = currentSpaceLists[i].substring(6);
+        let listData = (await listRef.doc(listID).get()).data();
+
         if (listData == undefined) {
           continue;
         }
+      
+        let listStorage = ({key: listID, value: listData});
+
         if (listData.spaceID.substring(7) == currSpaceID) {
-          data.push(listData);
+          data.push(listStorage);
         }
       }
 
@@ -70,7 +74,9 @@ export default function ListsPage({navigation, route}) {
 
   let data = []
   for (let i = 0; i < myLists.length; i++) {
-    data.push({value: myLists[i].name, key: myLists[i]})
+    data.push(myLists[i]);
+    console.log(myLists[i]);
+    //data.push({value: myLists[i].name, key: myLists[i]})
   }
 
   return (
@@ -100,10 +106,13 @@ export default function ListsPage({navigation, route}) {
               renderSectionHeader={SectionHeader}
               renderCustomItem={(item) => (
                 <List
-                  listName={item.value}
-                  numItems={item.key.items.length}
+                  listName={item.value.name}
+                  numItems={item.value.items.length}
                   onPress={() => {
-                    navigation.navigate('ListDetail', { items: item.key.items, data:route.params.data, name: item.value, numItems: item.key.number })}}
+                    console.log(item);
+                    navigation.navigate("ListDetail", { listID: item.key, name: item.value.name, numItems: item.value.items.length, data: route.params.data});
+                    //navigation.navigate('ListDetail', { items: item.key.items, data:route.params.data, name: item.value, numItems: item.key.number })
+                  }}
                   // TODO: Create custom icon for lists
                 />
               )}

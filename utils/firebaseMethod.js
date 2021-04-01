@@ -332,7 +332,7 @@ export async function getAllLists(space) {
     let listData;
     
     try {
-        listData = listRef.doc(listID).get().data();
+        listData = (await listRef.doc(listID).get()).data();
     } catch (e) {
         console.error("getSpace: Error in getting space with ID: ", listID);
         alert(e.message);

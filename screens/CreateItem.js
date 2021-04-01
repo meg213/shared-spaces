@@ -1,19 +1,28 @@
 import React, { useState, Component, useEffect } from 'react';
-import { ScrollView, StyleSheet, Text, View, SafeAreaView, Switch, Image} from 'react-native';
+import { ScrollView, StyleSheet, Text, View, SafeAreaView, Switch, Image, } from 'react-native';
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
 import { createItems } from '../utils/firebaseMethod';
 import * as ImagePicker from 'expo-image-picker'
+import { Dropdown } from 'react-native-material-dropdown-v2-fixed';
 
 export default function createItem({route, navigation}) {
     //route params: spaceID, currUser
     const [name, setName] = useState("");
-    const [category, setCategory] = useState("");
+    const [category, setCategory] = useState("Select List");
     const [shared, setShared] = useState(false);
     const toggleShared = () => setShared(previousState => ! previousState);
     const currentUser = route.params.currUser;
     const currentSpaceId = route.params.spaceID;
     const [image, setImage] = useState(null);    //image needs to be connected to backend
+    const data = [{
+        value: 'Banana',
+      }, {
+        value: 'Mango',
+      }, {
+        value: 'Pear',
+      }];
+   
 
     useEffect(() => {
         (async () => {
@@ -64,13 +73,17 @@ export default function createItem({route, navigation}) {
                     autoCapitalize="none"
                     autoCorrect={false}
                 />
-                <FormInput
+                <Dropdown
+                    label={category}
+                    data={data}
+                />
+                {/* <FormInput
                     labelValue={category}
                     onChangeText={(itemCategory) => setCategory(itemCategory)}
                     placeholderText="Add to List"
                     autoCapitalize="none"
                     autoCorrect={false}
-                />
+                /> */}
                 <View style={styles.shared}>
                     <Text style={styles.subtext}>Is this item is shared?</Text>
                     <Switch

@@ -52,14 +52,12 @@ export default function ListsPage({navigation, route}) {
     const subscriber = listRef.doc(listID).onSnapshot(documentSnapshot => {createItemData(documentSnapshot)});
     async function createItemData(documentSnapshot) {
       console.log('snapshot:', documentSnapshot.data())
-      console.log('name:', documentSnapshot.data().name);
-      console.log('items:', documentSnapshot.data().items);
       var currentItemList = documentSnapshot.data().items;
       var data = [];
 
       for (let i = 0; i < currentItemList.length; i++) {
         let itemData = (await itemRef.doc(currentItemList[i].substring(6)).get()).data();
-        console.log('itemdata', itemData);
+        // console.log('itemdata', itemData);
         if (itemData == undefined) {
           continue;
         }
@@ -76,8 +74,8 @@ export default function ListsPage({navigation, route}) {
   let data = []
   for (let i = 0; i < items.length; i++) {
     data.push({value: items[i].name, key: items[i]})
-    console.log('data', data)
   }
+  console.log('data!', data);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -105,9 +103,9 @@ export default function ListsPage({navigation, route}) {
               renderSectionHeader={SectionHeader}
               renderCustomItem={(item) => (
                 <Item
-                  itemName={item.name}
+                  itemName={item.value}
                   list={route.params.name}
-                  isShared={item.isShared}
+                  isShared={item.key.isShared}
                   listPage
                 />
               )}

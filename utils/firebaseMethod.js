@@ -316,7 +316,7 @@ export async function getAllLists(space) {
     const spaceID = currentSpace.substring(7);
 
     try {
-        return (await spaceRef.doc(spaceID).lists);
+        return spaceRef.doc(spaceID).lists;
     } catch (e) {
         console.error("Error retrieivng lists from space: ", e);
         alert(e.message);
@@ -332,7 +332,7 @@ export async function getAllLists(space) {
     let listData;
     
     try {
-        listData = (await listRef.doc(listID).get()).data();
+        listData = listRef.doc(listID).get().data();
     } catch (e) {
         console.error("getSpace: Error in getting space with ID: ", listID);
         alert(e.message);

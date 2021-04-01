@@ -7,6 +7,7 @@ import Button from "../components/Button";
 import { db } from '../config/keys';
 import {AlphabetList} from 'react-native-section-alphabet-list';
 import MyItemsPage from './MyItemsPage';
+import { getList } from '../utils/firebaseMethod';
 
 
 class SectionHeader extends Component {
@@ -51,9 +52,7 @@ export default function ListsPage({navigation, route}) {
       var data = [];
 
       for (let i = 0; i < currentSpaceLists.length; i++) {
-        console.log('currentSpaceLists', currentSpaceLists[i])
         let listData = (await listRef.doc(currentSpaceLists[i].substring(6)).get()).data();
-        console.log('currspace', currentSpaceLists[i])
         if (listData == undefined) {
           continue;
         }
@@ -104,6 +103,7 @@ export default function ListsPage({navigation, route}) {
                   listName={item.value}
                   numItems={item.key.number}
                   onPress={() => {
+                    
                     navigation.navigate('ListDetail', { items: item.key.items, data:route.params.data, name: item.value, numItems: item.key.number })}}
                   // TODO: Create custom icon for lists
                 />

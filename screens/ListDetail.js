@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef, Component} from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { Icon, ListItem } from 'react-native-elements';
 import Search from "../components/Search"
 import Button from "../components/Button";
 import { db } from '../config/keys';
@@ -8,6 +8,7 @@ import Item from "../components/Item";
 import {AlphabetList} from 'react-native-section-alphabet-list';
 import MyItemsPage from './MyItemsPage';
 import { getList } from '../utils/firebaseMethod';
+import { getItem } from '../utils/firebaseMethod';
 
 
 class SectionHeader extends Component {
@@ -31,14 +32,59 @@ class SectionHeader extends Component {
 }
 
 export default function ListsPage({navigation, route}) {
-  const spaceRef = db.collection('spaces');
-  const listRef = db.collection('lists');
-  const currSpaceID = route.params.data.substring(7);
+  // 1. get correct list
+  // 2. get list of item references
+  // 3. get item data
+  // 4. make items out of data
 
-  const[myLists, setLists] = useState([])
+  const listRef = db.collection('lists');
+  const itemRef = db.collection('items');
+
+  const[items, setItems] = useState([])
+
+
   const componentIsMounted = useRef(true);
 
-  // console.log(getList('lists/0jYR944RNWGKdJDc75fR'))
+  useEffect(() => {
+    return () => {
+      componentIsMounted.current = false;
+    };
+  }, []);
+
+  // replace with whatever list id given from route
+  const list = '0jYR944RNWGKdJDc75fR'; 
+
+  useEffect(() => {
+    const subscriber = listRef.doc(list).
+    onSnapshot(documentSnapshot => {createItemData(documentSnapshot)});
+    async function createItemData(documentSnapshot) {
+      console.log('snapshot of items:', documentSnapshot.data().items)
+
+      var currentItemList = documentSnapshot.data().items;
+      var data = [];
+
+      console.log(currentItemList[0]);
+      for (let i = 0; i < currentItemList.length; i++) {
+        console.log('hi');
+        let itemData = (await itemRef.doc(currentItemLists[i].substring(6)).get()).data();
+        console.log('itemdata', itemData);
+        if (itemData == undefined) {
+          continue;
+        }
+        data.push(itemData);
+      }
+
+      if (componentIsMounted.current) {
+        setItems(data);
+      }
+    }
+    return () => subscriber;
+  }, []);
+
+  let data = []
+  for (let i = 0; i < items.length; i++) {
+    console.log(item);
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -61,9 +107,9 @@ export default function ListsPage({navigation, route}) {
             <Search/>
         </View>
         <ScrollView>
-          <Item
+          {/* <Item
             listPage
-          />
+          /> */}
               {/* <AlphabetList
               data = {route.params.items}
               renderSectionHeader={SectionHeader}

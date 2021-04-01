@@ -32,17 +32,11 @@ class SectionHeader extends Component {
 }
 
 export default function ListsPage({navigation, route}) {
-  // 1. get correct list
-  // 2. get list of item references
-  // 3. get item data
-  // 4. make items out of data
-
+  const spaceRef = db.collection('spaces');
   const listRef = db.collection('lists');
   const itemRef = db.collection('items');
 
   const[items, setItems] = useState([])
-
-
   const componentIsMounted = useRef(true);
 
   useEffect(() => {
@@ -52,21 +46,19 @@ export default function ListsPage({navigation, route}) {
   }, []);
 
   // replace with whatever list id given from route
-  const list = '0jYR944RNWGKdJDc75fR'; 
+  const listID = '0jYR944RNWGKdJDc75fR'; 
 
   useEffect(() => {
-    const subscriber = listRef.doc(list).
-    onSnapshot(documentSnapshot => {createItemData(documentSnapshot)});
+    const subscriber = listRef.doc(listID).onSnapshot(documentSnapshot => {createItemData(documentSnapshot)});
     async function createItemData(documentSnapshot) {
-      console.log('snapshot of items:', documentSnapshot.data().items)
-
+      console.log('snapshot:', documentSnapshot.data())
+      console.log('name:', documentSnapshot.data().name);
+      console.log('items:', documentSnapshot.data().items);
       var currentItemList = documentSnapshot.data().items;
       var data = [];
 
-      console.log(currentItemList[0]);
       for (let i = 0; i < currentItemList.length; i++) {
-        console.log('hi');
-        let itemData = (await itemRef.doc(currentItemLists[i].substring(6)).get()).data();
+        let itemData = (await itemRef.doc(currentItemList[i].substring(6)).get()).data();
         console.log('itemdata', itemData);
         if (itemData == undefined) {
           continue;
@@ -83,7 +75,8 @@ export default function ListsPage({navigation, route}) {
 
   let data = []
   for (let i = 0; i < items.length; i++) {
-    console.log(item);
+    data.push({value: items[i].name, key: items[i]})
+    console.log('data', data)
   }
 
   return (
@@ -107,23 +100,18 @@ export default function ListsPage({navigation, route}) {
             <Search/>
         </View>
         <ScrollView>
-          {/* <Item
-            listPage
-          /> */}
-              {/* <AlphabetList
-              data = {route.params.items}
+            <AlphabetList
+              data = {data}
               renderSectionHeader={SectionHeader}
               renderCustomItem={(item) => (
                 <Item
                   itemName={item.name}
+                  list={route.params.name}
+                  isShared={item.isShared}
                   listPage
-                  // numItems={item.key.number}
-                  // onPress={() => {
-                  //   navigation.navigate('ListDetail', { name: item.value, numItems: item.key.number })}}
-                  // TODO: Create custom icon for lists
                 />
               )}
-            /> */}
+            />
         </ScrollView>
         <View style={styles.fab}>
             <Button

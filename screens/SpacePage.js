@@ -44,7 +44,6 @@ export default function SpacePage({route, navigation}){
         for (let i = 0; i < items.length; i++) {
             // Get item reference
             let itemData = (await itemRef.doc(items[i].substring(6)).get()).data();
-            console.log(itemData)
             // Get corresponding item owner reference
             let owner = (await userRef.doc(itemData.userID.substring(6)).get()).data().firstname;
             // Abort if either data is undefined

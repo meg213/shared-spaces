@@ -12,6 +12,7 @@ const spaceRef = db.collection('spaces');
 
 export default function MySpacesPage({navigation}){
     const currUser = firebase.auth().currentUser;
+    console.log(currUser.uid)
     const[spaceNames, setSpaceNames] = useState([]);
 
     const componentIsMounted = useRef(true);
@@ -55,7 +56,7 @@ export default function MySpacesPage({navigation}){
                     }} 
                     size={50} name='account-circle' color= '#79AAB5'
                     onPress={() => {
-                        navigation.navigate('ProfilePage');
+                        navigation.navigate('ProfilePage', {currUser: currUser});
                     }}
                 />
             </View>
@@ -79,6 +80,10 @@ export default function MySpacesPage({navigation}){
                     onClick={() => {
                         navigation.navigate('CreateSpaceScreen', {currUser: currUser});
                     }}
+                />
+                <Button 
+                    name="Join Space"
+                    onClick={() => {navigation.navigate('JoinSpaceScreen', {currUser: currUser})}}
                 />
             </ScrollView>
         </SafeAreaView>

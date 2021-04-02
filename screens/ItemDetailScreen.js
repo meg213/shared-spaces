@@ -1,54 +1,69 @@
-import React, { useState, Component } from 'react';
+import React, { useState, Component, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView, Switch, Image} from 'react-native';
 import Button from '../components/Button';
+import {storage, db} from '../config/keys';
+
 import User from '../components/User';
 
 export default function ItemDetailScreen ({route, navigation}) {
-    const [itemName, setName] = useState("");
-    const [list, setCategory] = useState(""); //the list or category it's in
-    const [shared, setShared] = useState(false);
-    const [image, setImage] = useState(null);
-    const [owner, setOwner] = useState("");
-    const [initials, setInitials] = useState("MG") //not sure if I need this. Maybe can get it from owner
-    
-    //Need to query the information above from database based on the Item that was clicked (most of the same information that was on the card clicked to get here)
-    //Image is the only thing extra that needs to be queried that was not queried on the item card
+    const itemData = route.params.itemData;
+    console.log(itemData)
+    const itemName = itemData.name;
+    const list = itemData.listID;
+    const shared = itemData.isShared;
+    const [owner, setOwner] = useState()
+    const [initials, setInitials] = useState()
+    const[image, setImage] = useState()
+    useEffect(() => {
+        (async () => {
+          let imageRef = storage.ref(itemName);
+          await imageRef.getDownloadURL().then((url) => {
+              setImage(url)
+          })
+          let userData = ((await db.collection("users").doc(itemData.userID.substring(6)).get()).data())
+          let firstname = userData.firstname
+          let lastname = userData.lastname
+          let initial = firstname[0] + lastname[0]
+          setOwner(firstname + lastname)
+          setInitials(initial)
+        })();
+    }, []);
 
     return (
         <SafeAreaView style = {[styles.container]}>
-            <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 4,paddingHorizontal: 30, flexDirection: 'row' }}>
-                {image && <Image source={{ uri: image }} style={[styles.icon]} />}
-                <Image source={require('../assets/icon.png')} style={[styles.icon]}/>
-            </View>
-            <View style={{paddingVertical: 30, paddingHorizontal: 30}}>
-                <Text style={[styles.text]}>
-                    itemName {/*<--- placeholder for now*/ itemName}
-                </Text>
-                <Text style={[styles.subtext]}>
-                    list  {/*<--- placeholder for now*/ list}
-                </Text>
-            </View>
-            { shared ?             
-            <View style={{paddingVertical: 16, paddingHorizontal: 30, flexDirection: 'row', alignItems: 'center'}}>
-                <Image source={require('../assets/logo.png')} style={[styles.image]}/>
-                <View style={{paddingHorizontal: 6}}/>
-                <Text style={[styles.small]}>
-                    This item is {shared ? '' : "not "}
-                    shared
-                </Text>
-            </View> : null}
-            <View style={{paddingVertical: 16, paddingHorizontal: 30, flexDirection: 'row', alignItems: 'center'}}>
-                <User initials={initials}/>
-                <View style={{paddingHorizontal: 6}}/>
-                <Text style={[styles.small]}>
-                    Maya Gee {/*<--- placeholder now */ owner}
-                </Text>
-            </View>
+            <ScrollView>
+                <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 4,paddingHorizontal: 30, flexDirection: 'row' }}>
+                    {image && <Image source={{ uri: image }} style={[styles.icon]} />}
+                </View>
+                <View style={{paddingVertical: 30, paddingHorizontal: 30}}>
+                    <Text style={[styles.text]}>
+                        itemName {itemName}
+                    </Text>
+                    <Text style={[styles.subtext]}>
+                        list  {list}
+                    </Text>
+                </View>
+                <View style={{paddingVertical: 16, paddingHorizontal: 30, flexDirection: 'row', alignItems: 'center'}}>
+                    <Image source={require('../assets/logo.png')} style={[styles.image]}/>
+                    <View style={{paddingHorizontal: 6}}/>
+                    <Text style={[styles.small]}>
+                        This item is {shared ? '' : "not "}
+                        shared
+                    </Text>
+                </View>
+                <View style={{paddingVertical: 16, paddingHorizontal: 30, flexDirection: 'row', alignItems: 'center'}}>
+                    <User initials={initials}/>
+                    <View style={{paddingHorizontal: 6}}/>
+                    <Text style={[styles.small]}>
+                        {owner}
+                    </Text>
+                </View>
 
-            <View style={{ position: 'absolute', bottom: 48, flexDirection: 'row', paddingTop: 48, paddingHorizontal: 30, justifyContent: 'center'}}>
-                <Button name="edit" width="55%" textColor="#184254" color="#ffffff" icon='edit' iconColor="#D9BD4B"/>       
-                <Button name="delete" width="55%" color="#ffffff" textColor="#184254" icon="close" iconColor="#EB5757"/>
-            </View>
+                <View style={{flexDirection: 'row', paddingTop: 48, paddingHorizontal: 30, justifyContent: 'center'}}>
+                    <Button name="edit" width="55%"/>       
+                    <Button name="delete" width="55%"/>
+                </View>
+            </ScrollView>
         </SafeAreaView>
     );
 }

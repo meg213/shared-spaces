@@ -1,18 +1,29 @@
-import React, { useState, Component } from 'react';
+import React, { useState, Component, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView, Modal} from 'react-native';
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
 import { Icon } from 'react-native-elements';
 import { createItems } from '../utils/firebaseMethod';
+import {db} from '../config/keys';
+import AlphabetList from 'react-alphabet-list';
 
 export default function editSpace({route, navigation}) {
+    console.log(route.params);
     //route params: spaceID, currUser
-    const [name, setName] = useState("");
-    const [category, setCategory] = useState("");
-    const [shared, setShared] = useState(false);
-    const toggleShared = () => setShared(previousState => ! previousState);
     // const currentUser = route.params.currUser;
-    const currentSpaceId = route.params.spaceID;
+    const [users, setUsers] = useState();
+    const [initials, setInitials] = useState();
+    
+    const currentSpaceId = route.params.spaceID.substring(7);
+    // useEffect(() => {
+    //     (async () => {
+    //       let users = ((await db.collection("spaces").doc(currentSpaceId).get()).data().user)
+    //       let name = []
+    //       for (let i = 0; i < users.length; i++) {
+    //           name.push(users[i].firstname + users[i].lastname)
+    //       }
+    //     })();
+    // }, []);
 
     return(
         <SafeAreaView style = {[styles.container]}>
@@ -31,7 +42,8 @@ export default function editSpace({route, navigation}) {
                         placeholderText="List Name"
                         autoCapitalize="none"
                         autoCorrect={false}
-                    />
+                />
+                <Text style={styles.subtext}>{currentSpaceId}</Text>
                 <Text style={styles.subtext}>Current Members</Text>
                 <Text style={{paddingVertical: 12}}>To Do: Method for current list of users</Text>
                 <Text style={[styles.subtext, {paddingVertical: 12}]}>Add Members</Text>

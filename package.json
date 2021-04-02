@@ -20,6 +20,7 @@
     "firebase": "^7.9.0",
     "formik": "^2.2.6",
     "react": "16.13.1",
+    "react-alphabet-list": "^0.1.8",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
     "react-native-alphabetlistview": "^0.3.1",

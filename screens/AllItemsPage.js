@@ -6,6 +6,7 @@ import Button from "../components/Button";
 import Search from '../components/Search';
 import {AlphabetList} from 'react-native-section-alphabet-list';
 import { db } from '../config/keys';
+import createItem from './CreateItem';
 
 class SectionHeader extends Component {
   render() {
@@ -58,12 +59,14 @@ export default function AllItemsPage({route, navigation}) {
             }
             data.push({owner: owner, item: itemData})
         }
+        console.log(data)
         if (componentIsMounted.current) {
             setItems(data)
         }
     }
     return () => subscriber;
   }, []);
+  console.log(allItems)
 
   let data = []
   for (let i = 0; i < allItems.length; i++) {
@@ -85,7 +88,7 @@ export default function AllItemsPage({route, navigation}) {
             />
             <View style={styles.headerMain}>
               <Text style={styles.headerTitle}>All Items</Text>
-              <Text> 2</Text>
+          <Text>{data.length}</Text>
             </View>
         </View>
         <ScrollView scrollEventThrottle={16}>
@@ -102,6 +105,7 @@ export default function AllItemsPage({route, navigation}) {
                   list={item.key.item.category}
                   owner={item.key.owner}
                   shared={item.key.item.isShared}
+                  onClick={() => navigation.navigate('ItemDetailScreen', {itemData: item.key.item})}
                 />
               )}
             />

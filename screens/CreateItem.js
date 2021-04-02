@@ -1,28 +1,24 @@
+
 import React, { useState, Component, useEffect } from 'react';
-import { ScrollView, StyleSheet, Text, View, SafeAreaView, Switch, Image, } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, SafeAreaView, Switch, Image} from 'react-native';
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
 import { createItems } from '../utils/firebaseMethod';
+import {db} from '../config/keys';
 import * as ImagePicker from 'expo-image-picker'
-import { Dropdown } from 'react-native-material-dropdown-v2-fixed';
 
 export default function createItem({route, navigation}) {
     //route params: spaceID, currUser
     const [name, setName] = useState("");
-    const [category, setCategory] = useState("Select List");
+    const [category, setCategory] = useState("");
     const [shared, setShared] = useState(false);
     const toggleShared = () => setShared(previousState => ! previousState);
     const currentUser = route.params.currUser;
     const currentSpaceId = route.params.spaceID;
-    const [image, setImage] = useState(null);    //image needs to be connected to backend
-    const data = [{
-        value: 'Banana',
-      }, {
-        value: 'Mango',
-      }, {
-        value: 'Pear',
-      }];
-   
+    console.log(currentSpaceId);
+    const [image, setImage] = useState(null);
+    const [allList, setAllList] = useState([]);
+
 
     useEffect(() => {
         (async () => {
@@ -34,6 +30,13 @@ export default function createItem({route, navigation}) {
           }
         })();
       }, []);
+
+    // useEffect(() => {
+    //     (async () => {
+    //     })();
+    //   }, []);
+
+    
     
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -73,17 +76,13 @@ export default function createItem({route, navigation}) {
                     autoCapitalize="none"
                     autoCorrect={false}
                 />
-                <Dropdown
-                    label={category}
-                    data={data}
-                />
-                {/* <FormInput
+                <FormInput
                     labelValue={category}
                     onChangeText={(itemCategory) => setCategory(itemCategory)}
                     placeholderText="Add to List"
                     autoCapitalize="none"
                     autoCorrect={false}
-                /> */}
+                />
                 <View style={styles.shared}>
                     <Text style={styles.subtext}>Is this item is shared?</Text>
                     <Switch
@@ -98,7 +97,7 @@ export default function createItem({route, navigation}) {
             <View style={{marginBottom: 50, width: '100%', position: 'absolute', bottom: 0}}>
                 <Button
                     name="Create Item"
-                    onPress={() => createItems(currentUser, currentSpaceId, name, category, shared)}
+                    onClick={() => createItems(currentUser, currentSpaceId, name, category, shared, image)}
                 />
             </View>
         </SafeAreaView>

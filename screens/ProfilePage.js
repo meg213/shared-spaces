@@ -5,8 +5,14 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 import User from "../components/User";
 import { logout } from '../utils/firebaseMethod';
+import firebase from 'firebase/app'
+import {db} from '../config/keys';
 
 export default function ProfilePage({navigation}) {
+    console.log(firebase.auth().currentUser);
+    const user = firebase.auth().currentUser
+    
+
     return (
       <SafeAreaView style={styles.container}>
         <View>

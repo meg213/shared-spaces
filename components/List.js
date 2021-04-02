@@ -50,7 +50,7 @@ const List = (props) => {
     return (
         <View style={styles.list}>
             <Pressable
-                onPress={console.log('Pressed List Component')}
+                onPress={props.onPress}
                 style={[styles.pressable, ({ pressed }) => [{opacity: pressed ? 0.6 : 1}]]}>
                 <Image source={props.icon} style={styles.icon}/>
                 <View style={styles.listHeaderSection}>
@@ -66,12 +66,16 @@ List.propTypes = {
     listName: PropTypes.string,
     numItems: PropTypes.number,
     icon: PropTypes.any,
+
+    onPres: PropTypes.func,
 };
 
 List.defaultProps = {
     listName: 'Test List',
     numItems: 0,
-    icon: require('../assets/kitchen.png')
+    icon: require('../assets/kitchen.png'),
+
+    onPress: () => {}
 };
 
 

@@ -4,7 +4,7 @@ import Button from '../components/Button';
 import FormInput from '../components/FormInput';
 import { createItems } from '../utils/firebaseMethod';
 import * as ImagePicker from 'expo-image-picker'
-import { Dropdown } from 'react-native-material-dropdown-v2-fixed';
+//import { Dropdown } from 'react-native-material-dropdown-v2-fixed';
 
 export default function createItem({route, navigation}) {
     //route params: spaceID, currUser
@@ -73,10 +73,10 @@ export default function createItem({route, navigation}) {
                     autoCapitalize="none"
                     autoCorrect={false}
                 />
-                <Dropdown
+                {/* <Dropdown
                     label={category}
                     data={data}
-                />
+                /> */}
                 {/* <FormInput
                     labelValue={category}
                     onChangeText={(itemCategory) => setCategory(itemCategory)}

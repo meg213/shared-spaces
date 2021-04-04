@@ -316,7 +316,7 @@ export async function getAllLists(space) {
     const spaceID = currentSpace.substring(7);
 
     try {
-        return (await spaceRef.doc(spaceID).lists);
+        return spaceRef.doc(spaceID).lists;
     } catch (e) {
         console.error("Error retrieivng lists from space: ", e);
         alert(e.message);

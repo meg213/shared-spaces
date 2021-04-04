@@ -35,7 +35,8 @@ export default function ListsPage({navigation, route}) {
   const listRef = db.collection('lists');
   const currSpaceID = route.params.data.substring(7);
 
-  const[myLists, setLists] = useState([])
+  const[myLists, setLists] = useState([]);
+  const[myTest, setTest] = useState([]);
   const componentIsMounted = useRef(true);
 
   useEffect(() => {
@@ -47,9 +48,10 @@ export default function ListsPage({navigation, route}) {
   useEffect(() => {
     const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {createListsData(documentSnapshot)});
     async function createListsData(documentSnapshot) {
-      console.log('snapshot:', documentSnapshot.data())
+      // console.log('snapshot:', documentSnapshot.data())
       var currentSpaceLists = documentSnapshot.data().lists;
       var data = [];
+      var test = [];
 
       for (let i = 0; i < currentSpaceLists.length; i++) {
         let listData = (await listRef.doc(currentSpaceLists[i].substring(6)).get()).data();
@@ -58,11 +60,14 @@ export default function ListsPage({navigation, route}) {
         }
         if (listData.spaceID.substring(7) == currSpaceID) {
           data.push(listData);
+          test.push({key: currentSpaceLists[i], value: listData})
+          // console.log('test', test);
         }
       }
 
       if (componentIsMounted.current) {
         setLists(data);
+        setTest(test);
       }
     }
     return () => subscriber;
@@ -72,7 +77,7 @@ export default function ListsPage({navigation, route}) {
   for (let i = 0; i < myLists.length; i++) {
     data.push({value: myLists[i].name, key: myLists[i]})
   }
-
+  
   return (
     <SafeAreaView style={styles.container}>
         <View style={styles.header}>

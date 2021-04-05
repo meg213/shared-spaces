@@ -28,6 +28,8 @@ class SectionHeader extends Component {
   }
 }
 
+
+
 const itemRef = db.collection('items');
 const userRef = db.collection('users');
 const spaceRef = db.collection('spaces');
@@ -38,6 +40,7 @@ export default function AllItemsPage({route, navigation}) {
   const[allItems, setItems] = useState([]);
   const componentIsMounted = useRef(true);
   const currSpaceID = route.params.data.substring(7);
+  const [itemIDToData, setMapItemIDToData] = useState(new Map());
 
   useEffect(() => {
     return () => {
@@ -48,30 +51,26 @@ export default function AllItemsPage({route, navigation}) {
   useEffect(() => {
     const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {createItemsData(documentSnapshot)});
     async function createItemsData(documentSnapshot) {
-        console.log(documentSnapshot.data())
         var all_items = documentSnapshot.data().items;
         var data = [];
+        var mapItemIDtoData = new Map();
         for (let i = 0; i < all_items.length; i++) {
-            let itemData = (await itemRef.doc(all_items[i].substring(6)).get()).data();
+            let itemID = all_items[i].substring(6);
+            let itemData = (await itemRef.doc(itemID).get()).data();
             let owner = (await userRef.doc(itemData.userID.substring(6)).get()).data().firstname;
             if (itemData == undefined || owner == undefined) {
                 continue
             }
-            data.push({owner: owner, item: itemData})
+            mapItemIDtoData.set(itemID, [itemData, owner])
+            data.push({value: itemData.name, key: itemID})
         }
-        console.log(data)
         if (componentIsMounted.current) {
             setItems(data)
+            setMapItemIDToData(mapItemIDtoData)
         }
     }
     return () => subscriber;
   }, []);
-  console.log(allItems)
-
-  let data = []
-  for (let i = 0; i < allItems.length; i++) {
-    data.push({value: allItems[i].item.name, key: allItems[i]})
-  }
   
   return (
     <SafeAreaView style={styles.container}>
@@ -83,12 +82,12 @@ export default function AllItemsPage({route, navigation}) {
             size={50} 
             name='arrow-left' 
             onPress={() => {
-                navigation.navigate('MySpacesPage')
+                navigation.navigate('SpacePage')
             }}
             />
             <View style={styles.headerMain}>
               <Text style={styles.headerTitle}>All Items</Text>
-          <Text>{data.length}</Text>
+          <Text>{allItems.length}</Text>
             </View>
         </View>
         <ScrollView scrollEventThrottle={16}>
@@ -96,16 +95,16 @@ export default function AllItemsPage({route, navigation}) {
               <Search/>
             </View>
             <AlphabetList
-              data = {data}
-              renderSectionHeader={SectionHeader}
+              data = {allItems}
+              // renderSectionHeader={SectionHeader}
               renderCustomItem={(item) => (
                 <Item 
                   listPage
                   itemName={item.value}
-                  list={item.key.item.category}
-                  owner={item.key.owner}
-                  shared={item.key.item.isShared}
-                  onClick={() => navigation.navigate('ItemDetailScreen', {itemData: item.key.item})}
+                  list={itemIDToData.get(item.key)[0].category}
+                  owner={itemIDToData.get(item.key)[1]}
+                  shared={itemIDToData.get(item.key)[0].isShared}
+                  onClick={() => navigation.navigate('ItemDetailScreen', {itemData: itemIDToData.get(item.key)[0]})}
                 />
               )}
             />

@@ -16,6 +16,7 @@ export default function MySpacesPage({navigation}){
     const[spaceNames, setSpaceNames] = useState([]);
 
     const componentIsMounted = useRef(true);
+    
 
     useEffect(() => {
         return () => {

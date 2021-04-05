@@ -28,12 +28,13 @@ class SectionHeader extends Component {
 }
 
 const itemRef = db.collection('items');
+const listRef = db.collection('lists');
 const userRef = db.collection('users');
 const spaceRef = db.collection('spaces');
 
 export default function AllItemsPage({route, navigation}) {
   //route params: spaceID
-  console.log(route)
+  // console.log(route)
   const[allItems, setItems] = useState([]);
   const componentIsMounted = useRef(true);
   const currSpaceID = route.params.data.substring(7);
@@ -47,16 +48,30 @@ export default function AllItemsPage({route, navigation}) {
   useEffect(() => {
     const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {createItemsData(documentSnapshot)});
     async function createItemsData(documentSnapshot) {
-        console.log(documentSnapshot.data())
-        var all_items = documentSnapshot.data().items;
+        // get all the lists of a space
+        var all_lists = documentSnapshot.data().lists;
         var data = [];
-        for (let i = 0; i < all_items.length; i++) {
-            let itemData = (await itemRef.doc(all_items[i].substring(6)).get()).data();
-            let owner = (await userRef.doc(itemData.userID.substring(6)).get()).data().firstname;
-            if (itemData == undefined || owner == undefined) {
-                continue
+        // console.log(all_lists)
+        //go through each list, get the items in the list
+        for (let i = 0; i < all_lists.length; i++) {
+            let listData = (await listRef.doc(all_lists[i].substring(6)).get()).data();
+            console.log(listData)
+            for (let i = 0; i < listData.items.length; i++) {
+              let itemData = (await itemRef.doc(listData.items[i].substring(6)).get()).data();
+              let owner = (await userRef.doc(listData.userID.substring(6)).get()).data().firstname;
+              if (itemData == undefined || owner == undefined) {
+                  continue
+              }
+              data.push({
+                owner: owner, //might need to check on this
+                category: itemData.category,
+                name: itemData.name,
+                spaceID: itemData.spaceID,
+                userID: itemData.userID, 
+                isShared: itemData.isShared,
+                listName: listData.name
+              })
             }
-            data.push({owner: owner, item: itemData})
         }
         if (componentIsMounted.current) {
             setItems(data)
@@ -65,11 +80,14 @@ export default function AllItemsPage({route, navigation}) {
     return () => subscriber;
   }, []);
 
-  let data = []
+   let data = []
+   console.log(allItems);
   for (let i = 0; i < allItems.length; i++) {
-    data.push({value: allItems[i].item.name, key: allItems[i]})
+    data.push({value: allItems[i].name, key: allItems[i]})
   }
-  
+
+  console.log('data', data);
+
   return (
     <SafeAreaView style={styles.container}>
         <View style={styles.header}>
@@ -98,10 +116,9 @@ export default function AllItemsPage({route, navigation}) {
               renderCustomItem={(item) => (
                 <Item 
                   listPage
-                  itemName={item.value}
-                  list={item.key.item.category}
-                  owner={item.key.owner}
-                  shared={item.key.item.isShared}
+                  itemName={item.key.name}
+                  list={item.key.listName}
+                  shared={item.key.isShared}
                 />
               )}
             />

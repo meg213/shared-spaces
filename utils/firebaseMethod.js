@@ -67,7 +67,6 @@ export async function createItems(currentUser, currentSpaceId, itemName, itemCat
             isShared: isShared,
             name: itemName,
             spaceID: currentSpaceId,
-            listID: "",
             userID: "users/" + currentUser.uid
         });
         spaceRef.doc(currentSpaceId.substring(7))

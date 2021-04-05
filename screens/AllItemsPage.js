@@ -74,7 +74,7 @@ export default function AllItemsPage({route, navigation}) {
                 isShared: itemData.isShared,
                 listName: listData.name
               })
-              // console.log(data)
+              console.log(data)
             }
 
         }

@@ -1,4 +1,4 @@
-import React, { useState, Component } from 'react';
+import React, { useState, Component, useEffect } from 'react';
 import { Alert } from 'react-native';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView , Pressable, Image} from 'react-native';
 import Button from '../components/Button';
@@ -6,8 +6,14 @@ import FormInput from '../components/FormInput';
 import CheckBox from '../components/Checkbox';
 import { BottomSheet , Icon} from 'react-native-elements'
 import { getItems } from '../utils/firebaseMethod';
-// import { CheckBox } from 'react-native-elements'
 import { createNewList } from '../utils/firebaseMethod';
+import { add } from 'react-native-reanimated';
+import { db } from '../config/keys';
+
+const itemRef = db.collection('items');
+const listRef = db.collection('lists');
+const userRef = db.collection('users');
+const spaceRef = db.collection('spaces');
 
 const CreateList= ({route, navigation}) => {
     const [name, setName] = useState("");
@@ -17,6 +23,8 @@ const CreateList= ({route, navigation}) => {
     const [index, setIndex] = useState(0);
     const buttons = ['Home', 'Office', 'Other']
     const currentSpaceId = route.params.spaceID;
+
+    const [unlistedItems, setUnlistedItems] = useState('')
 
     const ImageItem = (props) => {
         return (
@@ -28,6 +36,40 @@ const CreateList= ({route, navigation}) => {
             </Pressable>
         )
     }
+
+    useEffect(() => {
+        const subscriber = spaceRef.doc(currentSpaceId.substring(7)).onSnapshot(documentSnapshot => {getUnlistedItems(documentSnapshot)});
+        async function getUnlistedItems(documentSnapshot) {
+            const spaceID = currentSpaceId.substring(7);
+            var unlisted = documentSnapshot.data().items;
+
+            var data = []
+
+            for (let i = 0; i < unlisted.length; i++) {
+                let itemID = unlisted[i].substring(6)
+                let itemData = (await itemRef.doc(itemID).get()).data();
+
+                if (itemData == undefined) {
+                    continue
+                }
+
+                data.push({
+                    key: itemID,
+                    value: itemData
+                });
+            }
+
+            setUnlistedItems(data);      
+        }
+        return () => subscriber;
+      }, []);
+
+    let addableItems = []
+    for (let i = 0; i < unlistedItems.length; i++) {
+        addableItems.push(unlistedItems[i]);
+    }
+    console.log("Addable Items:\n")
+    console.log(addableItems)
 
     return(
         <SafeAreaView style = {[styles.container]}>
@@ -78,7 +120,7 @@ const CreateList= ({route, navigation}) => {
                     name="Create List"
                     width="75%"
                     onClick={() => {
-                        createNewList(currentSpaceId,name)
+                        createNewList(currentSpaceId, name)
                         navigation.navigate('ListsList');
                     }}
                 />

@@ -188,7 +188,7 @@ export default function SpacePage({route, navigation}){
                     renderCustomItem={(item) => (
                       <Item 
                         itemName={item.value}
-                        list={item.key.item.category}
+                        list={item.key.item.listID}
                         owner={item.key.owner}
                         shared={item.key.item.isShared}
                       />

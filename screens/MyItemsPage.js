@@ -71,7 +71,6 @@ export default function MyItemsPage({route, navigation}) {
               if (itemData.userID.substring(6) === route.params.currUser.uid){
                 data.push({
                   owner: owner.firstname,
-                  category: itemData.category,
                   name: itemData.name,
                   spaceID: itemData.spaceID,
                   userID: itemData.userID, 

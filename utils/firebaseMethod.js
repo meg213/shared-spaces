@@ -62,7 +62,6 @@ export async function deleteUser(currentUser) {
 export async function createItems(currentUser, currentSpaceId, itemName, isShared) {
     try {
         const currItem = itemRef.add({
-            category: itemCategory,
             isShared: isShared,
             name: itemName,
             spaceID: currentSpaceId,
@@ -88,7 +87,6 @@ export async function createItems(currentUser, currentSpaceId, itemName, isShare
  export async function createItemInList(currentUser, targetList, itemName,isShared) {
     try {
         const currItem = itemRef.add({
-            category: itemCategory,
             isShared: isShared,
             name: itemName,
             spaceID: "",

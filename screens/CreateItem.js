@@ -5,28 +5,26 @@ import FormInput from '../components/FormInput';
 import { createItems } from '../utils/firebaseMethod';
 import * as ImagePicker from 'expo-image-picker'
 import { Dropdown } from 'react-native-material-dropdown-v2-fixed';
+import { db } from '../config/keys';
+import {createItemInList } from '../utils/firebaseMethod';
+
+
+const itemRef = db.collection('items');
+const listRef = db.collection('lists');
+const userRef = db.collection('users');
+const spaceRef = db.collection('spaces');
 
 export default function createItem({route, navigation}) {
     //route params: spaceID, currUser
     const [name, setName] = useState("");
     const [category, setCategory] = useState("Select List");
     const [shared, setShared] = useState(true);
+    const [listData, setListData] = useState('')
     const toggleShared = () => setShared(previousState => ! previousState);
     const currentUser = route.params.currUser;
     const currentSpaceId = route.params.spaceID;
     const [image, setImage] = useState(null);    //image needs to be connected to backend
-    const data = [{
-        value: 'Living Room',
-      }, {
-        value: 'Kitchen',
-      }, {
-        value: 'Bathroom',
-      },{
-        value: 'Patio',
-      }
-    ];
    
-
     useEffect(() => {
         (async () => {
           if (Platform.OS !== 'web') {
@@ -46,12 +44,45 @@ export default function createItem({route, navigation}) {
             quality: 1,
         });
 
-        console.log(result);
+        // console.log(result);
 
         if (!result.cancelled) {
             setImage(result.uri);
         }
     }
+
+    //grab lists
+    useEffect(() => {
+        const subscriber = spaceRef.doc(currentSpaceId.substring(7)).onSnapshot(documentSnapshot => {createListData(documentSnapshot)});
+        async function createListData(documentSnapshot) {
+            // console.log(documentSnapshot.data().lists)
+            // get all the lists of a space
+            var all_lists = documentSnapshot.data().lists;
+            var data = [];
+
+            //go through each list, get the data fo the list
+            for (let i = 0; i < all_lists.length; i++) {
+                let listData = (await listRef.doc(all_lists[i].substring(6)).get()).data();
+                data.push({
+                    listID:  all_lists[i].substring(6),
+                    items: listData.items,
+                    name: listData.name,
+                    spaceID: listData.spaceID
+                });
+            }
+            setListData(data);
+        
+        }
+        return () => subscriber;
+      }, []);
+   
+    // putting together lists
+    let data = []
+     for (let i = 0; i < listData.length; i++) {
+       data.push({value: listData[i].name, key: listData[i]})
+     }
+     console.log(data)
+
 
     return(
         <SafeAreaView style = {[styles.container]}>
@@ -81,17 +112,17 @@ export default function createItem({route, navigation}) {
                     height:80
                 }}>
                     <Dropdown
-                        label={category}
+                        label={'Select List'}
                         data={data}
+                        onChangeText={(value) => {
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].value === value) {
+                                    setCategory('lists/' + data[i].key.listID)
+                                }
+                            }
+                        }}
                     />
                 </View>
-                {/* <FormInput
-                    labelValue={category}
-                    onChangeText={(itemCategory) => setCategory(itemCategory)}
-                    placeholderText="Add to List"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                /> */}
                 <View style={styles.shared}>
                     <Text style={styles.subtext}>Is this item is shared?</Text>
                     <Switch
@@ -106,11 +137,24 @@ export default function createItem({route, navigation}) {
             <View style={{marginBottom: 50, width: '100%', position: 'absolute', bottom: 0}}>
                 <Button
                     name="Create Item"
-                    onPress={() => createItems(currentUser, currentSpaceId, name, category, shared)}
+                    onClick={() => {
+                        if (category === 'Select List'){
+                            setCategory('none')
+                        }
+                        // creating an item
+                        createItems(currentUser, currentSpaceId, name, category, shared)
+
+                        //add to list
+                        // category vs itemCategory???????????????????
+                        if (category !== 'none')
+                        createItemInList(currentUser, category, name, category, shared) 
+
+                        navigation.navigate('SpacePage')
+                    }
+                  }
                 />
             </View>
         </SafeAreaView>
-        
     );
 }
 

@@ -57,10 +57,9 @@ export async function deleteUser(currentUser) {
  * @param currentUser       User creating the item
  * @param currentSpaceId    Space item belongs to
  * @param itemName          Name of the item
- * @param itemCategory      Type of the item
  * @param isShared          Is the item shared or not?
  */
-export async function createItems(currentUser, currentSpaceId, itemName, itemCategory, isShared) {
+export async function createItems(currentUser, currentSpaceId, itemName, isShared) {
     try {
         const currItem = itemRef.add({
             category: itemCategory,
@@ -84,10 +83,9 @@ export async function createItems(currentUser, currentSpaceId, itemName, itemCat
  * @param currentUser       User creating the item
  * @param targetList        List item belongs to
  * @param itemName          Name of the item
- * @param itemCategory      Type of the item
  * @param isShared          Is the item shared or not?
  */
- export async function createItemInList(currentUser, targetList, itemName, itemCategory, isShared) {
+ export async function createItemInList(currentUser, targetList, itemName,isShared) {
     try {
         const currItem = itemRef.add({
             category: itemCategory,

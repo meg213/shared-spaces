@@ -112,10 +112,11 @@ export default function MyItemsPage({route, navigation}) {
               <Text> {myItems.length} </Text>
             </View>
         </View>
-        <ScrollView scrollEventThrottle={16}>
-            <View>
+        <View style={styles.search}>
               <Search/>
-            </View>
+        </View>
+        <ScrollView scrollEventThrottle={16}>
+          <View> 
             <AlphabetList
               data = {data}
               renderSectionHeader={SectionHeader}
@@ -130,6 +131,7 @@ export default function MyItemsPage({route, navigation}) {
                 />
               )}
             />
+        </View>    
         </ScrollView>
     </SafeAreaView>
   );
@@ -168,5 +170,8 @@ const styles = StyleSheet.create({
     color: '#4E7580',
     paddingHorizontal: 12,
     paddingVertical: 6
+  },
+  search: {
+    width: '90%'
   }
 });

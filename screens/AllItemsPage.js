@@ -110,10 +110,11 @@ export default function AllItemsPage({route, navigation}) {
               <Text>{data.length}</Text>
             </View>
         </View>
+        <View style={styles.search}>
+          <Search/>
+        </View>
         <ScrollView scrollEventThrottle={16}>
-            <View>
-              <Search/>
-            </View>
+          <View>  
             <AlphabetList
               data = {data}
               renderSectionHeader={SectionHeader}
@@ -126,12 +127,11 @@ export default function AllItemsPage({route, navigation}) {
                   shared={item.key.isShared}
                   onClick={()=> {
                     console.log(item.key)
-                    navigation.navigate('ItemDetailScreen', {data: item.key})
-                  }
-                  }
+                    navigation.navigate('ItemDetailScreen', {data: item.key})}}
                 />
               )}
             />
+          </View>
         </ScrollView>
     </SafeAreaView>
   );
@@ -165,4 +165,7 @@ const styles = StyleSheet.create({
       fontWeight: '500',
       paddingBottom: 12,
   },
+  search: {
+    width: '90%'
+  }
 });

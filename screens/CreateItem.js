@@ -10,18 +10,21 @@ export default function createItem({route, navigation}) {
     //route params: spaceID, currUser
     const [name, setName] = useState("");
     const [category, setCategory] = useState("Select List");
-    const [shared, setShared] = useState(false);
+    const [shared, setShared] = useState(true);
     const toggleShared = () => setShared(previousState => ! previousState);
     const currentUser = route.params.currUser;
     const currentSpaceId = route.params.spaceID;
     const [image, setImage] = useState(null);    //image needs to be connected to backend
     const data = [{
-        value: 'Banana',
+        value: 'Living Room',
       }, {
-        value: 'Mango',
+        value: 'Kitchen',
       }, {
-        value: 'Pear',
-      }];
+        value: 'Bathroom',
+      },{
+        value: 'Patio',
+      }
+    ];
    
 
     useEffect(() => {
@@ -73,10 +76,15 @@ export default function createItem({route, navigation}) {
                     autoCapitalize="none"
                     autoCorrect={false}
                 />
-                {/* <Dropdown
-                    label={category}
-                    data={data}
-                /> */}
+                <View
+                style={{
+                    height:80
+                }}>
+                    <Dropdown
+                        label={category}
+                        data={data}
+                    />
+                </View>
                 {/* <FormInput
                     labelValue={category}
                     onChangeText={(itemCategory) => setCategory(itemCategory)}

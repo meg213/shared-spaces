@@ -7,12 +7,13 @@ import { createItems } from '../utils/firebaseMethod';
 
 export default function editSpace({route, navigation}) {
     //route params: spaceID, currUser
-    const [name, setName] = useState("");
+    const [name, setName] = useState(route.params.name);
     const [category, setCategory] = useState("");
     const [shared, setShared] = useState(false);
     const toggleShared = () => setShared(previousState => ! previousState);
     // const currentUser = route.params.currUser;
     const currentSpaceId = route.params.spaceID;
+    
 
     return(
         <SafeAreaView style = {[styles.container]}>
@@ -26,24 +27,31 @@ export default function editSpace({route, navigation}) {
                 }}>
                 <Text style={styles.subtext}>Space Name</Text>
                 <FormInput
-                        labelValue={route.params.name}
+                        labelValue={name}
                         onChangeText={(spaceName) => setName(spaceName)}
                         placeholderText="List Name"
                         autoCapitalize="none"
                         autoCorrect={false}
                     />
                 <Text style={styles.subtext}>Current Members</Text>
-                <Text style={{paddingVertical: 12}}>To Do: Method for current list of users</Text>
+                <Text style={{paddingVertical: 12}}>To Do: Add current list of users</Text>
                 <Text style={[styles.subtext, {paddingVertical: 12}]}>Add Members</Text>
                 <Button
                     name="Generate Code"
                 />
             </View>
-            <View style={{marginBottom: 50, width: '100%', position: 'absolute', bottom: 0}}>
+            <View style={{marginBottom: 50, width: '100%', position: 'absolute', bottom: 0,}}>
+                <View style={{paddingVertical: 12}}>
+                <Button
+                    name="Update Space"
+                    color='#184254'
+                    onClick={() => { navigation.navigate('SpacePage') }}
+                />
+                </View>
                 <Button
                     name="Delete Space"
                     color='#EB5757'
-                    // onPress={() => createItems(currentUser, currentSpaceId, name, category, shared)}
+                    // onClick={() => createItems(currentUser, currentSpaceId, name, category, shared)}
                 />
             </View>
         </SafeAreaView>

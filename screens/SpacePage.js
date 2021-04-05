@@ -143,7 +143,7 @@ export default function SpacePage({route, navigation}){
                     <Card name="Shared"
                         onClick={() => {
                             console.log('card click test');
-                            navigation.navigate('SharedList');
+                            navigation.navigate('SharedList', {data:route.params.data, currUser: route.params.currUser});
                             }}/>
                     <Card name="My Items"
                         icon='account-circle'
@@ -161,7 +161,7 @@ export default function SpacePage({route, navigation}){
                         icon='group'
                         backgroundColor="#F2994A"
                         onClick={() => {
-                            navigation.navigate('AllItems', {data:route.params.data});
+                            navigation.navigate('AllItems', {data:route.params.data, currUser: route.params.currUser});
                             }}/>
                 </ScrollView>
             </View>

@@ -34,7 +34,7 @@ export default function ListsPage({navigation, route}) {
   const listRef = db.collection('lists');
   const currSpaceID = route.params.data.substring(7);
 
-  const[myLists, setLists] = useState([])
+  const[myLists, setLists] = useState([]);
   const componentIsMounted = useRef(true);
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export default function ListsPage({navigation, route}) {
   useEffect(() => {
     const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {createListsData(documentSnapshot)});
     async function createListsData(documentSnapshot) {
-      console.log('snapshot:', documentSnapshot.data())
+      // console.log('snapshot:', documentSnapshot.data())
       var currentSpaceLists = documentSnapshot.data().lists;
       var data = [];
 
@@ -71,12 +71,17 @@ export default function ListsPage({navigation, route}) {
     }
     return () => subscriber;
   }, []);
-
-  let data = []
+  
+  let data = [];
   for (let i = 0; i < myLists.length; i++) {
-    data.push(myLists[i]);
-    console.log(myLists[i]);
-    //data.push({value: myLists[i].name, key: myLists[i]})
+    data.push({value: myLists[i].value.name, 
+      key: {
+        name: myLists[i].value.name,
+        items: myLists[i].value.items,
+        spaceID: myLists[i].value.spaceID,
+        listID: myLists[i].key
+      }
+    })
   }
 
   return (
@@ -106,12 +111,11 @@ export default function ListsPage({navigation, route}) {
               renderSectionHeader={SectionHeader}
               renderCustomItem={(item) => (
                 <List
-                  listName={item.value.name}
-                  numItems={item.value.items.length}
+                  listName={item.key.name}
+                  numItems={item.key.items.length}
                   onPress={() => {
-                    console.log(item);
-                    navigation.navigate("ListDetail", { listID: item.key, name: item.value.name, numItems: item.value.items.length, data: route.params.data});
-                    //navigation.navigate('ListDetail', { items: item.key.items, data:route.params.data, name: item.value, numItems: item.key.number })
+                    console.log('item', item);
+                    navigation.navigate("ListDetail", { listID: item.key.listID, name: item.key.name, numItems: item.key.items.length, data: route.params.data});
                   }}
                   // TODO: Create custom icon for lists
                 />

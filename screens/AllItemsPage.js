@@ -74,19 +74,25 @@ export default function AllItemsPage({route, navigation}) {
                 isShared: itemData.isShared,
                 listName: listData.name
               })
+              // console.log(data)
             }
+
         }
+        console.log(componentIsMounted.current)
         if (componentIsMounted.current) {
             setItems(data)
+            console.log('hi')
         }
     }
     return () => subscriber;
   }, []);
 
+  console.log(allItems)
    let data = []
   for (let i = 0; i < allItems.length; i++) {
     data.push({value: allItems[i].name, key: allItems[i]})
   }
+  console.log(data)
 
   return (
     <SafeAreaView style={styles.container}>

@@ -35,7 +35,6 @@ export default function ListsPage({navigation, route}) {
   const currSpaceID = route.params.data.substring(7);
 
   const[myLists, setLists] = useState([]);
-  const[myTest, setTest] = useState([]);
   const componentIsMounted = useRef(true);
 
   useEffect(() => {
@@ -50,7 +49,6 @@ export default function ListsPage({navigation, route}) {
       // console.log('snapshot:', documentSnapshot.data())
       var currentSpaceLists = documentSnapshot.data().lists;
       var data = [];
-      var test = [];
 
       for (let i = 0; i < currentSpaceLists.length; i++) {
         let listID = currentSpaceLists[i].substring(6);
@@ -69,7 +67,6 @@ export default function ListsPage({navigation, route}) {
 
       if (componentIsMounted.current) {
         setLists(data);
-        setTest(test);
       }
     }
     return () => subscriber;

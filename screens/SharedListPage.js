@@ -5,6 +5,27 @@ import Item from "../components/Item";
 import Button from "../components/Button";
 import Search from '../components/Search';
 import {AlphabetList} from 'react-native-section-alphabet-list';
+import { db } from '../config/keys';
+
+class SectionHeader extends Component {
+  render() {
+    var textStyle = {
+      textAlign:'center',
+      color:'#fff',
+      fontWeight:'700',
+      fontSize:16
+    };
+
+    var viewStyle = {
+      backgroundColor: '#ccc'
+    };
+    return (
+      <View style={viewStyle}>
+        <Text style={textStyle}>{this.props.title}</Text>
+      </View>
+    );
+  }
+}
 
 const itemRef = db.collection('items');
 const listRef = db.collection('lists');
@@ -29,28 +50,36 @@ export default function SharedPage({route, navigation}) {
         // get all the lists of a space
         var all_lists = documentSnapshot.data().lists;
         var data = [];
-        // console.log(all_lists)
+
         //go through each list, get the items in the list
         for (let i = 0; i < all_lists.length; i++) {
-            let listData = (await listRef.doc(all_lists[i].substring(6)).get()).data();
-            console.log(listData)
+          let listData = (await listRef.doc(all_lists[i].substring(6)).get()).data();
+
+            // if there is at least one item in the list
             for (let i = 0; i < listData.items.length; i++) {
               let itemData = (await itemRef.doc(listData.items[i].substring(6)).get()).data();
-              let owner = (await userRef.doc(listData.userID.substring(6)).get()).data().firstname;
-              if (itemData == undefined || owner == undefined) {
-                  continue
+              console.log(itemData)
+              //get the owner
+              let owner; 
+              if (itemData.userID === undefined) {
+                  owner = 'none'
+              } else {
+                  owner = (await userRef.doc(itemData.userID.substring(6)).get()).data();
               }
-              data.push({
-                owner: owner, //might need to check on this
-                category: itemData.category,
-                name: itemData.name,
-                spaceID: itemData.spaceID,
-                userID: itemData.userID, 
-                isShared: itemData.isShared,
-                listName: listData.name
-              })
-              // console.log('itemData', data)
+              if (itemData.isShared){
+                data.push({
+                  owner: owner.firstname,
+                  category: itemData.category,
+                  name: itemData.name,
+                  spaceID: itemData.spaceID,
+                  userID: itemData.userID, 
+                  isShared: itemData.isShared,
+                  listName: listData.name
+                })
+              }
+              // console.log(data)
             }
+
         }
         if (componentIsMounted.current) {
             setItems(data)
@@ -60,7 +89,6 @@ export default function SharedPage({route, navigation}) {
   }, []);
 
    let data = []
-   console.log(allItems);
   for (let i = 0; i < allItems.length; i++) {
     data.push({value: allItems[i].name, key: allItems[i]})
   }
@@ -82,7 +110,7 @@ export default function SharedPage({route, navigation}) {
             />
             <View style={styles.headerMain}>
               <Text style={styles.headerTitle}>Shared Items</Text>
-              <Text> 2</Text>
+              <Text> {data.length}</Text>
             </View>
         </View>
         <View style={styles.search}>

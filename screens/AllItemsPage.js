@@ -34,7 +34,6 @@ const spaceRef = db.collection('spaces');
 
 export default function AllItemsPage({route, navigation}) {
   //route params: spaceID
-  // console.log(route)
   const[allItems, setItems] = useState([]);
   const componentIsMounted = useRef(true);
   const currSpaceID = route.params.data.substring(7);
@@ -61,13 +60,13 @@ export default function AllItemsPage({route, navigation}) {
               let itemData = (await itemRef.doc(listData.items[i].substring(6)).get()).data();
               //get the owner
               let owner; 
-              if (listData.userID != undefined) {
-                  owner = (await userRef.doc(listData.userID.substring(6)).get()).data().firstname;
-              } else {
+              if (itemData.userID === undefined) {
                   owner = 'none'
+              } else {
+                  owner = (await userRef.doc(itemData.userID.substring(6)).get()).data();
               }
               data.push({
-                owner: owner,
+                owner: owner.firstname,
                 category: itemData.category,
                 name: itemData.name,
                 spaceID: itemData.spaceID,

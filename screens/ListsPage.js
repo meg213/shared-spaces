@@ -77,7 +77,7 @@ export default function ListsPage({navigation, route}) {
   
   let data = [];
   for (let i = 0; i < myLists.length; i++) {
-    data.push({value: myLists[i].key, 
+    data.push({value: myLists[i].value.name, 
       key: {
         name: myLists[i].value.name,
         items: myLists[i].value.items,

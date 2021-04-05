@@ -29,7 +29,7 @@ export default function SharedPage({navigation}) {
             size={50} 
             name='arrow-left' 
             onPress={() => {
-                navigation.navigate('MySpacesPage')
+                navigation.navigate('SpacePage')
             }}
             />
             <View style={styles.headerMain}>
@@ -47,11 +47,11 @@ export default function SharedPage({navigation}) {
                 onClick={() => {navigation.navigate('ItemDetailScreen')}}
             />
             <Item
+                itemName="Test Item"
+                owner="Maya"
                 listPage
-                onClick={() => {navigation.navigate('ItemDetailScreen')}}
-            />
-            <Button
-                onClick={()=> {navigation.navigate('SpacePage')}}
+                onClick={() => {navigation.navigate('ItemDetailScreen'), { }}}
+               // navigation.navigate("ListDetail", { listID: item.key.listID, name: item.key.name, numItems: item.key.items.length, data: route.params.data});
             />
         </View>
         </ScrollView>

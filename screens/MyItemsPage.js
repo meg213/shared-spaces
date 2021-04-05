@@ -95,7 +95,28 @@ export default function MyItemsPage({route, navigation}) {
             <View>
               <Search/>
             </View>
-            <AlphabetList
+            <Item
+              itemName="New Item"
+              shared
+              owner="Morgan"
+              listPage
+            />
+            <Item
+              itemName="Test Item"
+              shared
+              owner="Morgan"
+              list="Kitchen"
+              listPage
+            />
+            <Item
+              itemName="Lamp"
+              shared
+              owner="Morgan"
+              list="Living Room"
+              listPage
+            />
+
+            {/* <AlphabetList
               data = {data}
               renderSectionHeader={SectionHeader}
               renderCustomItem={(item) => (
@@ -107,11 +128,7 @@ export default function MyItemsPage({route, navigation}) {
                   owner={null}
                 />
               )}
-            />
-            <Button
-                onClick={()=> {navigation.navigate('SpacePage')}}
-                name="Back"
-            />
+            /> */}
         </ScrollView>
     </SafeAreaView>
   );

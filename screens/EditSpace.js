@@ -40,11 +40,18 @@ export default function editSpace({route, navigation}) {
                     name="Generate Code"
                 />
             </View>
-            <View style={{marginBottom: 50, width: '100%', position: 'absolute', bottom: 0}}>
+            <View style={{marginBottom: 50, width: '100%', position: 'absolute', bottom: 0,}}>
+                <View style={{paddingVertical: 12}}>
+                <Button
+                    name="Update Space"
+                    color='#184254'
+                    onClick={() => { navigation.navigate('SpacePage') }}
+                />
+                </View>
                 <Button
                     name="Delete Space"
                     color='#EB5757'
-                    // onPress={() => createItems(currentUser, currentSpaceId, name, category, shared)}
+                    // onClick={() => createItems(currentUser, currentSpaceId, name, category, shared)}
                 />
             </View>
         </SafeAreaView>

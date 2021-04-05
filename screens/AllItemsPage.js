@@ -80,12 +80,12 @@ export default function AllItemsPage({route, navigation}) {
             size={50} 
             name='arrow-left' 
             onPress={() => {
-                navigation.navigate('MySpacesPage')
+                navigation.navigate('SpacePage')
             }}
             />
             <View style={styles.headerMain}>
               <Text style={styles.headerTitle}>All Items</Text>
-              <Text> 2</Text>
+              <Text>{data.length}</Text>
             </View>
         </View>
         <ScrollView scrollEventThrottle={16}>
@@ -104,9 +104,6 @@ export default function AllItemsPage({route, navigation}) {
                   shared={item.key.item.isShared}
                 />
               )}
-            />
-            <Button
-                onClick={()=> {navigation.navigate('SpacePage')}}
             />
         </ScrollView>
     </SafeAreaView>

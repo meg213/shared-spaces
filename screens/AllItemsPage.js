@@ -52,27 +52,22 @@ export default function AllItemsPage({route, navigation}) {
         var all_lists = documentSnapshot.data().lists;
         var data = [];
 
-        //get the users of the space
-        var user = documentSnapshot.data().user
-        
         //go through each list, get the items in the list
         for (let i = 0; i < all_lists.length; i++) {
           let listData = (await listRef.doc(all_lists[i].substring(6)).get()).data();
-          // if there is at least one item in the list
-          // console.log('listdata', listData)
+
+            // if there is at least one item in the list
             for (let i = 0; i < listData.items.length; i++) {
-              console.log('listdata', listData);
               let itemData = (await itemRef.doc(listData.items[i].substring(6)).get()).data();
-              console.log(listData.userID);
-             // let testowner = (await userRef.doc(listData.userID.substring(6)).get()).data();
-    
-              console.log('testowner', testowner);
-              // if (itemData == undefined || owner == undefined) {
-              //     continue
-              // }
-              // let testowner = 'test'
+              //get the owner
+              let owner; 
+              if (listData.userID != undefined) {
+                  owner = (await userRef.doc(listData.userID.substring(6)).get()).data().firstname;
+              } else {
+                  owner = 'none'
+              }
               data.push({
-                // owner: testowner, //might need to check on this
+                owner: owner,
                 category: itemData.category,
                 name: itemData.name,
                 spaceID: itemData.spaceID,
@@ -90,12 +85,9 @@ export default function AllItemsPage({route, navigation}) {
   }, []);
 
    let data = []
-  //  console.log(allItems);
   for (let i = 0; i < allItems.length; i++) {
     data.push({value: allItems[i].name, key: allItems[i]})
   }
-
-  // console.log('data', data);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -125,6 +117,7 @@ export default function AllItemsPage({route, navigation}) {
               renderCustomItem={(item) => (
                 <Item 
                   listPage
+                  owner={item.key.owner}
                   itemName={item.key.name}
                   list={item.key.listName}
                   shared={item.key.isShared}

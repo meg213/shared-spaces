@@ -138,16 +138,6 @@ export default function SharedPage({route, navigation}) {
     );
 }
 
-/*
-    const [itemName, setName] = useState("");
-    const [list, setCategory] = useState(""); //the list or category it's in
-    const [shared, setShared] = useState(false);
-    const [image, setImage] = useState(null);
-    const [owner, setOwner] = useState("");
-    const [initials, setInitials] = useState("MG") //not sure if I need this. Maybe can get it from owner
-
-*/
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -126,6 +126,11 @@ export default function AllItemsPage({route, navigation}) {
                   itemName={item.key.name}
                   list={item.key.listName}
                   shared={item.key.isShared}
+                  onClick={()=> {
+                    console.log(item.key)
+                    navigation.navigate('ItemDetailScreen', {data: item.key})
+                  }
+                  }
                 />
               )}
             />

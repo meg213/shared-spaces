@@ -41,6 +41,8 @@ export default function MySpacesPage({navigation}){
         }
         return () => subscriber;
     }, []);
+
+    console.log('spaceNames', spaceNames);
     return (
         <SafeAreaView style = {[styles.container]}>
             <View style ={{

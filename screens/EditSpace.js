@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, Text, View, SafeAreaView, Modal} from 'react-na
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
 import { Icon } from 'react-native-elements';
-import { createItems } from '../utils/firebaseMethod';
+import { updateSpace } from '../utils/firebaseMethod';
 
 export default function editSpace({route, navigation}) {
     //route params: spaceID, currUser
@@ -45,7 +45,11 @@ export default function editSpace({route, navigation}) {
                 <Button
                     name="Update Space"
                     color='#184254'
-                    onClick={() => { navigation.navigate('SpacePage') }}
+                    onClick={() => { 
+                        console.log(currentSpaceId.substring(7))
+                        updateSpace(currentSpaceId, name);
+                        navigation.navigate('SpacePage') 
+                    }}
                 />
                 </View>
                 <Button

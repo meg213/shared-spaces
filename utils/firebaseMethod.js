@@ -238,6 +238,26 @@ export async function deleteSpace(currentUser, currentSpace) {
     return spaceData;
 }
 
+
+/**
+ * Updates the name of a Space
+ * In future, add to this method with more updates
+ * @param spaceID           Current Space
+ * @param newName           New space Name
+ */
+ export async function updateSpace(spaceID, newName) {
+    try {
+        spaceRef.doc(spaceID.substring(7)).update({
+            name: newName
+        })
+        let itemData = (await spaceRef.doc(spaceID.substring(7)).get()).data();
+        console.log( itemData)
+        console.log('space updated');
+    } catch (e) {
+        Alert.alert(e.message)
+    }
+}
+
 /**
  * Creates a new list reference in Firebase
  * @param currentSpaceID Space to own the newly created list

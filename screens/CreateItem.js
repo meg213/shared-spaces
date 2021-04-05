@@ -147,7 +147,7 @@ export default function createItem({route, navigation}) {
                         //add to list
                         // category vs itemCategory???????????????????
                         if (category !== 'none')
-                        createItemInList(currentUser, category, name, category, shared) 
+                            createItemInList(currentUser, category, name, category, shared) 
 
                         navigation.navigate('SpacePage')
                     }

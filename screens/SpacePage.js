@@ -22,13 +22,24 @@ export default function SpacePage({route, navigation}){
   const currSpaceID = route.params.data.substring(7);
   // Items array in reverse order; recently added items are first in array
   const[recentItems, setItems] = useState([]);
-  const componentIsMounted = useRef(true);
+  const[spaceName, setSpaceName] = useState('');
+   const componentIsMounted = useRef(true);
+  
   
   useEffect(() => {
     return () => {
       componentIsMounted.current = false;
     };
   }, []);
+
+  useEffect(() => {
+    const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {getSpaceName(documentSnapshot)});
+     async function getSpaceName(documentSnapshot) {
+        console.log('snap', documentSnapshot.data())
+        setSpaceName(documentSnapshot.data().name)
+     }
+     return () => subscriber;
+    }, []);
 
   // Updates recentItems on every new item instance
   useEffect(() => {
@@ -107,7 +118,7 @@ export default function SpacePage({route, navigation}){
                 fontWeight:'500',
                 color: "#184254"
                 }}>
-                {route.params.name}
+                {spaceName}
             </Text>
             <Icon
                 size={40} 

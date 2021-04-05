@@ -74,14 +74,19 @@ export default function ListsPage({navigation, route}) {
     }
     return () => subscriber;
   }, []);
-
-  let data = []
-  for (let i = 0; i < myLists.length; i++) {
-    data.push(myLists[i]);
-    console.log(myLists[i]);
-    //data.push({value: myLists[i].name, key: myLists[i]})
-  }
   
+  let data = [];
+  for (let i = 0; i < myLists.length; i++) {
+    data.push({value: myLists[i].key, 
+      key: {
+        name: myLists[i].value.name,
+        items: myLists[i].value.items,
+        spaceID: myLists[i].value.spaceID,
+        listID: myLists[i].key
+      }
+    })
+  }
+
   return (
     <SafeAreaView style={styles.container}>
         <View style={styles.header}>
@@ -109,12 +114,11 @@ export default function ListsPage({navigation, route}) {
               renderSectionHeader={SectionHeader}
               renderCustomItem={(item) => (
                 <List
-                  listName={item.value.name}
-                  numItems={item.value.items.length}
+                  listName={item.key.name}
+                  numItems={item.key.items.length}
                   onPress={() => {
-                    console.log(item);
-                    navigation.navigate("ListDetail", { listID: item.key, name: item.value.name, numItems: item.value.items.length, data: route.params.data});
-                    //navigation.navigate('ListDetail', { items: item.key.items, data:route.params.data, name: item.value, numItems: item.key.number })
+                    console.log('item', item);
+                    navigation.navigate("ListDetail", { listID: item.key.listID, name: item.key.name, numItems: item.key.items.length, data: route.params.data});
                   }}
                   // TODO: Create custom icon for lists
                 />

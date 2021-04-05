@@ -174,6 +174,41 @@ export async function createSpaces(currentUser, spaceName, spaceType) {
 }
 
 /**
+ * Updates a space's info in firebase
+ * Unused fields should be NULL
+ * 
+ * @param targetSpace ID of space requesting change, assumed spaces/...
+ * @param newOwner Optional: New owner user ID
+ * @param newName Optional: New name of the new space
+ * @param newType Optional: New type of the new space
+ */
+ export async function updateSpaces(targetSpace, newOwner, newName, newType) {
+    const spaceID = targetSpace.substring(7);
+    
+    try {
+        if (newOwner != null) {
+            spaceRef.doc(targetSpace).update({
+                owner: newOwner
+            });
+        }
+
+        if (newName != null) {
+            spaceRef.doc(targetSpace).update({
+                name: newName
+            });
+        }
+
+        if (newType != null) {
+            spaceRef.doc(targetSpace).update({
+                spaceType: newType
+            });
+        }
+    } catch (e) {
+        alert(e.message);
+    }
+}
+
+/**
  * Deletes the Space ONLY IF currentUser is the owner of the Space
  * @param currentUser User requesting deletion
  * @param currentSpace Space targeted for deletion

@@ -32,9 +32,10 @@ class SectionHeader extends Component {
 }
 
 export default function ListsPage({navigation, route}) {
-  const spaceRef = db.collection('spaces');
-  const listRef = db.collection('lists');
   const itemRef = db.collection('items');
+  const listRef = db.collection('lists');
+  const userRef = db.collection('users');
+  const spaceRef = db.collection('spaces');
 
   const[items, setItems] = useState([])
   const componentIsMounted = useRef(true);
@@ -51,16 +52,32 @@ export default function ListsPage({navigation, route}) {
     const subscriber = listRef.doc(listID).onSnapshot(documentSnapshot => {createItemData(documentSnapshot)});
     async function createItemData(documentSnapshot) {
       console.log('snapshot:', documentSnapshot.data())
+      var listName = documentSnapshot.data().name;
       var currentItemList = documentSnapshot.data().items;
       var data = [];
 
       for (let i = 0; i < currentItemList.length; i++) {
         let itemData = (await itemRef.doc(currentItemList[i].substring(6)).get()).data();
-        // console.log('itemdata', itemData);
         if (itemData == undefined) {
           continue;
         }
-        data.push(itemData);
+         //get the owner
+         let owner; 
+         if (itemData.userID === undefined) {
+             owner = 'none'
+         } else {
+             owner = (await userRef.doc(itemData.userID.substring(6)).get()).data();
+         }
+        data.push({
+          owner: owner.firstname,
+          category: itemData.category,
+          name: itemData.name,
+          spaceID: itemData.spaceID,
+          userID: itemData.userID, 
+          isShared: itemData.isShared,
+          listName: listName
+        })
+        console.log('data', data)
       }
 
       if (componentIsMounted.current) {
@@ -74,7 +91,6 @@ export default function ListsPage({navigation, route}) {
   for (let i = 0; i < items.length; i++) {
     data.push({value: items[i].name, key: items[i]})
   }
-  console.log('data!', data);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -101,12 +117,14 @@ export default function ListsPage({navigation, route}) {
               data = {data}
               renderSectionHeader={SectionHeader}
               renderCustomItem={(item) => (
-                <Item
-                  itemName={item.value}
-                  list={route.params.name}
-                  isShared={item.key.isShared}
-                  listPage
-                />
+                <Item 
+                listPage
+                owner={item.key.owner}
+                itemName={item.key.name}
+                list={item.key.listName}
+                shared={item.key.isShared}
+                onClick={()=> {navigation.navigate('ItemDetailScreen', {data: item.key})}}
+              />
               )}
             />
         </ScrollView>

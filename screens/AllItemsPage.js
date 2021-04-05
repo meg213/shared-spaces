@@ -78,10 +78,8 @@ export default function AllItemsPage({route, navigation}) {
             }
 
         }
-        console.log(componentIsMounted.current)
         if (componentIsMounted.current) {
             setItems(data)
-            console.log('hi')
         }
     }
     return () => subscriber;

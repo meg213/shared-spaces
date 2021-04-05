@@ -128,6 +128,7 @@ export default function SharedPage({route, navigation}) {
                   itemName={item.key.name}
                   list={item.key.listName}
                   shared={item.key.isShared}
+                  onClick={()=> {navigation.navigate('ItemDetailScreen', {data: item.key})}}
                 />
               )}
             />
@@ -136,6 +137,16 @@ export default function SharedPage({route, navigation}) {
     </SafeAreaView> 
     );
 }
+
+/*
+    const [itemName, setName] = useState("");
+    const [list, setCategory] = useState(""); //the list or category it's in
+    const [shared, setShared] = useState(false);
+    const [image, setImage] = useState(null);
+    const [owner, setOwner] = useState("");
+    const [initials, setInitials] = useState("MG") //not sure if I need this. Maybe can get it from owner
+
+*/
 
 const styles = StyleSheet.create({
   container: {

@@ -4,16 +4,17 @@ import Button from '../components/Button';
 import User from '../components/User';
 
 export default function ItemDetailScreen ({route, navigation}) {
-    const [itemName, setName] = useState("");
-    const [list, setCategory] = useState(""); //the list or category it's in
-    const [shared, setShared] = useState(false);
+    const [itemName, setName] = useState(route.params.data.name);
+    const [list, setCategory] = useState(route.params.data.listName); //the list or category it's in
+    const [shared, setShared] = useState(route.params.data.isShared);
     const [image, setImage] = useState(null);
-    const [owner, setOwner] = useState("");
+    const [owner, setOwner] = useState(route.params.data.owner);
     const [initials, setInitials] = useState("MG") //not sure if I need this. Maybe can get it from owner
     
     //Need to query the information above from database based on the Item that was clicked (most of the same information that was on the card clicked to get here)
     //Image is the only thing extra that needs to be queried that was not queried on the item card
 
+    console.log('route.params', route.params.data.name);
     return (
         <SafeAreaView style = {[styles.container]}>
             <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 4,paddingHorizontal: 30, flexDirection: 'row' }}>
@@ -22,10 +23,10 @@ export default function ItemDetailScreen ({route, navigation}) {
             </View>
             <View style={{paddingVertical: 30, paddingHorizontal: 30}}>
                 <Text style={[styles.text]}>
-                    itemName {/*<--- placeholder for now*/ itemName}
+                    {itemName}
                 </Text>
                 <Text style={[styles.subtext]}>
-                    list  {/*<--- placeholder for now*/ list}
+                    {list}
                 </Text>
             </View>
             { shared ?             

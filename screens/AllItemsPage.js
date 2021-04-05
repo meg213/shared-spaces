@@ -51,19 +51,28 @@ export default function AllItemsPage({route, navigation}) {
         // get all the lists of a space
         var all_lists = documentSnapshot.data().lists;
         var data = [];
-        // console.log(all_lists)
+
+        //get the users of the space
+        var user = documentSnapshot.data().user
+        
         //go through each list, get the items in the list
         for (let i = 0; i < all_lists.length; i++) {
-            let listData = (await listRef.doc(all_lists[i].substring(6)).get()).data();
-            console.log(listData)
+          let listData = (await listRef.doc(all_lists[i].substring(6)).get()).data();
+          // if there is at least one item in the list
+          // console.log('listdata', listData)
             for (let i = 0; i < listData.items.length; i++) {
+              console.log('listdata', listData);
               let itemData = (await itemRef.doc(listData.items[i].substring(6)).get()).data();
-              let owner = (await userRef.doc(listData.userID.substring(6)).get()).data().firstname;
-              if (itemData == undefined || owner == undefined) {
-                  continue
-              }
+              console.log(listData.userID);
+             // let testowner = (await userRef.doc(listData.userID.substring(6)).get()).data();
+    
+              console.log('testowner', testowner);
+              // if (itemData == undefined || owner == undefined) {
+              //     continue
+              // }
+              // let testowner = 'test'
               data.push({
-                owner: owner, //might need to check on this
+                // owner: testowner, //might need to check on this
                 category: itemData.category,
                 name: itemData.name,
                 spaceID: itemData.spaceID,
@@ -81,12 +90,12 @@ export default function AllItemsPage({route, navigation}) {
   }, []);
 
    let data = []
-   console.log(allItems);
+  //  console.log(allItems);
   for (let i = 0; i < allItems.length; i++) {
     data.push({value: allItems[i].name, key: allItems[i]})
   }
 
-  console.log('data', data);
+  // console.log('data', data);
 
   return (
     <SafeAreaView style={styles.container}>

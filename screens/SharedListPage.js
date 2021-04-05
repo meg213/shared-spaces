@@ -54,11 +54,10 @@ export default function SharedPage({route, navigation}) {
         //go through each list, get the items in the list
         for (let i = 0; i < all_lists.length; i++) {
           let listData = (await listRef.doc(all_lists[i].substring(6)).get()).data();
-
             // if there is at least one item in the list
             for (let i = 0; i < listData.items.length; i++) {
               let itemData = (await itemRef.doc(listData.items[i].substring(6)).get()).data();
-              console.log(itemData)
+              console.log('itemdata', itemData)
               //get the owner
               let owner; 
               if (itemData.userID === undefined) {
@@ -66,6 +65,7 @@ export default function SharedPage({route, navigation}) {
               } else {
                   owner = (await userRef.doc(itemData.userID.substring(6)).get()).data();
               }
+              // if the item is shared
               if (itemData.isShared){
                 data.push({
                   owner: owner.firstname,
@@ -77,7 +77,7 @@ export default function SharedPage({route, navigation}) {
                   listName: listData.name
                 })
               }
-              // console.log(data)
+              console.log(data)
             }
 
         }
@@ -124,6 +124,7 @@ export default function SharedPage({route, navigation}) {
               renderCustomItem={(item) => (
                 <Item 
                   listPage
+                  owner={item.key.owner}
                   itemName={item.key.name}
                   list={item.key.listName}
                   shared={item.key.isShared}

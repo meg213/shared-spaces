@@ -128,7 +128,7 @@ export default function ListsPage({navigation, route}) {
             />
         </ScrollView>
         <View style={styles.fab}>
-            <Button
+            {/* <Button
                 width='80%'
                 name="Add Item"
                 onClick={()=> {
@@ -136,7 +136,7 @@ export default function ListsPage({navigation, route}) {
                   // navigation.navigate("CreateItem", {spaceID:route.params.data})
                 }
                 }
-            />
+            /> */}
         </View>
     </SafeAreaView>
   );

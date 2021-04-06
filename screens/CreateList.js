@@ -18,6 +18,7 @@ const CreateList= ({route, navigation}) => {
     const [icon, setIcon] = useState(require('../assets/kitchen.png'))
     const [isVisible, setIsVisible] = useState(false);
     const [items, setItems] = useState([]);
+    const [checkboxes, setCheckboxes] = useState([]);
     
     const componentIsMounted = useRef(true);
     const currentSpaceId = route.params.spaceID;
@@ -63,7 +64,11 @@ const CreateList= ({route, navigation}) => {
         return () => subscriber;
     }, []);
 
-    console.log('items', items)
+    let data = [];
+    for (var i = 0; i < items.length; i++){
+        data.push({value: items[i].name, isChecked: false})
+    }
+    console.log('items', data);
 
     const ImageItem = (props) => {
         return (
@@ -76,8 +81,13 @@ const CreateList= ({route, navigation}) => {
         )
     }
 
-    const handleCheckboxes = () => {
-        
+    const handleCheckboxes = (name) => {
+        for (var i = 0; i < data.length; i++){
+            if (data[i].value === name) {
+                data[i].isChecked = !data[i].isChecked;
+                console.log('here in checked')
+            }
+        }
     }
 
     return(
@@ -108,14 +118,13 @@ const CreateList= ({route, navigation}) => {
                 </Pressable>
                 <View style={styles.itemList}>
                     <Text style={styles.itemTitle}>Add Items</Text>
-                    {/* number of checkboxes per number of items */}
                     <View>
                         { items.map((item) => {
                             return (
                                 <CheckBox
                                     title={item.name}
-                                    
-                                    onPress={()=> {console.log('hi')}}
+                                    onPress={()=> {handleCheckboxes(item.name)}}
+                                    isChecked={item.isCheecked}
                                 />
                             )
                         })

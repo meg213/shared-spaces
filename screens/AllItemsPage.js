@@ -67,7 +67,6 @@ export default function AllItemsPage({route, navigation}) {
               }
               data.push({
                 owner: owner.firstname,
-                category: itemData.category,
                 name: itemData.name,
                 spaceID: itemData.spaceID,
                 userID: itemData.userID, 

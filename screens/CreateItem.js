@@ -138,18 +138,18 @@ export default function createItem({route, navigation}) {
                 <Button
                     name="Create Item"
                     onClick={() => {
-                        if (category === 'Select List'){
-                            setCategory('none')
+                        // if the item wasn't set to a list
+                        if (category.toString() === 'Select List'){
+                            console.log('no list');
+                            createItems(currentUser, currentSpaceId, name, 'None', shared)
                         }
-                        // creating an item
-                        createItems(currentUser, currentSpaceId, name, category, shared)
-
-                        //add to list
-                        // category vs itemCategory???????????????????
-                        if (category !== 'none')
+                        // if the item has a list
+                        if (category !== 'none') {
+                            console.log('created Item in list')
                             createItemInList(currentUser, category, name, category, shared) 
+                        }
 
-                        navigation.navigate('SpacePage')
+                       navigation.navigate('SpacePage')
                     }
                   }
                 />

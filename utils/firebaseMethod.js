@@ -128,6 +128,16 @@ export async function moveItemToList(currentItem, currentSpace, targetList) {
     }
 }
 
+// /**
+//  * Moves array of items 
+//  * @param itemArray     array of item IDs to move
+//  * @param currentSpace  spaceID holding all unlisted items
+//  * @param targetList    target listID to move all items to
+//  */
+// export async function moveCheckedItemsToList(itemArray, currentSpace, targetList) {
+
+// }
+
 /**
  * Returns item data for given ID, or null if error occurs
  * @param item Firebase ID of desired item, assumed to be "items/..."
@@ -357,6 +367,21 @@ export async function deleteList(currentList, currentSpace) {
 }
 
 /**
+ * @param space ID of the current space, should be of form spaces/...
+ * @returns     items[], or the default list of the space
+ */
+export async function getDefaultList(space) {
+    const spaceID = currentSpace.substring(7);
+
+    try {
+        return spaceRef.doc(spaceID).items;
+    } catch (e) {
+        console.error("Error retrieivng lists from space: ", e);
+        alert(e.message);
+    }
+}
+
+/**
  * Return all lists belonging to corresponding page
  * 
  * @param space ID of the current space, should be of form spaces/...
@@ -377,7 +402,7 @@ export async function getAllLists(space) {
  * Returns list data for given ID, or null if error occurs
  * @param list Firebase ID of desired list, assumed to be "lists/..."
  */
- export async function getList(list) {
+ export async function getListData(list) {
     const listID = list.substring(6);
     let listData;
     

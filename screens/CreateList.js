@@ -8,6 +8,7 @@ import { BottomSheet , Icon} from 'react-native-elements'
 import { getItems } from '../utils/firebaseMethod';
 import { createNewList, moveItemToList } from '../utils/firebaseMethod';
 import { db } from '../config/keys';
+import { TapGestureHandler } from 'react-native-gesture-handler';
 
 const itemRef = db.collection('items');
 const listRef = db.collection('lists');
@@ -88,7 +89,20 @@ const CreateList= ({route, navigation}) => {
                 var newArray = checkboxes;
                 newArray[i].isChecked = !checkboxes[i].isChecked;
                 setCheckboxes(newArray)
-                console.log('newUpdated Array', newArray);
+                console.log(checkboxes[i].value, ' is ', checkboxes[i].isChecked )
+            }
+        }
+    }
+
+    const findIfChecked = (name) => {
+        for (var i = 0; i < checkboxes.length; i++){
+            if (checkboxes[i].value === name) {
+              if (checkboxes[i].isChecked){
+                  console.log('returned true')
+                  return true
+              }
+              console.log('returned false')
+              return false;
             }
         }
     }
@@ -127,7 +141,7 @@ const CreateList= ({route, navigation}) => {
                                 <CheckBox
                                     title={item.value}
                                     onPress={()=> {handleCheckboxes(item.value)}}
-                                    checked={item.isChecked}
+                                    checked={findIfChecked(item.value)}
                                 />
                             )
                         })
@@ -141,7 +155,7 @@ const CreateList= ({route, navigation}) => {
                     width="75%"
                     onClick={() => {
                         createNewList(currentSpaceId, name)
-                       
+                        
                         // move over all items and add them to the newly created list
                         // for (var i = 0; i < checkboxes.length; i++){
                         //     if (checkboxes[i].isChecked){

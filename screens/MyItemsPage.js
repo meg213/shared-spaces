@@ -50,15 +50,17 @@ export default function MyItemsPage({route, navigation}) {
     async function createItemsData(documentSnapshot) {
         // get all the lists of a space
         var all_lists = documentSnapshot.data().lists;
+        var all_items_not_in_lists = documentSnapshot.data().items;
         var data = [];
 
         //go through each list, get the items in the list
+        /*
         for (let i = 0; i < all_lists.length; i++) {
           let listData = (await listRef.doc(all_lists[i].substring(6)).get()).data();
             // if there is at least one item in the list
             for (let i = 0; i < listData.items.length; i++) {
               let itemData = (await itemRef.doc(listData.items[i].substring(6)).get()).data();
-              // console.log('itemdata', itemData)
+              //console.log('itemdata', itemData)
               //get the owner
               let owner; 
               if (itemData.userID === undefined) {
@@ -80,8 +82,35 @@ export default function MyItemsPage({route, navigation}) {
               }
               console.log(data)
             }
-
         }
+        */
+        
+
+        for (let i = 0; i < all_items_not_in_lists.length; i++) {
+          let itemData = (await itemRef.doc(all_items_not_in_lists[i].substring(6)).get()).data();
+          //console.log('itemdata', itemData)
+          //get the owner
+          let owner; 
+          if (itemData.userID === undefined) {
+              owner = 'none'
+          } else {
+              owner = (await userRef.doc(itemData.userID.substring(6)).get()).data();
+          }
+
+          //if the itemData user === current user
+          if (itemData.userID.substring(6) === route.params.currUser.uid){
+            data.push({
+              owner: owner.firstname,
+              name: itemData.name,
+              spaceID: itemData.spaceID,
+              userID: itemData.userID, 
+              isShared: itemData.isShared,
+            })
+          }
+          console.log(data)
+        }
+      
+
         if (componentIsMounted.current) {
             setItems(data)
         }

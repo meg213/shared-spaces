@@ -1,9 +1,9 @@
+import { db } from '../config/keys';
 import React, {useState, useEffect, useRef, Component} from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { Icon, ListItem } from 'react-native-elements';
 import Search from "../components/Search"
 import Button from "../components/Button";
-import { db } from '../config/keys';
 import Item from "../components/Item";
 import {AlphabetList} from 'react-native-section-alphabet-list';
 import MyItemsPage from './MyItemsPage';
@@ -35,7 +35,7 @@ export default function ListsPage({navigation, route}) {
   const itemRef = db.collection('items');
   const listRef = db.collection('lists');
   const userRef = db.collection('users');
-  const spaceRef = db.collection('spaces');
+  // const spaceRef = db.collection('spaces');
 
   const[items, setItems] = useState([])
   const componentIsMounted = useRef(true);
@@ -70,7 +70,6 @@ export default function ListsPage({navigation, route}) {
          }
         data.push({
           owner: owner.firstname,
-          category: itemData.category,
           name: itemData.name,
           spaceID: itemData.spaceID,
           userID: itemData.userID, 

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useState, useRef, useEffect, Component } from 'react';
+=======
+import React, { useState, Component, useEffect } from 'react';
+>>>>>>> master
 import { Alert } from 'react-native';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView , Pressable, Image} from 'react-native';
 import Button from '../components/Button';
@@ -6,9 +10,18 @@ import FormInput from '../components/FormInput';
 import CheckBox from '../components/Checkbox';
 import { BottomSheet , Icon} from 'react-native-elements'
 import { getItems } from '../utils/firebaseMethod';
-// import { CheckBox } from 'react-native-elements'
 import { createNewList } from '../utils/firebaseMethod';
+<<<<<<< HEAD
 import { db } from '../config/keys';
+=======
+import { add } from 'react-native-reanimated';
+import { db } from '../config/keys';
+
+const itemRef = db.collection('items');
+const listRef = db.collection('lists');
+const userRef = db.collection('users');
+const spaceRef = db.collection('spaces');
+>>>>>>> master
 
 const itemRef = db.collection('items');
 const listRef = db.collection('lists');
@@ -129,7 +142,7 @@ const CreateList= ({route, navigation}) => {
                     name="Create List"
                     width="75%"
                     onClick={() => {
-                        createNewList(currentSpaceId,name)
+                        createNewList(currentSpaceId, name)
                         navigation.navigate('ListsList');
                     }}
                 />

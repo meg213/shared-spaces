@@ -8,7 +8,6 @@ import { Dropdown } from 'react-native-material-dropdown-v2-fixed';
 import { db } from '../config/keys';
 import {createItemInList } from '../utils/firebaseMethod';
 
-
 const itemRef = db.collection('items');
 const listRef = db.collection('lists');
 const userRef = db.collection('users');
@@ -78,10 +77,10 @@ export default function createItem({route, navigation}) {
    
     // putting together lists
     let data = []
-     for (let i = 0; i < listData.length; i++) {
-       data.push({value: listData[i].name, key: listData[i]})
-     }
-     console.log(data)
+    for (let i = 0; i < listData.length; i++) {
+        data.push({value: listData[i].name, key: listData[i]})
+    }
+    console.log(data)
 
 
     return(

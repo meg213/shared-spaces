@@ -57,13 +57,11 @@ export async function deleteUser(currentUser) {
  * @param currentUser       User creating the item
  * @param currentSpaceId    Space item belongs to
  * @param itemName          Name of the item
- * @param itemCategory      Type of the item
  * @param isShared          Is the item shared or not?
  */
-export async function createItems(currentUser, currentSpaceId, itemName, itemCategory, isShared) {
+export async function createItems(currentUser, currentSpaceId, itemName, isShared) {
     try {
         const currItem = itemRef.add({
-            category: itemCategory,
             isShared: isShared,
             name: itemName,
             spaceID: currentSpaceId,
@@ -84,13 +82,11 @@ export async function createItems(currentUser, currentSpaceId, itemName, itemCat
  * @param currentUser       User creating the item
  * @param targetList        List item belongs to
  * @param itemName          Name of the item
- * @param itemCategory      Type of the item
  * @param isShared          Is the item shared or not?
  */
- export async function createItemInList(currentUser, targetList, itemName, itemCategory, isShared) {
+ export async function createItemInList(currentUser, targetList, itemName,isShared) {
     try {
         const currItem = itemRef.add({
-            category: itemCategory,
             isShared: isShared,
             name: itemName,
             spaceID: "",
@@ -132,6 +128,16 @@ export async function moveItemToList(currentItem, currentSpace, targetList) {
     }
 }
 
+// /**
+//  * Moves array of items 
+//  * @param itemArray     array of item IDs to move
+//  * @param currentSpace  spaceID holding all unlisted items
+//  * @param targetList    target listID to move all items to
+//  */
+// export async function moveCheckedItemsToList(itemArray, currentSpace, targetList) {
+
+// }
+
 /**
  * Returns item data for given ID, or null if error occurs
  * @param item Firebase ID of desired item, assumed to be "items/..."
@@ -162,7 +168,7 @@ export async function createSpaces(currentUser, spaceName, spaceType) {
         const currSpace = spaceRef.add({
             name: spaceName,
             spaceType: spaceType,
-            owner: currentUser,
+            owner: currentUser.uid,
             user: firebase.firestore.FieldValue.arrayUnion(currentUser.uid),
             lists: [],
             items: []
@@ -172,6 +178,41 @@ export async function createSpaces(currentUser, spaceName, spaceType) {
             spaces: firebase.firestore.FieldValue.arrayUnion((await currSpace).path)
         });
         Alert.alert("Space created!");
+    } catch (e) {
+        alert(e.message);
+    }
+}
+
+/**
+ * Updates a space's info in firebase
+ * Unused fields should be NULL
+ * 
+ * @param targetSpace ID of space requesting change, assumed spaces/...
+ * @param newOwner Optional: New owner user ID
+ * @param newName Optional: New name of the new space
+ * @param newType Optional: New type of the new space
+ */
+ export async function updateSpaces(targetSpace, newOwner, newName, newType) {
+    const spaceID = targetSpace.substring(7);
+    
+    try {
+        if (newOwner != null) {
+            spaceRef.doc(targetSpace).update({
+                owner: newOwner
+            });
+        }
+
+        if (newName != null) {
+            spaceRef.doc(targetSpace).update({
+                name: newName
+            });
+        }
+
+        if (newType != null) {
+            spaceRef.doc(targetSpace).update({
+                spaceType: newType
+            });
+        }
     } catch (e) {
         alert(e.message);
     }
@@ -326,6 +367,21 @@ export async function deleteList(currentList, currentSpace) {
 }
 
 /**
+ * @param space ID of the current space, should be of form spaces/...
+ * @returns     items[], or the default list of the space
+ */
+export async function getDefaultList(space) {
+    const spaceID = currentSpace.substring(7);
+
+    try {
+        return spaceRef.doc(spaceID).items;
+    } catch (e) {
+        console.error("Error retrieivng lists from space: ", e);
+        alert(e.message);
+    }
+}
+
+/**
  * Return all lists belonging to corresponding page
  * 
  * @param space ID of the current space, should be of form spaces/...
@@ -346,12 +402,12 @@ export async function getAllLists(space) {
  * Returns list data for given ID, or null if error occurs
  * @param list Firebase ID of desired list, assumed to be "lists/..."
  */
- export async function getList(list) {
+ export async function getListData(list) {
     const listID = list.substring(6);
     let listData;
     
     try {
-        listData = (await listRef.doc(listID).get()).data();
+        listData = listRef.doc(listID).get().data();
     } catch (e) {
         console.error("getSpace: Error in getting space with ID: ", listID);
         alert(e.message);

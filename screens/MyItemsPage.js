@@ -71,7 +71,6 @@ export default function MyItemsPage({route, navigation}) {
               if (itemData.userID.substring(6) === route.params.currUser.uid){
                 data.push({
                   owner: owner.firstname,
-                  category: itemData.category,
                   name: itemData.name,
                   spaceID: itemData.spaceID,
                   userID: itemData.userID, 
@@ -112,10 +111,11 @@ export default function MyItemsPage({route, navigation}) {
               <Text> {myItems.length} </Text>
             </View>
         </View>
-        <ScrollView scrollEventThrottle={16}>
-            <View>
+        <View style={styles.search}>
               <Search/>
-            </View>
+        </View>
+        <ScrollView scrollEventThrottle={16}>
+          <View> 
             <AlphabetList
               data = {data}
               renderSectionHeader={SectionHeader}
@@ -130,6 +130,7 @@ export default function MyItemsPage({route, navigation}) {
                 />
               )}
             />
+        </View>    
         </ScrollView>
     </SafeAreaView>
   );
@@ -168,5 +169,8 @@ const styles = StyleSheet.create({
     color: '#4E7580',
     paddingHorizontal: 12,
     paddingVertical: 6
+  },
+  search: {
+    width: '90%'
   }
 });

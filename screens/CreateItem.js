@@ -141,9 +141,8 @@ export default function createItem({route, navigation}) {
                         if (category.toString() === 'Select List'){
                             console.log('no list');
                             createItems(currentUser, currentSpaceId, name, 'None', shared)
-                        }
-                        // if the item has a list
-                        if (category !== 'none') {
+                        } 
+                        else { // if the item has a list
                             console.log('created Item in list')
                             createItemInList(currentUser, category, name, category, shared) 
                         }

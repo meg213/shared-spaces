@@ -158,7 +158,7 @@ export async function createSpaces(currentUser, spaceName, spaceType) {
         const currSpace = spaceRef.add({
             name: spaceName,
             spaceType: spaceType,
-            owner: currentUser,
+            owner: currentUser.uid,
             user: firebase.firestore.FieldValue.arrayUnion(currentUser.uid),
             lists: [],
             items: []

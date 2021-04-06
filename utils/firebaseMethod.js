@@ -316,6 +316,9 @@ export async function createNewList(currentSpaceID, listName) {
         })
 
         Alert.alert("Created a new list!");
+
+        let path = newList.ref().toString();
+        return path;
     } catch (e) {
         alert(e.message);
     }

@@ -6,7 +6,7 @@ import FormInput from '../components/FormInput';
 import CheckBox from '../components/Checkbox';
 import { BottomSheet , Icon} from 'react-native-elements'
 import { getItems } from '../utils/firebaseMethod';
-import { createNewList } from '../utils/firebaseMethod';
+import { createNewList, moveItemToList } from '../utils/firebaseMethod';
 import { db } from '../config/keys';
 
 const itemRef = db.collection('items');
@@ -58,17 +58,18 @@ const CreateList= ({route, navigation}) => {
             }
             }
             if (componentIsMounted.current) {
-                setItems(data)
+                setItems(data);
+
+                // add the data to a checkboxes array
+                let newdata = [];
+                for (var i = 0; i < data.length; i++){
+                    newdata.push({value: data[i].name, isChecked: false})
+                }
+                setCheckboxes(newdata);       
             }
         }
         return () => subscriber;
     }, []);
-
-    let data = [];
-    for (var i = 0; i < items.length; i++){
-        data.push({value: items[i].name, isChecked: false})
-    }
-    console.log('items', data);
 
     const ImageItem = (props) => {
         return (
@@ -82,10 +83,12 @@ const CreateList= ({route, navigation}) => {
     }
 
     const handleCheckboxes = (name) => {
-        for (var i = 0; i < data.length; i++){
-            if (data[i].value === name) {
-                data[i].isChecked = !data[i].isChecked;
-                console.log('here in checked')
+        for (var i = 0; i < checkboxes.length; i++){
+            if (checkboxes[i].value === name) {
+                var newArray = checkboxes;
+                newArray[i].isChecked = !checkboxes[i].isChecked;
+                setCheckboxes(newArray)
+                console.log('newUpdated Array', newArray);
             }
         }
     }
@@ -119,12 +122,12 @@ const CreateList= ({route, navigation}) => {
                 <View style={styles.itemList}>
                     <Text style={styles.itemTitle}>Add Items</Text>
                     <View>
-                        { items.map((item) => {
+                        { checkboxes.map((item) => {
                             return (
                                 <CheckBox
-                                    title={item.name}
-                                    onPress={()=> {handleCheckboxes(item.name)}}
-                                    isChecked={item.isCheecked}
+                                    title={item.value}
+                                    onPress={()=> {handleCheckboxes(item.value)}}
+                                    checked={item.isChecked}
                                 />
                             )
                         })
@@ -138,6 +141,13 @@ const CreateList= ({route, navigation}) => {
                     width="75%"
                     onClick={() => {
                         createNewList(currentSpaceId, name)
+                       
+                        // move over all items and add them to the newly created list
+                        // for (var i = 0; i < checkboxes.length; i++){
+                        //     if (checkboxes[i].isChecked){
+                        //         moveItemToList(items[i], currentSpaceId, )
+                        //     }
+                        // }
                         navigation.navigate('ListsList');
                     }}
                 />

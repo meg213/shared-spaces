@@ -314,8 +314,8 @@ export async function createNewList(currentSpaceID, listName) {
         spaceRef.doc(currentSpaceID.substring(7)).update({
             lists: firebase.firestore.FieldValue.arrayUnion((await newList).path)
         })
-
         Alert.alert("Created a new list!");
+        
     } catch (e) {
         alert(e.message);
     }

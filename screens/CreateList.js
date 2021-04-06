@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import React, { useState, useRef, useEffect, Component } from 'react';
-=======
-import React, { useState, Component, useEffect } from 'react';
->>>>>>> master
 import { Alert } from 'react-native';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView , Pressable, Image} from 'react-native';
 import Button from '../components/Button';

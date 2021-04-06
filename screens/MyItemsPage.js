@@ -54,7 +54,6 @@ export default function MyItemsPage({route, navigation}) {
         var data = [];
 
         //go through each list, get the items in the list
-        /*
         for (let i = 0; i < all_lists.length; i++) {
           let listData = (await listRef.doc(all_lists[i].substring(6)).get()).data();
             // if there is at least one item in the list
@@ -83,7 +82,6 @@ export default function MyItemsPage({route, navigation}) {
               console.log(data)
             }
         }
-        */
         
 
         for (let i = 0; i < all_items_not_in_lists.length; i++) {

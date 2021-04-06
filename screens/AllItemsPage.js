@@ -52,7 +52,6 @@ export default function AllItemsPage({route, navigation}) {
         var all_items_not_in_lists = documentSnapshot.data().items;
         var data = [];
 
-        /*
         //go through each list, get the items in the list
         for (let i = 0; i < all_lists.length; i++) {
           let listData = (await listRef.doc(all_lists[i].substring(6)).get()).data();
@@ -78,7 +77,6 @@ export default function AllItemsPage({route, navigation}) {
               console.log(data)
             }
         }
-        */
 
         for (let i = 0; i < all_items_not_in_lists.length; i++) {
           let itemData = (await itemRef.doc(all_items_not_in_lists[i].substring(6)).get()).data();

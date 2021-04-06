@@ -87,10 +87,10 @@ const styles = StyleSheet.create({
   };
 
   Item.defaultProps = {
-    itemName: "Lamp",
+    itemName: "Unnamed",
     text: "Sample", //private
     list: "None",
-    owner: "Morgan",
+    owner: "Undefined",
     shared: true,
     listPage: false,
     

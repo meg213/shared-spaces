@@ -11,17 +11,7 @@ import CheckBox from '../components/Checkbox';
 import { BottomSheet , Icon} from 'react-native-elements'
 import { getItems } from '../utils/firebaseMethod';
 import { createNewList } from '../utils/firebaseMethod';
-<<<<<<< HEAD
 import { db } from '../config/keys';
-=======
-import { add } from 'react-native-reanimated';
-import { db } from '../config/keys';
-
-const itemRef = db.collection('items');
-const listRef = db.collection('lists');
-const userRef = db.collection('users');
-const spaceRef = db.collection('spaces');
->>>>>>> master
 
 const itemRef = db.collection('items');
 const listRef = db.collection('lists');

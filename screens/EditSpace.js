@@ -6,6 +6,22 @@ import { Icon } from 'react-native-elements';
 import { updateSpace } from '../utils/firebaseMethod';
 
 export default function editSpace({route, navigation}) {
+    const deleteConfirmAlert = () => 
+        Alert.alert(
+            "Are you sure?",
+            "You are about to delete your space. This action cannot be reversed.",
+            [
+                {
+                    text: "Cancel",
+                    style: cancel
+                },
+                {
+                    text: "Delete Space",
+                    onPress: () => console.log("delete space!")
+                }
+            ]
+        );
+
     //route params: spaceID, currUser
     const [name, setName] = useState(route.params.name);
     const [category, setCategory] = useState("");
@@ -55,6 +71,10 @@ export default function editSpace({route, navigation}) {
                 <Button
                     name="Delete Space"
                     color='#EB5757'
+                    onPress = { () => {
+                        console.log("Delete?")
+                        deleteConfirmAlert
+                    }}
                     // onClick={() => createItems(currentUser, currentSpaceId, name, category, shared)}
                 />
             </View>

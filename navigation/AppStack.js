@@ -13,6 +13,7 @@ import CreateList from './../screens/CreateList';
 import EditSpace from '../screens/EditSpace'
 import CreateItem from '../screens/CreateItem';
 import JoinSpaceScreen from '../screens/JoinSpaceScreen';
+import ChatScreen from '../screens/ChatScreen';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { logout } from '../utils/firebaseMethod';
 import ItemDetailScreen from '../screens/ItemDetailScreen';
@@ -128,6 +129,29 @@ const AppStack = () => {
         })}
       />
       <Stack.Screen
+        name="ChatScreen"
+        component={ChatScreen}
+        options={({navigation}) => ({
+          title: '',
+          headerStyle: {
+            backgroundColor: '#F2F0EB',
+            shadowColor: '#F2F0EB',
+            elevation: 0,
+          },
+          headerLeft: () => (
+            <View style={{marginLeft: 10}}>
+              <FontAwesome.Button 
+                name="long-arrow-left"
+                size={25}
+                backgroundColor="#F2F0EB"
+                color="#333"
+                onPress={() => navigation.navigate('SpacePage')}
+              />
+            </View>
+          ),
+        })}
+      />
+      <Stack.Screen
         name="SharedList"
         component={SharedPage}
         options={{ headerShown: false}}
@@ -176,11 +200,6 @@ const AppStack = () => {
       component={CreateList}
       options={{ headerShown: false}}
     /> 
-    {/* <Stack.Screen
-      name="AddItemScreen"
-      component={AddItemScreen}
-      options={{ headerShown: false}}
-    /> */}
 
     <Stack.Screen 
       name="ItemDetailScreen"

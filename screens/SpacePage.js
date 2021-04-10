@@ -16,21 +16,23 @@ import { AlphabetList } from 'react-native-section-alphabet-list';
 const itemRef = db.collection('items');
 const userRef = db.collection('users');
 const spaceRef = db.collection('spaces');
+const messagesRef = db.collection('messages');
 
 export default function SpacePage({route, navigation}){
   // Tracks what Space we're in using "route"
+  const spaceID = route.params.data;
   const currSpaceID = route.params.data.substring(7);
   // Items array in reverse order; recently added items are first in array
   const[recentItems, setItems] = useState([]);
   const componentIsMounted = useRef(true);
   const [itemIDToData, setMapItemIDToData] = useState(new Map());
+  const [recentMessData, setRecentMessData] = useState("")
   
   useEffect(() => {
     return () => {
       componentIsMounted.current = false;
     };
   }, []);
-  console.log(componentIsMounted)
 
 //   Updates recentItems on every new item instance
   useEffect(() => {
@@ -92,6 +94,25 @@ export default function SpacePage({route, navigation}){
     }
   }
 
+  useEffect(() => {
+        const subscriber = messagesRef
+        .orderBy('createdAt', 'desc')
+        .where('user.spaceID', '==', spaceID)
+        .limit(1)
+        .onSnapshot(documentSnapshot => {createMessagesData(documentSnapshot)});
+        async function createMessagesData(documentSnapshot) {
+          for (let i = 0; i < documentSnapshot.docs.length; i++) {
+              let m = await documentSnapshot.docs[i].data()
+              let data = {
+                  name: m.user.name,
+                  text: m.text.text
+              }
+              setRecentMessData(data)
+          }
+        }
+        return () => subscriber;
+      }, []);
+
   return (
     <SafeAreaView style={styles.container}>
         <View style ={{
@@ -145,7 +166,11 @@ export default function SpacePage({route, navigation}){
                 }}> 
                     Messages 
                 </Text>
-                <RecentMessageShow/>
+                <RecentMessageShow
+                    name={recentMessData.name}
+                    lastestMessage={recentMessData.text}
+                    onClick={() => {navigation.navigate('ChatScreen', {spaceID: route.params.data, currUser: route.params.currUser})}}
+                />
             </View>
             <View style={{height: 120, marginTop: 6, marginLeft: 6}}>
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>

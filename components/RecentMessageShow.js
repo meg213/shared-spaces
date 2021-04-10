@@ -32,30 +32,37 @@ const styles = StyleSheet.create({
 
 const RecentMessageShow = (props) => {
   return (
-    <View style={[styles.item ]}>
-      <Text style={{
-        flex: 1,
-        color: '#4E7580',
-        textAlign: 'left',
-        fontWeight: "500",
-        fontSize: 20,
-      }}>
-        Max: 
+    <Pressable onPress={ props.onClick }>
+      <View style={[styles.item ]}>
         <Text style={{
-          padding: 10,
+          flex: 1,
           color: '#4E7580',
-          fontWeight: '300'
+          textAlign: 'left',
+          fontWeight: "500",
+          fontSize: 20,
         }}>
-          {" "}yeah, sure!
+            {props.name}
+          <Text style={{
+            padding: 10,
+            color: '#4E7580',
+            fontWeight: '300'
+          }}>
+            {props.lastestMessage}
+          </Text>
         </Text>
-      </Text>
-      <View style={[styles.circle]}>
-        <Text style={[styles.text]}>
-          2
-        </Text>
+        <View style={[styles.circle]}>
+          <Text style={[styles.text]}>
+            2
+          </Text>
+        </View>
       </View>
-    </View>
+    </Pressable>
   );
 }
+RecentMessageShow.propTypes = {
+  name: PropTypes.string,
+  lastestMessage: PropTypes.string,
+  onClick: PropTypes.func,
+};
 
 export default RecentMessageShow;

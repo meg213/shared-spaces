@@ -24,8 +24,7 @@ export default function SpacePage({route, navigation}){
   // Items array in reverse order; recently added items are first in array
   const[recentItems, setItems] = useState([]);
   const[spaceName, setSpaceName] = useState('');
-   const componentIsMounted = useRef(true);
-  
+  const componentIsMounted = useRef(true);
   
   useEffect(() => {
     return () => {
@@ -125,9 +124,6 @@ export default function SpacePage({route, navigation}){
         break;
     }
   }
-
-  console.log("RECENT ITEMS:\n")
-  console.log(recent_items_stack)
 
   return (
     <SafeAreaView style={styles.container}>

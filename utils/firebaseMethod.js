@@ -218,6 +218,63 @@ export async function createSpaces(currentUser, spaceName, spaceType) {
     }
 }
 
+export async function leaveSpace(currentUser, currentSpace) 
+{
+    const spaceID = currentSpace.substring(7);
+    const userID  = currentUser.uid;
+
+    try {
+        // const spaceData = getSpace(currentSpace);
+        const spaceData = (await getSpace(currentSpace));
+        const owner = spaceData.owner
+        const numUsers = spaceData.user.length;
+
+        if (numUsers == 1) {
+            // Owner is the sole member of the space
+            deleteSpace(currentUser, currentSpace);
+        } else if (userID == owner) {
+            Alert.alert("Attempted to leave space as owner. Please change ownership before continuing.");
+            return -1;
+        } else {
+            // Remove users from space
+            spaceRef.doc(spaceID).update({
+                users: firebase.firestore.FieldValue.arrayRemove((await userID))
+            });
+            // Remove space from user
+            userRef.doc(userID).update({
+                spaces: firebase.firestore.FieldValue.arrayRemove((await currentSpace))
+            });
+        }
+    } catch (e) {
+        console.error("Error leaving space: ", e);
+        alert(e.message);
+    }
+}
+
+export async function changeSpaceOwner(currentUser, newOwner, currentSpace)
+{
+    const spaceID = currentSpaceID.substring(7);
+    const userID  = currentUser.uid;
+
+    try {
+        const owner = spaceRef.doc(currentSpace).owner;
+
+        if (userID != owner) {
+            Alert.alert("Invalid Permissions: Only the owner may change ownership of the Space.");
+            return -1;
+        }
+
+        spaceRef.doc(spaceID).update({
+            owner: newOwner
+        });
+
+        return 0;
+    } catch (e) {
+        console.error("Error change space owner: ", e);
+        alert(e.message);
+    }
+}
+
 /**
  * Deletes the Space ONLY IF currentUser is the owner of the Space
  * @param currentUser User requesting deletion
@@ -227,13 +284,13 @@ export async function createSpaces(currentUser, spaceName, spaceType) {
 export async function deleteSpace(currentUser, currentSpace) {
     try {
         // Authenticate owner is requesting deletion.
-        const spaceID = currentSpaceID.substring(7);
-        const owner = spaceRef.doc(spaceID).owner;
+        const spaceID = currentSpace.substring(7);
+        const spaceData = (await getSpace(currentSpace));
 
-        console.log("Owner: ", owner);
-        console.log("Current User: ", currentUser);
+        const owner = spaceData.owner;
+        const userID = currentUser.uid;
 
-        if (currentUser != owner) {
+        if (userID != owner) {
             // Requesting user is not the owner, alert and exit.
             Alert.alert("Invalid Permissions: Only the owner may delete the Space.");
             return;
@@ -241,18 +298,28 @@ export async function deleteSpace(currentUser, currentSpace) {
 
         // User is authenticated. Delete the space.
         // 1. Delete the lists.
-        // TODO: Delete list 
+        const lists = spaceData.lists;
+        console.log(lists)
+
+        for (let i = 0; i < lists.length; i++) {
+            deleteList(lists[i], currentSpace);
+        }
 
         // 2. Delete the items.
-        const items = spaceRef.doc(spaceID).items;  // Items array in space's unnamed list
+        const items = spaceData.items;  // Items array in space's unnamed list
         for (let i = 0; i < items.length; i++) {
             let currItemID = items[i].substring(6);
-            itemsRef.doc(currItemID).delete();
+            itemRef.doc(currItemID).delete();
         }
 
         // 3. Delete the space.
         spaceRef.doc(spaceID).delete().then(() => {
             console.log("Space sucessfully deleted!");
+        });
+
+        // 4. Delete the user reference to the space
+        userRef.doc(userID).update({
+            spaces: firebase.firestore.FieldValue.arrayRemove((await currentSpace))
         });
     } catch (e) {
         console.error("Error deleting space: ", e);
@@ -269,13 +336,12 @@ export async function deleteSpace(currentUser, currentSpace) {
     let spaceData;
     
     try {
-        spaceData = spaceRef.doc(spaceID).get().data();
+        spaceData = (await spaceRef.doc(spaceID).get()).data();
     } catch (e) {
         console.error("getSpace: Error in getting space with ID: ", spaceID);
         alert(e.message);
         return null;
     }
-
     return spaceData;
 }
 
@@ -336,10 +402,11 @@ export async function deleteList(currentList, currentSpace) {
         const spaceID = currentSpace.substring(7);
         const listID  = currentList.substring(6);
 
-        const availableLists = spaceRef.doc(spaceID).lists;
+        const availableLists = (await getSpace(currentSpace)).lists;
+
         let canDeleteList = 0;
         for (let i = 0; i < availableLists.length; i++) {
-            let currList = availableLists[i].subtring(6);
+            let currList = availableLists[i].substring(6);
             if (currList == listID) {
                 // Found list in corresponding space.
                 canDeleteList = 1;

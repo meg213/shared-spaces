@@ -43,6 +43,7 @@ export default function MySpacesPage({navigation}){
     }, []);
 
     console.log('spaceNames', spaceNames);
+
     return (
         <SafeAreaView style = {[styles.container]}>
             <View style ={{

@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, Text, View, SafeAreaView, Modal} from 'react-na
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
 import { Icon } from 'react-native-elements';
-import { updateSpace } from '../utils/firebaseMethod';
+import { leaveSpace, updateSpace } from '../utils/firebaseMethod';
 
 export default function editSpace({route, navigation}) {
     //route params: spaceID, currUser
@@ -11,9 +11,8 @@ export default function editSpace({route, navigation}) {
     const [category, setCategory] = useState("");
     const [shared, setShared] = useState(false);
     const toggleShared = () => setShared(previousState => ! previousState);
-    // const currentUser = route.params.currUser;
+    const currentUser = route.params.currUser;
     const currentSpaceId = route.params.spaceID;
-    
 
     return(
         <SafeAreaView style = {[styles.container]}>
@@ -42,15 +41,27 @@ export default function editSpace({route, navigation}) {
             </View>
             <View style={{marginBottom: 50, width: '100%', position: 'absolute', bottom: 0,}}>
                 <View style={{paddingVertical: 12}}>
-                <Button
-                    name="Update Space"
-                    color='#184254'
-                    onClick={() => { 
-                        console.log(currentSpaceId.substring(7))
-                        updateSpace(currentSpaceId, name);
-                        navigation.navigate('SpacePage') 
-                    }}
-                />
+                    <Button
+                        name="Update Space"
+                        color='#184254'
+                        onClick={() => { 
+                            console.log(currentSpaceId.substring(7))
+                            updateSpace(currentSpaceId, name);
+                            navigation.navigate('SpacePage') 
+                        }}
+                    />
+                    
+                </View>
+                <View style={{paddingVertical: 12}}>
+                    <Button
+                        name="Leave Space"
+                        color='#EB5757'
+                        onClick= {() => {
+                            leaveSpace(currentUser, currentSpaceId, null);
+                            navigation.navigate('MySpacesPage') 
+                        }}
+                        // onClick={() => createItems(currentUser, currentSpaceId, name, category, shared)}
+                    />
                 </View>
                 <Button
                     name="Delete Space"
@@ -59,7 +70,6 @@ export default function editSpace({route, navigation}) {
                 />
             </View>
         </SafeAreaView>
-        
     );
 }
 

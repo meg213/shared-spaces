@@ -17,6 +17,7 @@ export default function ItemDetailScreen ({route, navigation}) {
     useEffect(() => {
         (async () => {
           let imageRef = storage.ref(itemName);
+          console.log(imageRef)
           await imageRef.getDownloadURL().then((url) => {
               setImage(url)
           })

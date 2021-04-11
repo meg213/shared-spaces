@@ -351,20 +351,20 @@ export async function deleteList(currentList, currentSpace) {
 /** 
  * Authentication Functions
 */
-export async function signUp(lastName, firstName, email, phone, password, confirmPassword) {
+export async function signUp(lastName, firstName, email, phone, password, confirmPassword, image) {
     if (!lastName) {
-        alert('First name is required');
+        Alert.alert('First name is required');
     } else if (!firstName) {
-        alert('First name is required');
+        Alert.alert('First name is required');
     } else if (!email) {
-        alert('Email field is required.');
+        Alert.alert('Email field is required.');
     } else if (!password) {
-        alert('Password field is required.');
+        Alert.alert('Password field is required.');
     } else if (!confirmPassword) {
         setPassword('');
-        alert('Confirm password field is required.');
+        Alert.alert('Confirm password field is required.');
     } else if (password !== confirmPassword) {
-        alert('Password does not match!');
+        Alert.alert('Password does not match!');
     } else {
         try {
             await firebase.auth().createUserWithEmailAndPassword(email, password);
@@ -376,6 +376,16 @@ export async function signUp(lastName, firstName, email, phone, password, confir
                 phone: phone,
                 spaces: []
             });
+            if (image != '') {
+                const response = await fetch(image)
+                const blob = await response.blob()
+                const uploadImage = storage.ref().child(firstName + " " +lastName + "'s Avatar")
+                uploadImage.put(blob)
+            }
+            await currUser.updateProfile({
+                displayName: firstName + " " + lastName,
+                photoURL: firstName + " " +lastName + "'s Avatar"
+            })
         } catch (e) {
             alert(e.message);
         }

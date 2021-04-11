@@ -12,7 +12,7 @@ const spaceRef = db.collection('spaces');
 
 export default function MySpacesPage({navigation}){
     const currUser = firebase.auth().currentUser;
-    console.log(currUser.uid)
+    console.log(currUser)
     const[spaceNames, setSpaceNames] = useState([]);
 
     const componentIsMounted = useRef(true);

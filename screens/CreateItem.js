@@ -20,37 +20,24 @@ export default function createItem({route, navigation}) {
     const [allList, setAllList] = useState([]);
 
 
-    useEffect(() => {
-        (async () => {
-          if (Platform.OS !== 'web') {
-            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-            if (status !== 'granted') {
-              alert('Sorry, we need camera roll permissions to make this work!');
-            }
-          }
-        })();
-      }, []);
-
-    // useEffect(() => {
-    //     (async () => {
-    //     })();
-    //   }, []);
-
+    let openImagePickerAsync = async () => {
+        let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
     
-    
-    const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowEditing: true,
-            aspect: [4,3],
-            quality: 1,
-        });
-
-        console.log(result);
-
-        if (!result.cancelled) {
-            setImage(result.uri);
+        if (permissionResult.granted === false) {
+          alert("Permission to access camera roll is required!");
+          return;
         }
+    
+        let pickerResult = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowEditing: true,
+                aspect: [4,3],
+                quality: 1,
+        });
+        if (!pickerResult.cancelled) {
+          setImage(pickerResult.uri);
+        }
+        console.log(pickerResult);
     }
 
     return(
@@ -63,7 +50,7 @@ export default function createItem({route, navigation}) {
             <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 4 }}>
                 {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
                 <View style={{ paddingVertical:6}} />
-                <Button name="Upload a Photo of Item" onClick={pickImage} />
+                <Button name="Upload a Photo of Item" onClick={openImagePickerAsync}/>
                 
             </View>
             <View style={{

@@ -4,16 +4,22 @@ import { Icon } from 'react-native-elements';
 import Input from "../components/Input";
 import Button from "../components/Button";
 import User from "../components/User";
-import {db} from '../config/keys';
+import {storage, db} from '../config/keys';
 import { logout } from '../utils/firebaseMethod';
 
 export default function ProfilePage({route, navigation}) {
+    const currUser = route.params.currUser;
+    console.log(currUser)
     const userID = route.params.currUser.uid;
     const [firstname, setFirstName] = useState()
     const [lastname, setLastName] = useState()
     const [email, setEmail] = useState()
     const [phone, setPhone] = useState()
     const [initials, setInitials] = useState()
+    const [imgSource, setImgSource] = useState()
+    const image = currUser.displayName + "'s Avatar"
+    const imageRef = storage.ref(image);
+    // setImgSource(imageRef.location.bucket + "/" + imageRef.location.path)
     useEffect(() => {
         (async () => {
           let userData = ((await db.collection("users").doc(userID).get()).data())
@@ -23,16 +29,24 @@ export default function ProfilePage({route, navigation}) {
           setEmail(userData.email)
           setPhone(userData.phone)
           setInitials(userData.firstname[0] + userData.lastname[0]);
+          await imageRef.getDownloadURL().then((url) => {
+            setImgSource(url)
+        })
         })();
+        return;
     }, []);
     return (
       <SafeAreaView style={styles.container}>
         <View>
             <Text style={styles.profile}>My Profile</Text>
         </View>
-            <User
+            {/* <User
                 initials={initials}
                 size="large"
+            /> */}
+            <User 
+                // title={initials}
+                source={imgSource}
             />
             <View style={styles.subcontainer}>
                 <Text style={styles.subtext}>Basic Information</Text>

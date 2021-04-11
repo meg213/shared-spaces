@@ -218,6 +218,11 @@ export async function createSpaces(currentUser, spaceName, spaceType) {
     }
 }
 
+/**
+ * Removes user from space
+ * @param currentUser   User requesting or marked for removal
+ * @param currentSpace  Space where currentUser is a member
+ */
 export async function leaveSpace(currentUser, currentSpace) 
 {
     const spaceID = currentSpace.substring(7);
@@ -251,13 +256,19 @@ export async function leaveSpace(currentUser, currentSpace)
     }
 }
 
+/**
+ * Changes owner for the current space
+ * @param currentUser   User requesting ownership change
+ * @param newOwner      Target owner
+ * @param currentSpace  Space where both users are members
+ */
 export async function changeSpaceOwner(currentUser, newOwner, currentSpace)
 {
     const spaceID = currentSpaceID.substring(7);
     const userID  = currentUser.uid;
 
     try {
-        const owner = spaceRef.doc(currentSpace).owner;
+        const owner = (await getSpace(currentSpace)).owner;
 
         if (userID != owner) {
             Alert.alert("Invalid Permissions: Only the owner may change ownership of the Space.");

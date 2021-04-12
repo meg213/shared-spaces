@@ -97,7 +97,7 @@ export default function AllItemsPage({route, navigation}) {
             isShared: itemData.isShared,
           })
 
-          console.log(data)
+          //console.log(data)
         }
 
         if (componentIsMounted.current) {
@@ -107,12 +107,12 @@ export default function AllItemsPage({route, navigation}) {
     return () => subscriber;
   }, []);
 
-  console.log(allItems)
+ // console.log(allItems)
    let data = []
   for (let i = 0; i < allItems.length; i++) {
     data.push({value: allItems[i].name, key: allItems[i]})
   }
-  console.log(data)
+  //console.log(data)
 
   return (
     <SafeAreaView style={styles.container}>

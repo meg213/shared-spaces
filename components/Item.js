@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   Item.defaultProps = {
     itemName: "Unnamed",
     text: "Sample", //private
-    list: "Unlisted",
+    list: "None",
     owner: "Undefined",
     shared: true,
     listPage: false,

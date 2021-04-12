@@ -51,7 +51,7 @@ export default function ListsPage({navigation, route}) {
   useEffect(() => {
     const subscriber = listRef.doc(listID).onSnapshot(documentSnapshot => {createItemData(documentSnapshot)});
     async function createItemData(documentSnapshot) {
-      console.log('snapshot:', documentSnapshot.data())
+     // console.log('snapshot:', documentSnapshot.data())
       var listName = documentSnapshot.data().name;
       var currentItemList = documentSnapshot.data().items;
       var data = [];
@@ -76,7 +76,7 @@ export default function ListsPage({navigation, route}) {
           isShared: itemData.isShared,
           listName: listName
         })
-        console.log('data', data)
+     //   console.log('data', data)
       }
 
       if (componentIsMounted.current) {
@@ -132,7 +132,7 @@ export default function ListsPage({navigation, route}) {
                 width='80%'
                 name="Add Item"
                 onClick={()=> {
-                  console.log(route.params.items);
+              //    console.log(route.params.items);
                   // navigation.navigate("CreateItem", {spaceID:route.params.data})
                 }
                 }

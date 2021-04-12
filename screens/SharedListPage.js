@@ -58,7 +58,7 @@ export default function SharedPage({route, navigation}) {
             // if there is at least one item in the list
             for (let i = 0; i < listData.items.length; i++) {
               let itemData = (await itemRef.doc(listData.items[i].substring(6)).get()).data();
-              console.log('itemdata', itemData)
+             // console.log('itemdata', itemData)
               //get the owner
               let owner; 
               if (itemData.userID === undefined) {
@@ -78,7 +78,7 @@ export default function SharedPage({route, navigation}) {
                   listName: listData.name
                 })
               }
-              console.log(data)
+              //console.log(data)
             }
         }
        
@@ -103,7 +103,6 @@ export default function SharedPage({route, navigation}) {
               isShared: itemData.isShared,
             })
           }
-          console.log(data)
         }
 
         if (componentIsMounted.current) {

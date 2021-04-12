@@ -235,11 +235,8 @@ export default function SpacePage({route, navigation}){
                         shared={item.key.isShared}
                         onClick={()=> {
                             console.log(item.key)
-                            navigation.navigate('ItemDetailScreen', {data: item.key})}}
-                        // itemName={item.name}
-                        // list={item.key.item.listID}
-                        // owner={item.key.owner}
-                        // shared={item.key.item.isShared}
+                            navigation.navigate('ItemDetailScreen', {data: item.key})
+                        }}
                       />
                     )}
                 />

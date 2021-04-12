@@ -428,7 +428,7 @@ export async function deleteSpace(currentUser, currentSpace) {
             
             if (itemToRemove != undefined) {
                 spaceRef.doc(currentSpaceID.substring(7)).update({
-                    items: firebase.firestore.FieldValue.arrayRemove((await itemToRemove).path)
+                    items: firebase.firestore.FieldValue.arrayRemove(itemToRemove)
                 });
             }
         }

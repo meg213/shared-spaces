@@ -270,6 +270,11 @@ export async function changeSpaceOwner(currentUser, newOwner, currentSpace)
     try {
         const owner = (await getSpace(currentSpace)).owner;
 
+        if (newOwner == null) {
+            Alert.alert("Invalid Action: Please select a new owner before attempting ownership change.");
+            return -1;
+        }
+
         if (userID != owner) {
             Alert.alert("Invalid Permissions: Only the owner may change ownership of the Space.");
             return -1;

@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, Text, View, SafeAreaView, Modal} from 'react-na
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
 import { Icon } from 'react-native-elements';
-import { leaveSpace, updateSpace } from '../utils/firebaseMethod';
+import { changeSpaceOwner, deleteSpace, getSpace, leaveSpace, updateSpace } from '../utils/firebaseMethod';
 
 export default function editSpace({route, navigation}) {
     //route params: spaceID, currUser
@@ -13,6 +13,10 @@ export default function editSpace({route, navigation}) {
     const toggleShared = () => setShared(previousState => ! previousState);
     const currentUser = route.params.currUser;
     const currentSpaceId = route.params.spaceID;
+
+    // Conditional rendering for the change ownership button
+    // User ID must be equal to the owner ID
+    const is_owner = ((await getSpace(currentSpaceId)).owner == currUser.uid);
 
     return(
         <SafeAreaView style = {[styles.container]}>
@@ -50,8 +54,15 @@ export default function editSpace({route, navigation}) {
                             navigation.navigate('SpacePage') 
                         }}
                     />
-                    
                 </View>
+                <Button
+                    name="Change Owner"
+                    color='#EB5757'
+                    onClick={() => {
+                        // TODO: Change null to new owner id through modal
+                        changeSpaceOwner(currentUser, null, currentSpaceId);
+                    }}
+                />
                 <View style={{paddingVertical: 12}}>
                     <Button
                         name="Leave Space"
@@ -60,13 +71,15 @@ export default function editSpace({route, navigation}) {
                             leaveSpace(currentUser, currentSpaceId, null);
                             navigation.navigate('MySpacesPage') 
                         }}
-                        // onClick={() => createItems(currentUser, currentSpaceId, name, category, shared)}
                     />
                 </View>
                 <Button
                     name="Delete Space"
                     color='#EB5757'
-                    // onClick={() => createItems(currentUser, currentSpaceId, name, category, shared)}
+                    onClick={() => {
+                        deleteSpace(currUser, currentSpaceId);
+                        navigation.navigate('MySpacesPage')
+                    }}
                 />
             </View>
         </SafeAreaView>

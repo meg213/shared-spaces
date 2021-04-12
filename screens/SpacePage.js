@@ -45,6 +45,7 @@ export default function SpacePage({route, navigation}){
   useEffect(() => {
     const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {updateRecentItems(documentSnapshot)});
     async function updateRecentItems(documentSnapshot) {
+        componentIsMounted.current = true;
         // Return the Space data for the snapshot
         var space = documentSnapshot.data();
         // Return the items lists, not in chronological order
@@ -65,15 +66,16 @@ export default function SpacePage({route, navigation}){
                 if (itemData.userID === undefined) {
                     owner = 'none'
                 } else {
-                    owner = (await userRef.doc(itemData.userID.substring(6)).get()).data();
+                    owner = (await userRef.doc(itemData.userID.substring(6)).get()).data().firstname;
                 }
                 data.push({
-                    owner: owner.firstname,
+                    owner: owner,
                     name: itemData.name,
                     spaceID: itemData.spaceID,
                     userID: itemData.userID, 
                     isShared: itemData.isShared,
-                    listName: listData.name
+                    listName: listData.name,
+                    timestamp: itemData.timestamp
                 })
             }
         }
@@ -90,11 +92,13 @@ export default function SpacePage({route, navigation}){
 
             // Else push owner and item key-value pair into data
             data.push({
-                owner: owner.firstname,
+                owner: owner,
                 name: itemData.name,
                 spaceID: itemData.spaceID,
                 userID: itemData.userID, 
                 isShared: itemData.isShared,
+                listName: "none",
+                timestamp: itemData.timestamp
             });
         }
 
@@ -105,10 +109,14 @@ export default function SpacePage({route, navigation}){
     return () => subscriber;
   }, []);
 
-  let recent_items_stack = []   // Stack representing the recent items page
+  // Sort recentItems by timestamp
+  recentItems.sort((a,b) => b.timestamp - a.timestamp);
+
+  // Populate recent items list
+  const recent_items_stack = []    // Stack representing the recent items page
   const max_items_shown = 10;    // How many items we want to show in "Recently Added Items"
 
-  for (let i = recentItems.length - 1; i >= 0; i--) {
+  for (let i = 0; i < recentItems.length; i++) {
     // Push most recent items onto the stack 
     // Track total number of items added
     let count = recent_items_stack.push({value: recentItems[i].name, key: recentItems[i]});
@@ -230,11 +238,11 @@ export default function SpacePage({route, navigation}){
                     renderCustomItem={(item) => (
                       <Item 
                         owner={item.key.owner}
-                        itemName={item.key.name}
+                        itemName={item.value}
                         list={item.key.listName}
                         shared={item.key.isShared}
                         onClick={()=> {
-                            console.log(item.key)
+                            console.log(item)
                             navigation.navigate('ItemDetailScreen', {data: item.key})
                         }}
                       />

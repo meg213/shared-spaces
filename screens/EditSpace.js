@@ -17,7 +17,7 @@ export default function editSpace({route, navigation}) {
     // Conditional rendering for the change ownership button
     // User ID must be equal to the owner ID
     // TODO: How do I conditionally render this?
-    const is_owner = ((await getSpace(currentSpaceId)).owner == currUser.uid);
+    //const is_owner = ((await getSpace(currentSpaceId)).owner == currUser.uid);
 
     return(
         <SafeAreaView style = {[styles.container]}>
@@ -78,7 +78,7 @@ export default function editSpace({route, navigation}) {
                     name="Delete Space"
                     color='#EB5757'
                     onClick={() => {
-                        deleteSpace(currUser, currentSpaceId);
+                        deleteSpace(currentUser, currentSpaceId);
                         navigation.navigate('MySpacesPage')
                     }}
                 />

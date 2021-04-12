@@ -406,29 +406,33 @@ export async function deleteSpace(currentUser, currentSpace) {
  * Creates a new list reference in Firebase
  * @param currentSpaceID Space to own the newly created list
  * @param listName Name of the list
- * @param items array of items
+ * @param items array of items to add
  */
  export async function createNewListWithItems(currentSpaceID, listName, items) {
     try {
+        // Making a new list with array of items
         const newList = listRef.add({
             name: listName,
             spaceID: currentSpaceID,
             items: items
-        })
+        });
+
+        // Add reference of new list to current space
         spaceRef.doc(currentSpaceID.substring(7)).update({
             lists: firebase.firestore.FieldValue.arrayUnion((await newList).path)
-        })
-        var itemlist = (await spaceRef.doc(currentSpaceID.substring(7)).get()).data().items
-        console.log('itemList', itemlist)
-        // for (var i = 0; i < itemlist.length; i++){
-        //     for (var j = 0; j < items.length; i++){
-        //         if (itemlist[i] === items[j]){
-        //             spaceRef.doc(currentSpaceID.substring(7)).update({
-        //                 items: firebase.firestore.FieldValue.arrayRemove(i)
-        //             })
-        //         }
-        //     }
-        // }
+        });
+
+        // Remove items recently added to new list from default list
+        for (let i = 0; i < items.length; i++) {
+            let itemToRemove = items[i];
+            
+            if (itemToRemove != undefined) {
+                spaceRef.doc(currentSpaceID.substring(7)).update({
+                    items: firebase.firestore.FieldValue.arrayRemove((await itemToRemove).path)
+                });
+            }
+        }
+
         Alert.alert("Created a new list!");
 
         let path = newList.ref().toString();
@@ -489,10 +493,8 @@ export async function deleteList(currentList, currentSpace) {
  * @returns     items[], or the default list of the space
  */
 export async function getDefaultList(space) {
-    const spaceID = currentSpace.substring(7);
-
     try {
-        return spaceRef.doc(spaceID).items;
+        return (await getSpace(space)).items;
     } catch (e) {
         console.error("Error retrieivng lists from space: ", e);
         alert(e.message);
@@ -506,10 +508,8 @@ export async function getDefaultList(space) {
  * @returns [] of Firebase List objects
  */
 export async function getAllLists(space) {
-    const spaceID = currentSpace.substring(7);
-
     try {
-        return spaceRef.doc(spaceID).lists;
+        return (await getSpace(space)).lists;
     } catch (e) {
         console.error("Error retrieivng lists from space: ", e);
         alert(e.message);
@@ -525,7 +525,7 @@ export async function getAllLists(space) {
     let listData;
     
     try {
-        listData = listRef.doc(listID).get().data();
+        listData = (await listRef.doc(listID).get()).data();
     } catch (e) {
         console.error("getSpace: Error in getting space with ID: ", listID);
         alert(e.message);

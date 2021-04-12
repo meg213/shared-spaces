@@ -16,6 +16,7 @@ export default function editSpace({route, navigation}) {
 
     // Conditional rendering for the change ownership button
     // User ID must be equal to the owner ID
+    // TODO: How do I conditionally render this?
     const is_owner = ((await getSpace(currentSpaceId)).owner == currUser.uid);
 
     return(

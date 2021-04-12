@@ -292,7 +292,7 @@ export async function deleteSpace(currentUser, currentSpace) {
             name: newName
         })
         let itemData = (await spaceRef.doc(spaceID.substring(7)).get()).data();
-        console.log( itemData)
+       // console.log( itemData)
         console.log('space updated');
     } catch (e) {
         Alert.alert(e.message)
@@ -304,7 +304,7 @@ export async function deleteSpace(currentUser, currentSpace) {
  * @param currentSpaceID Space to own the newly created list
  * @param listName Name of the list
  */
-export async function createNewList(currentSpaceID, listName) {
+ export async function createNewList(currentSpaceID, listName) {
     try {
         const newList = listRef.add({
             name: listName,
@@ -315,7 +315,39 @@ export async function createNewList(currentSpaceID, listName) {
             lists: firebase.firestore.FieldValue.arrayUnion((await newList).path)
         })
         Alert.alert("Created a new list!");
-        
+    } catch (e) {
+        alert(e.message);
+    }
+}
+
+/**
+ * Creates a new list reference in Firebase
+ * @param currentSpaceID Space to own the newly created list
+ * @param listName Name of the list
+ * @param items array of items
+ */
+ export async function createNewListWithItems(currentSpaceID, listName, items) {
+    try {
+        const newList = listRef.add({
+            name: listName,
+            spaceID: currentSpaceID,
+            items: items
+        })
+        spaceRef.doc(currentSpaceID.substring(7)).update({
+            lists: firebase.firestore.FieldValue.arrayUnion((await newList).path)
+        })
+        var itemlist = (await spaceRef.doc(currentSpaceID.substring(7)).get()).data().items
+        console.log('itemList', itemlist)
+        // for (var i = 0; i < itemlist.length; i++){
+        //     for (var j = 0; j < items.length; i++){
+        //         if (itemlist[i] === items[j]){
+        //             spaceRef.doc(currentSpaceID.substring(7)).update({
+        //                 items: firebase.firestore.FieldValue.arrayRemove(i)
+        //             })
+        //         }
+        //     }
+        // }
+        Alert.alert("Created a new list!");
     } catch (e) {
         alert(e.message);
     }

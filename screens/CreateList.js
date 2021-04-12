@@ -6,7 +6,7 @@ import FormInput from '../components/FormInput';
 import CheckBox from '../components/Checkbox';
 import { BottomSheet , Icon} from 'react-native-elements'
 import { getItems } from '../utils/firebaseMethod';
-import { createNewList, moveItemToList } from '../utils/firebaseMethod';
+import { createNewList, createNewListWithItems, mostRecentList } from '../utils/firebaseMethod';
 import { db } from '../config/keys';
 import { TapGestureHandler } from 'react-native-gesture-handler';
 
@@ -19,6 +19,7 @@ const CreateList= ({route, navigation}) => {
     const [icon, setIcon] = useState(require('../assets/kitchen.png'))
     const [isVisible, setIsVisible] = useState(false);
     const [items, setItems] = useState([]);
+    const [itemIDs, setItemIDs] = useState([]);
     const [checkboxes, setCheckboxes] = useState([]);
     
     const componentIsMounted = useRef(true);
@@ -36,9 +37,12 @@ const CreateList= ({route, navigation}) => {
             // get the unordered items
             var unlisted_items = documentSnapshot.data().items; 
             let data = [];
+            let itemIds = []
             //get the item objects from each
             for (let i = 0; i < unlisted_items.length; i++) {
             let itemData = (await itemRef.doc(unlisted_items[i].substring(6)).get()).data();
+            itemIds.push(unlisted_items[i])
+
             if (itemData !== undefined) {
                 // get the owner
                 let owner; 
@@ -60,7 +64,7 @@ const CreateList= ({route, navigation}) => {
             }
             if (componentIsMounted.current) {
                 setItems(data);
-
+                setItemIDs(itemIds);
                 // add the data to a checkboxes array
                 let newdata = [];
                 for (var i = 0; i < data.length; i++){
@@ -72,6 +76,7 @@ const CreateList= ({route, navigation}) => {
         return () => subscriber;
     }, []);
 
+    console.log('itemIds', itemIDs)
     const ImageItem = (props) => {
         return (
             <Pressable onPress={()=> {
@@ -84,27 +89,14 @@ const CreateList= ({route, navigation}) => {
     }
 
     const handleCheckboxes = (name) => {
+        var newArray = checkboxes;
         for (var i = 0; i < checkboxes.length; i++){
             if (checkboxes[i].value === name) {
-                var newArray = checkboxes;
                 newArray[i].isChecked = !checkboxes[i].isChecked;
-                setCheckboxes(newArray)
                 console.log(checkboxes[i].value, ' is ', checkboxes[i].isChecked )
             }
         }
-    }
-
-    const findIfChecked = (name) => {
-        for (var i = 0; i < checkboxes.length; i++){
-            if (checkboxes[i].value === name) {
-              if (checkboxes[i].isChecked){
-                  console.log('returned true')
-                  return true
-              }
-              console.log('returned false')
-              return false;
-            }
-        }
+        return newArray;
     }
 
     return(
@@ -140,8 +132,8 @@ const CreateList= ({route, navigation}) => {
                             return (
                                 <CheckBox
                                     title={item.value}
-                                    onPress={()=> {handleCheckboxes(item.value)}}
-                                    checked={findIfChecked(item.value)}
+                                    onPress={()=> {setCheckboxes(handleCheckboxes(item.value))}}
+                                    checked={item.isChecked}
                                 />
                             )
                         })
@@ -154,14 +146,14 @@ const CreateList= ({route, navigation}) => {
                     name="Create List"
                     width="75%"
                     onClick={() => {
-                        createNewList(currentSpaceId, name)
-                        
-                        // move over all items and add them to the newly created list
-                        // for (var i = 0; i < checkboxes.length; i++){
-                        //     if (checkboxes[i].isChecked){
-                        //         moveItemToList(items[i], currentSpaceId, )
-                        //     }
-                        // }
+                        console.log(items)
+                        var checkedItems = [];
+                        for (var i = 0; i < items.length; i++){
+                            if (checkboxes[i].isChecked){
+                                checkedItems.push(itemIDs[i]);
+                            }
+                        }
+                        createNewListWithItems(currentSpaceId, name, checkedItems);
                         navigation.navigate('ListsList');
                     }}
                 />

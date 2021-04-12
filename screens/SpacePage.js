@@ -36,7 +36,7 @@ export default function SpacePage({route, navigation}){
   useEffect(() => {
     const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {getSpaceName(documentSnapshot)});
      async function getSpaceName(documentSnapshot) {
-        console.log('snap', documentSnapshot.data())
+        // console.log('snap', documentSnapshot.data())
         setSpaceName(documentSnapshot.data().name)
      }
      return () => subscriber;
@@ -126,8 +126,8 @@ export default function SpacePage({route, navigation}){
     }
   }
 
-  console.log("RECENT ITEMS:\n")
-  console.log(recent_items_stack)
+//   console.log("RECENT ITEMS:\n")
+//   console.log(recent_items_stack)
 
   return (
     <SafeAreaView style={styles.container}>

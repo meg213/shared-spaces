@@ -6,13 +6,14 @@ import Button from '../components/Button';
 import SpaceCard from '../components/SpaceCard';
 import firebase from 'firebase/app';
 import { db } from '../config/keys';
+import User from '../components/User';
+
 
 const userRef = db.collection('users');
 const spaceRef = db.collection('spaces');
 
 export default function MySpacesPage({navigation}){
     const currUser = firebase.auth().currentUser;
-    console.log(currUser)
     const[spaceNames, setSpaceNames] = useState([]);
 
     const componentIsMounted = useRef(true);
@@ -27,7 +28,6 @@ export default function MySpacesPage({navigation}){
     useEffect(() => {
         const subscriber = userRef.doc(currUser.uid).onSnapshot(documentSnapshot => {createSpaceCard(documentSnapshot)});
         async function createSpaceCard(documentSnapshot) {
-            console.log(documentSnapshot.data())
             var spaces = documentSnapshot.data().spaces;
             var names = [];
             for (let i = 0; i < spaces.length; i++) {
@@ -73,15 +73,19 @@ export default function MySpacesPage({navigation}){
             </View>
             <ScrollView>
                 {spaceNames.map((space, index) => 
-                    <SpaceCard key={index} name={space.spaceData.name} onClick={() => {navigation.navigate('SpacePage', {data:space.spaceId, currUser:currUser, name: space.spaceData.name})}}/>
+                    <SpaceCard key={index} name={space.spaceData.name} 
+                    members={space.spaceData.user.length}
+                    onClick={() => {navigation.navigate('SpacePage', {data:space.spaceId, currUser:currUser, name: space.spaceData.name})}}/>
                 )}
-                <Button
-                    name = "Create Space"
-                    width ="95%"
-                    onClick={() => {
+                <View style={{marginBottom: 12}}>
+                    <Button
+                        name = "Create Space"
+                        width ="95%"
+                        onClick={() => {
                         navigation.navigate('CreateSpaceScreen', {currUser: currUser});
-                    }}
-                />
+                        }}
+                    />
+                </View>
                 <Button 
                     name="Join Space"
                     onClick={() => {navigation.navigate('JoinSpaceScreen', {currUser: currUser})}}

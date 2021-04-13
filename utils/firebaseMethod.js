@@ -1,8 +1,10 @@
+import  {useState} from 'react';
 import { db } from '../config/keys';
 import {storage} from '../config/keys';
 import firebase from 'firebase/app';
 import { Alert } from 'react-native';
 import Item from '../components/Item';
+import { set } from 'react-native-reanimated';
 
 const spaceRef = db.collection("spaces")
 const userRef = db.collection("users")
@@ -348,6 +350,62 @@ export async function deleteList(currentList, currentSpace) {
     return listData;
 }
 
+export async function uploadImageToStorage(userID, image) {
+    if (image != '') {
+        var photoURL = ""
+        const response = await fetch(image)
+        const blob = await response.blob()
+        const uploadImage = storage.ref().child(userID)
+        await uploadImage.put(blob)
+    }
+}
+
+export async function getImageDownloadURL(imageID) {
+    var photoURL = null
+    try {
+        await storage.ref(imageID).getDownloadURL().then((url) => {
+            photoURL = url
+        })
+    } catch (e) {
+        alert(e.message);
+    } finally {
+        return photoURL
+    }
+}
+
+export async function updateProfileInformation(user, lastName, firstName, email, phone, imageURI, newPassword, currPassword) {
+    const userID = user.uid;
+    if (imageURI != null) {
+        console.log(await getImageDownloadURL(userID))
+        if (await getImageDownloadURL(userID) != null) {
+            await storage.ref(userID).delete()
+        }
+        await uploadImageToStorage(userID, imageURI)
+        
+    }
+    userRef.doc(userID).update({
+        firstname: firstName,
+        lastname: lastName,
+        phone: phone,
+        email: email,
+    });
+    await user.updateProfile({
+        displayName: firstName[0] + lastName[0],
+        email: email
+    })
+    await user.updateEmail(email)
+    if (newPassword != "" && currPassword != "") {
+        const currUser = firebase.auth().currentUser;
+        var creds = firebase.auth.EmailAuthProvider.credential(email, currPassword)
+        currUser.reauthenticateWithCredential(creds).then(() => {
+            currUser.updatePassword(newPassword)
+            Alert.alert("password updated")
+        }).catch(() => {
+            Alert.alert("update password failed")
+        })
+    }
+}
+
 /** 
  * Authentication Functions
 */
@@ -369,23 +427,18 @@ export async function signUp(lastName, firstName, email, phone, password, confir
         try {
             await firebase.auth().createUserWithEmailAndPassword(email, password);
             const currUser = firebase.auth().currentUser;
-            userRef.doc(currUser.uid).set({
+            const userID = currUser.uid;
+            uploadImageToStorage(userID, image)
+            await currUser.updateProfile({
+                displayName: firstName[0] + lastName[0]
+            })
+            userRef.doc(userID).set({
                 email: currUser.email,
                 firstname: firstName,
                 lastname: lastName,
                 phone: phone,
                 spaces: []
             });
-            if (image != '') {
-                const response = await fetch(image)
-                const blob = await response.blob()
-                const uploadImage = storage.ref().child(firstName + " " +lastName + "'s Avatar")
-                uploadImage.put(blob)
-            }
-            await currUser.updateProfile({
-                displayName: firstName + " " + lastName,
-                photoURL: firstName + " " +lastName + "'s Avatar"
-            })
         } catch (e) {
             alert(e.message);
         }

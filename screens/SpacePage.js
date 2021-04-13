@@ -11,6 +11,7 @@ import { FlatList } from 'react-native';
 import List from '../components/List';
 import { cos, max } from 'react-native-reanimated';
 import { AlphabetList } from 'react-native-section-alphabet-list';
+import { getImageDownloadURL } from '../utils/firebaseMethod'
 
 // References to Firebase collections
 const itemRef = db.collection('items');
@@ -19,7 +20,10 @@ const spaceRef = db.collection('spaces');
 const messagesRef = db.collection('messages');
 
 export default function SpacePage({route, navigation}){
+    console.log(route.params)
   // Tracks what Space we're in using "route"
+  const currUser = route.params.currUser;
+  const userID = currUser.uid;
   const spaceID = route.params.data;
   const currSpaceID = route.params.data.substring(7);
   // Items array in reverse order; recently added items are first in array
@@ -27,6 +31,14 @@ export default function SpacePage({route, navigation}){
   const componentIsMounted = useRef(true);
   const [itemIDToData, setMapItemIDToData] = useState(new Map());
   const [recentMessData, setRecentMessData] = useState("")
+  const [imgURL, setImgURL] = useState()
+
+  useEffect(() => {
+    (async () => {
+        setImgURL(await(getImageDownloadURL(userID)))
+    })();
+    return;
+  }, []);
   
   useEffect(() => {
     return () => {
@@ -154,7 +166,11 @@ export default function SpacePage({route, navigation}){
                 margin: 6,
                 }}
             >
-                <User/>
+                <User
+                    size="medium"
+                    title={currUser.displayName}
+                    source={imgURL}
+                />
             </View>
             <View>
                 <Text style={{

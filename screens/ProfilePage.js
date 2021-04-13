@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { ScrollView, StyleSheet, Text, View, SafeAreaView} from 'react-native';
 import Input from "../components/Input";
 import Button from "../components/Button";
 import User from "../components/User";
-import {storage, db} from '../config/keys';
-import { logout } from '../utils/firebaseMethod';
+import { db } from '../config/keys';
+import { logout, updateProfileInformation, getImageDownloadURL } from '../utils/firebaseMethod';
+import * as ImagePicker from 'expo-image-picker'
 
 export default function ProfilePage({route, navigation}) {
     const currUser = route.params.currUser;
@@ -15,11 +15,11 @@ export default function ProfilePage({route, navigation}) {
     const [lastname, setLastName] = useState()
     const [email, setEmail] = useState()
     const [phone, setPhone] = useState()
+    const [currPassword, setCurrPassword] = useState("")
+    const [newPassword, setNewPassword] = useState("")
     const [initials, setInitials] = useState()
-    const [imgSource, setImgSource] = useState()
-    const image = currUser.displayName + "'s Avatar"
-    const imageRef = storage.ref(image);
-    // setImgSource(imageRef.location.bucket + "/" + imageRef.location.path)
+    const [imgURL, setImgURL] = useState()
+    const [imageURI, setImageURI] = useState(null);
     useEffect(() => {
         (async () => {
           let userData = ((await db.collection("users").doc(userID).get()).data())
@@ -29,48 +29,80 @@ export default function ProfilePage({route, navigation}) {
           setEmail(userData.email)
           setPhone(userData.phone)
           setInitials(userData.firstname[0] + userData.lastname[0]);
-          await imageRef.getDownloadURL().then((url) => {
-            setImgSource(url)
-        })
+          setImgURL(await getImageDownloadURL(userID))
         })();
         return;
     }, []);
+    let openImagePickerAsync = async () => {
+        let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    
+        if (permissionResult.granted === false) {
+          alert("Permission to access camera roll is required!");
+          return;
+        }
+    
+        let pickerResult = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowEditing: true,
+                aspect: [4,3],
+                quality: 1,
+        });
+        if (!pickerResult.cancelled) {
+          setImageURI(pickerResult.uri);
+        }
+    }
+
     return (
       <SafeAreaView style={styles.container}>
         <View>
             <Text style={styles.profile}>My Profile</Text>
         </View>
-            {/* <User
-                initials={initials}
+            <User
                 size="large"
-            /> */}
-            <User 
-                // title={initials}
-                source={imgSource}
+                title={initials}
+                source={imageURI != null? imageURI : imgURL}
+                onClick={openImagePickerAsync}
             />
             <View style={styles.subcontainer}>
                 <Text style={styles.subtext}>Basic Information</Text>
                 <Input
-                    label={firstname}
+                    labelValue={firstname}
+                    onChangeText={text => setFirstName(text)}
                 />
                 <Input
-                    label={lastname}
+                    labelValue={lastname}
+                    onChangeText={text => setLastName(text)}
                 />
             </View>              
             <View style={styles.subcontainer}>
                 <Text style={styles.subtext}>Account Info</Text>
                 <Input
-                    label={email}
+                    labelValue={email}
+                    onChangeText={text => setEmail(text)}
                 />
                 <Input
-                    label={phone}
+                    labelValue={phone}
+                    onChangeText={text => setPhone(text)}
+                />
+                 <Input
+                    label={'current password'}
+                    onChangeText={text => setCurrPassword(text)}
+                    secureTextEntry={true}
                 />
                 <Input
-                    label={'password'}
-                    password
+                    label={'new password'}
+                    onChangeText={text => setNewPassword(text)}
+                    secureTextEntry={true}
                 />
             </View>  
             <View>
+                <View style={{marginBottom: 12}}>
+                    <Button
+                        name="Update"
+                        color="#EB5757"
+                        onClick={() => {updateProfileInformation(currUser, lastname, firstname, email, phone, imageURI, newPassword, currPassword); setCurrPassword(''); setNewPassword('')}}
+                    />    
+                </View>
                 <View style={{marginBottom: 12}}>
                     <Button
                         name="Logout"
@@ -107,6 +139,47 @@ export default function ProfilePage({route, navigation}) {
         fontSize: 18,
         color: '#4E7580',
         marginHorizontal: 12,
-    }
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+      },
+      modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+      },
+      button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2
+      },
+      buttonOpen: {
+        backgroundColor: "#F194FF",
+      },
+      buttonClose: {
+        backgroundColor: "#2196F3",
+      },
+      textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+      },
+      modalText: {
+        marginBottom: 15,
+        textAlign: "center"
+      }
   });
   

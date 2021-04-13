@@ -3,6 +3,7 @@ import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 import Button from '../components/Button';
+import { Icon } from 'react-native-elements';
 import { signUp } from '../utils/firebaseMethod';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import * as ImagePicker from 'expo-image-picker';
@@ -34,7 +35,6 @@ const SignupScreen = ({navigation}) => {
     if (!pickerResult.cancelled) {
       setImage(pickerResult.uri);
     }
-    console.log(pickerResult);
   }
 
   return (     

@@ -518,6 +518,22 @@ export async function getAllLists(space) {
 }
 
 /**
+ * Return all members belonging to corresponding page
+ * 
+ * @param space ID of the current space, should be of form spaces/...
+ * @returns [] of Firebase Member objects
+ */
+ export async function getAllMembers(space) {
+    try {
+        return (await getSpace(space)).user;
+    } catch (e) {
+        console.error("Error retrieivng lists from space: ", e);
+        alert(e.message);
+    }
+}
+
+
+/**
  * Returns list data for given ID, or null if error occurs
  * @param list Firebase ID of desired list, assumed to be "lists/..."
  */

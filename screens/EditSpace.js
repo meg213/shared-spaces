@@ -1,23 +1,40 @@
-import React, { useState, Component } from 'react';
+import React, { useState, Component, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView, Modal} from 'react-native';
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
 import { Icon } from 'react-native-elements';
-import { changeSpaceOwner, deleteSpace, getSpace, leaveSpace, updateSpace } from '../utils/firebaseMethod';
+import { changeSpaceOwner, deleteSpace, getSpace, leaveSpace, updateSpace, getAllMembers } from '../utils/firebaseMethod';
 
 export default function editSpace({route, navigation}) {
     //route params: spaceID, currUser
     const [name, setName] = useState(route.params.name);
-    const [category, setCategory] = useState("");
-    const [shared, setShared] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false)
+    const [isOwner, setIsOwner] = useState(false);
+    const [members, setMembers] = useState([]);
     const toggleShared = () => setShared(previousState => ! previousState);
     const currentUser = route.params.currUser;
     const currentSpaceId = route.params.spaceID;
 
+
     // Conditional rendering for the change ownership button
     // User ID must be equal to the owner ID
-    // TODO: How do I conditionally render this?
-    //const is_owner = ((await getSpace(currentSpaceId)).owner == currUser.uid);
+    useEffect(() => {
+        async function getOwner() {
+            let spaceOwner = (await getSpace(currentSpaceId)).owner;
+            let user = currentUser.uid
+            (spaceOwner === user) ? setIsOwner(true) : setIsOwner(false);
+        }
+       getOwner();
+    }, []);
+
+    // get the members of a space
+    useEffect(() => {
+        async function getMembers() {
+            let users = (await getSpace(currentSpaceId)).user;
+            setMembers(users);
+        }
+        getMembers();
+    })
 
     return(
         <SafeAreaView style = {[styles.container]}>
@@ -38,7 +55,7 @@ export default function editSpace({route, navigation}) {
                         autoCorrect={false}
                     />
                 <Text style={styles.subtext}>Current Members</Text>
-                <Text style={{paddingVertical: 12}}>To Do: Add current list of users</Text>
+                
                 <Text style={[styles.subtext, {paddingVertical: 12}]}>Add Members</Text>
                 <Button
                     name="Generate Code"
@@ -56,18 +73,21 @@ export default function editSpace({route, navigation}) {
                         }}
                     />
                 </View>
+                {isOwner ? 
                 <Button
                     name="Change Owner"
-                    color='#EB5757'
+                    color='#219653'
                     onClick={() => {
+                        setModalVisible(true)
                         // TODO: Change null to new owner id through modal
-                        changeSpaceOwner(currentUser, null, currentSpaceId);
+                        // changeSpaceOwner(currentUser, null, currentSpaceId);
                     }}
-                />
+                /> : null
+                }
                 <View style={{paddingVertical: 12}}>
                     <Button
                         name="Leave Space"
-                        color='#EB5757'
+                        color='#F2994A'
                         onClick= {() => {
                             leaveSpace(currentUser, currentSpaceId, null);
                             navigation.navigate('MySpacesPage') 
@@ -83,6 +103,30 @@ export default function editSpace({route, navigation}) {
                     }}
                 />
             </View>
+        <View style={styles.centeredView}>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                Alert.alert("Modal has been closed.");
+                setModalVisible(!modalVisible);
+                }}
+            >
+                <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                    <Text style={styles.modalText}>Change Owner</Text>
+                    <Button
+                        name="Update Owner"
+                        color= "#184254"
+                        onClick={() => setModalVisible(!modalVisible)}
+                    >
+                    <Text style={styles.textStyle}>Hide Modal</Text>
+                    </Button>
+                </View>
+                </View>
+            </Modal>
+    </View>
         </SafeAreaView>
     );
 }
@@ -105,5 +149,38 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#4E7580',
     },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+      },
+      modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 24,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+      },
+      textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+      },
+      modalText: {
+        marginBottom: 15,
+        color: '#184254',
+        fontSize: 18,
+        textAlign: "center"
+      }
+    
 
 })

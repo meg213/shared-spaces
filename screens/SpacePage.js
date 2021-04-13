@@ -21,8 +21,14 @@ const listRef = db.collection('lists');
 export default function SpacePage({route, navigation}){
   // Tracks what Space we're in using "route"
   const currSpaceID = route.params.data.substring(7);
-  // Items array in reverse order; recently added items are first in array
+  // List of all items in order of time added
   const[recentItems, setItems] = useState([]);
+  // Stack of items for the "Recent Added Items" view
+  const[recent_items_stack, setRecentList] = useState([]);
+//   const[recent_items_stack, setRecentList] = useState(new Map());
+  // How many items do we want to show in "Recently Added Items"?
+  const max_items_shown = 10;    
+
   const[spaceName, setSpaceName] = useState('');
   const componentIsMounted = useRef(true);
   
@@ -45,22 +51,23 @@ export default function SpacePage({route, navigation}){
   useEffect(() => {
     const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {updateRecentItems(documentSnapshot)});
     async function updateRecentItems(documentSnapshot) {
-        componentIsMounted.current = true;
         // Return the Space data for the snapshot
         var space = documentSnapshot.data();
         // Return the items lists, not in chronological order
         var items = space.items;
         // Return all the lists in a given space
         var all_lists = space.lists;
-        // Empty array of items in order
+        // Empty array of items
         var data = [];
 
+        // Add items from all lists
         for (let i = 0; i < all_lists.length; i++) {
             let listData = (await listRef.doc(all_lists[i].substring(6)).get()).data();
   
               // if there is at least one item in the list
               for (let i = 0; i < listData.items.length; i++) {
-                let itemData = (await itemRef.doc(listData.items[i].substring(6)).get()).data();
+                let itemID = listData.items[i].substring(6);
+                let itemData = (await itemRef.doc(itemID).get()).data();
                 //get the owner
                 let owner; 
                 if (itemData.userID === undefined) {
@@ -69,6 +76,7 @@ export default function SpacePage({route, navigation}){
                     owner = (await userRef.doc(itemData.userID.substring(6)).get()).data().firstname;
                 }
                 data.push({
+                    key: itemID,
                     owner: owner,
                     name: itemData.name,
                     spaceID: itemData.spaceID,
@@ -80,9 +88,11 @@ export default function SpacePage({route, navigation}){
             }
         }
 
+        // Add items from defaultList
         for (let i = 0; i < items.length; i++) {
+            let itemID = items[i].substring(6);
             // Get item reference
-            let itemData = (await itemRef.doc(items[i].substring(6)).get()).data();
+            let itemData = (await itemRef.doc(itemID).get()).data();
             // Get corresponding item owner reference
             let owner = (await userRef.doc(itemData.userID.substring(6)).get()).data().firstname;
             // Abort if either data is undefined
@@ -92,6 +102,7 @@ export default function SpacePage({route, navigation}){
 
             // Else push owner and item key-value pair into data
             data.push({
+                key: itemID, 
                 owner: owner,
                 name: itemData.name,
                 spaceID: itemData.spaceID,
@@ -103,35 +114,25 @@ export default function SpacePage({route, navigation}){
         }
 
         if (componentIsMounted.current) {
+            data.sort((a,b) => b.timestamp - a.timestamp)
             setItems(data);
         }
     }
     return () => subscriber;
   }, []);
 
-  // Sort recentItems by timestamp
-  recentItems.sort((a,b) => b.timestamp - a.timestamp);
+  useEffect(() => {
+    // Add most recent items to recent items stack
+    let mostRecentItems = [];
 
-  // Populate recent items list
-  const recent_items_stack = []    // Stack representing the recent items page
-  const max_items_shown = 10;    // How many items we want to show in "Recently Added Items"
-
-  for (let i = 0; i < recentItems.length; i++) {
-    // Push most recent items onto the stack 
-    // Track total number of items added
-    let count = recent_items_stack.push({value: recentItems[i].name, key: recentItems[i]});
-
-    // Compare total items to constant maximum
-    if (count == max_items_shown) {
-        // Exit as we equal maximum items shown
-        break;
-    } else if (count > max_items_shown) {
-        // Delete the last item (which is least recently added)
-        recent_items_stack.pop();
-        // Exit as we equal maximum items shown
-        break;
+    for (let i = 0; i < recentItems.length && i < max_items_shown; i++) {
+        // mostRecentItems.set(recentItems[i].key, recentItems[i]);
+        mostRecentItems.push({key: recentItems[i].key, value: recentItems[i]});
     }
-  }
+
+    setRecentList(recent_items_stack => [...mostRecentItems]);
+  }, [recentItems]);
+
   
   return (
     <SafeAreaView style={styles.container}>

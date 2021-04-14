@@ -14,7 +14,7 @@ export default function ItemDetailScreen ({route, navigation}) {
     //Need to query the information above from database based on the Item that was clicked (most of the same information that was on the card clicked to get here)
     //Image is the only thing extra that needs to be queried that was not queried on the item card
 
-    console.log('route.params', route.params.data);
+    console.log('route.params!', route.params.data);
     return (
         <SafeAreaView style = {[styles.container]}>
             <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 4,paddingHorizontal: 30, flexDirection: 'row' }}>
@@ -47,7 +47,9 @@ export default function ItemDetailScreen ({route, navigation}) {
             </View>
 
             <View style={{ position: 'absolute', bottom: 48, flexDirection: 'row', paddingTop: 48, paddingHorizontal: 30, justifyContent: 'center'}}>
-                <Button name="edit" width="55%" textColor="#184254" color="#ffffff" icon='edit' iconColor="#D9BD4B"/>       
+                <Button name="edit" width="55%" textColor="#184254" color="#ffffff" icon='edit' iconColor="#D9BD4B"
+                    onClick={()=> {navigation.navigate("EditItemScreen", {route: route.params.data})}}
+                />       
                 <Button name="delete" width="55%" color="#ffffff" textColor="#184254" icon="close" iconColor="#EB5757"/>
             </View>
         </SafeAreaView>

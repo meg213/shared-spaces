@@ -34,6 +34,7 @@ export default function MySpacesPage({navigation}){
                     continue
                 }
                 names.push({spaceData: spaceData, spaceId: spaces[i]});
+     
             }
             if (componentIsMounted.current) {
                 setSpaceNames(names)
@@ -73,7 +74,7 @@ export default function MySpacesPage({navigation}){
             </View>
             <ScrollView>
                 {spaceNames.map((space, index) => 
-                    <SpaceCard key={index} name={space.spaceData.name} onClick={() => {navigation.navigate('SpacePage', {data:space.spaceId, currUser:currUser, name: space.spaceData.name})}}/>
+                    <SpaceCard key={index} name={space.spaceData.name} members={space.spaceData.user.length} onClick={() => {navigation.navigate('SpacePage', {data:space.spaceId, currUser:currUser, name: space.spaceData.name})}}/>
                 )}
                 <Button
                     name = "Create Space"

@@ -1,5 +1,5 @@
 import React, { useState, Component, useEffect } from 'react';
-import { ScrollView, StyleSheet, Text, View, SafeAreaView, Modal} from 'react-native';
+import { ScrollView, StyleSheet, Text, View, SafeAreaView, Modal, Pressable} from 'react-native';
 import Button from '../components/Button';
 import User from '../components/User';
 import FormInput from '../components/FormInput';
@@ -13,38 +13,31 @@ export default function editSpace({route, navigation}) {
     const [modalVisible, setModalVisible] = useState(false)
     const [isOwner, setIsOwner] = useState(false);
     const [members, setMembers] = useState([]);
+    const [memberClicked, setMemberClicked] = useState('');
+    const [memberClickedId, setMemberClickedID] = useState('');
     const currentUser = route.params.currUser;
     const currentSpaceId = route.params.spaceID;
+    // console.log(currentUser);
 
     // db refs
     const userRef = db.collection('users');
 
-
     // Get the owner of a space
-    //TODO HAS ERRORS??? UNSURE WHY
     useEffect(() => {
         async function getOwner() {
             let spaceOwner = (await getSpace(currentSpaceId)).owner;
             let user = currentUser.uid
             // compare to see if current user is the space owner
-            if (spaceOwner === user ){
-                console.log('hello')
-            }
             (spaceOwner === user) ? setIsOwner(true) : setIsOwner(false);
         }
        getOwner();
     }, []);
 
-    //grab the potential new owners (exclude current owner)
-    const nonOwners = [];
-    const changeOwner = () => {
-        for (var i = 0; i < members.length; i++){
-            if (!members[i].owner){
-                nonOwners.push(members[i]);
-            }
-        }
+    const openModal = (user, id) => {
+        setMemberClicked(user);
+        setMemberClickedID(id);
+        setModalVisible(true);
     }
-
     // get the members of a space
     useEffect(() => {
         async function getMembers() {
@@ -57,15 +50,16 @@ export default function editSpace({route, navigation}) {
                 let userData = (await userRef.doc(userIDs[i]).get()).data();
                 let initials = userData.firstname.substring(0, 1) + userData.lastname.substring(0, 1);
                 if (userIDs[i] === owner)
-                    users.push({firstName: userData.firstname, lastName: userData.lastname, initials: initials, owner: true})
+                    users.push({firstName: userData.firstname, lastName: userData.lastname, initials: initials, owner: true, id: userIDs[i]})
                 else {
-                    users.push({firstName: userData.firstname, lastName: userData.lastname, initials: initials, owner: false})
+                    users.push({firstName: userData.firstname, lastName: userData.lastname, initials: initials, owner: false, id: userIDs[i]})
                 }
             }
             setMembers(users);
         }
         getMembers();
     })
+    // console.log(members);
 
     return(
         <SafeAreaView style = {[styles.container]}>
@@ -89,17 +83,24 @@ export default function editSpace({route, navigation}) {
                 <View>
                     {members.map((user) =>
                         { return (
-                            <View style={[styles.users, {justifyContent:'space-between'}]}>
-                                <View style={styles.users}>
-                                    <User
-                                        initials={user.initials}
-                                    />
-                                    <Text style={styles.userText}>{user.firstName} {user.lastName} </Text>
+                            <Pressable  style={({ pressed }) => [{opacity: pressed ? 0.6 : 1}]}
+                                onPress={ () => {
+                                    if (isOwner) {
+                                        openModal(user.firstName + ' ' + user.lastName, user.id)
+                                    }
+                                    } } >
+                                <View style={[styles.users, {justifyContent:'space-between'}]}>
+                                    <View style={styles.users}>
+                                        <User
+                                            initials={user.initials}
+                                        />
+                                        <Text style={styles.userText}>{user.firstName} {user.lastName} </Text>
+                                    </View>
+                                    <View style={{paddingRight: 12, paddingTop:16}}>
+                                    {user.owner ? <Icon  name='star' size={36}/> : null}
+                                    </View>
                                 </View>
-                                <View style={{paddingRight: 12, paddingTop:16}}>
-                                 {user.owner ? <Icon  name='star' size={36}/> : null}
-                                </View>
-                            </View>
+                            </Pressable>
                     )})}
                 </View>
                 <Text style={[styles.subtext, {paddingVertical: 12}]}>Add Members</Text>
@@ -118,19 +119,7 @@ export default function editSpace({route, navigation}) {
                     }}
                 />
                 {isOwner ? 
-                <View>
-                    <View style={{paddingVertical: 8}}>
-                        <Button
-                            name="Change Owner"
-                            color='#219653'
-                            onClick={() => {
-                                changeOwner();
-                                setModalVisible(true)
-                                // TODO: Change null to new owner id through modal
-                                // changeSpaceOwner(currentUser, null, currentSpaceId);
-                            }}
-                        /> 
-                    </View>
+                <View style={{paddingVertical: 8}}>
                     <Button
                         name="Delete Space"
                         color='#EB5757'
@@ -140,8 +129,7 @@ export default function editSpace({route, navigation}) {
                         }}
                     />
                 </View>
-                :                
-                <View style={{paddingVertical: 12}}>
+                :<View style={{paddingVertical: 8}}>
                     <Button
                         name="Leave Space"
                         color='#F2994A'
@@ -153,6 +141,9 @@ export default function editSpace({route, navigation}) {
                  </View> 
                 }
             </View>
+
+
+        {/* MODAL FOR USERS */}
         <View style={styles.centeredView}>
             <Modal
                 animationType="slide"
@@ -163,25 +154,33 @@ export default function editSpace({route, navigation}) {
                 setModalVisible(!modalVisible);
                 }}
             >
-                <View style={styles.centeredView}>
+            <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                    <Text style={styles.modalText}>Change Owner</Text>
-                    <View>
-                        {nonOwners.map((user) => {
-                            return (
-                                <Text>{user.firstName}</Text>
-                            )
-                        })}
+                    <Icon name="close" size={36} />
+                    <Text style={styles.modalText}>{memberClicked}</Text>
+                    <View style={{flexDirection: 'row'}}>
+                        <View style={{paddingRight: 10}}>
+                            <Button
+                                name="Make Owner"
+                                color= "#219653"
+                                width={100}
+                                onClick={() =>
+                                    {
+                                    changeSpaceOwner(currentUser, memberClickedId, currentSpaceId)
+                                    setModalVisible(!modalVisible)
+                                    }
+                                }
+                            />
+                        </View>
+                        <Button
+                            name="Remove Member"
+                            color= "#9B51E0"
+                            width={100}
+                            onClick={() => setModalVisible(!modalVisible)}
+                        />
                     </View>
-                    <Button
-                        name="Update Owner"
-                        color= "#184254"
-                        onClick={() => setModalVisible(!modalVisible)}
-                    >
-                    <Text style={styles.textStyle}>Hide Modal</Text>
-                    </Button>
                 </View>
-                </View>
+            </View>
             </Modal>
     </View>
         </SafeAreaView>
@@ -213,7 +212,7 @@ const styles = StyleSheet.create({
         marginTop: 22
       },
       modalView: {
-        margin: 20,
+        margin: 12,
         backgroundColor: "white",
         borderRadius: 20,
         padding: 24,
@@ -235,7 +234,7 @@ const styles = StyleSheet.create({
       modalText: {
         marginBottom: 15,
         color: '#184254',
-        fontSize: 18,
+        fontSize: 24,
         textAlign: "center"
       },
       users: {

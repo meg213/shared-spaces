@@ -80,7 +80,7 @@ export default function createItem({route, navigation}) {
     for (let i = 0; i < listData.length; i++) {
         data.push({value: listData[i].name, key: listData[i]})
     }
-    console.log(data)
+   // console.log(data)
 
 
     return(

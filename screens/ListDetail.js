@@ -128,15 +128,14 @@ export default function ListsPage({navigation, route}) {
             />
         </ScrollView>
         <View style={styles.fab}>
-            {/* <Button
+            <Button
                 width='80%'
                 name="Add Item"
                 onClick={()=> {
-              //    console.log(route.params.items);
-                  // navigation.navigate("CreateItem", {spaceID:route.params.data})
-                }
-                }
-            /> */}
+                  console.log(route.params.items);
+                  navigation.navigate("CreateItem", {spaceID:route.params.data, currUser: route.params.currUser})
+                }}
+            />
         </View>
     </SafeAreaView>
   );

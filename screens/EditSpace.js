@@ -151,17 +151,6 @@ export default function editSpace({route, navigation}) {
                         }}
                     />
                 </View>
-<<<<<<< HEAD
-                <Button
-                    name="Delete Space"
-                    color='#EB5757'
-                    onPress = { () => {
-                        console.log("Delete?")
-                        deleteConfirmAlert
-                    }}
-                    // onClick={() => createItems(currentUser, currentSpaceId, name, category, shared)}
-                />
-=======
                 :<View style={{paddingVertical: 8}}>
                     <Button
                         name="Leave Space"
@@ -173,7 +162,6 @@ export default function editSpace({route, navigation}) {
                     />
                  </View> 
                 }
->>>>>>> jackson-branch
             </View>
 
 

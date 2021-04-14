@@ -115,7 +115,7 @@ export default function ListsPage({navigation, route}) {
                   numItems={item.key.items.length}
                   onPress={() => {
                     console.log('item', item);
-                    navigation.navigate("ListDetail", { listID: item.key.listID, name: item.key.name, numItems: item.key.items.length, data: route.params.data});
+                    navigation.navigate("ListDetail", { listID: item.key.listID, currUser: route.params.currUser, name: item.key.name, numItems: item.key.items.length, data: route.params.data});
                   }}
                   // TODO: Create custom icon for lists
                 />

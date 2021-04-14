@@ -8,6 +8,22 @@ import { changeSpaceOwner, deleteSpace, getSpace, leaveSpace, updateSpace } from
 import { db } from '../config/keys';
 
 export default function editSpace({route, navigation}) {
+    const deleteConfirmAlert = () => 
+        Alert.alert(
+            "Are you sure?",
+            "You are about to delete your space. This action cannot be reversed.",
+            [
+                {
+                    text: "Cancel",
+                    style: cancel
+                },
+                {
+                    text: "Delete Space",
+                    onPress: () => console.log("delete space!")
+                }
+            ]
+        );
+
     //route params: spaceID, currUser
     const [name, setName] = useState(route.params.name);
     const [modalVisible, setModalVisible] = useState(false)

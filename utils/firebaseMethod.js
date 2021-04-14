@@ -265,7 +265,7 @@ export async function leaveSpace(currentUser, currentSpace)
  */
 export async function changeSpaceOwner(currentUser, newOwner, currentSpace)
 {
-    const spaceID = currentSpaceID.substring(7);
+    const spaceID = currentSpace.substring(7);
     const userID  = currentUser.uid;
 
     try {

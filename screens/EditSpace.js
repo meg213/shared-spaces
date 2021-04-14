@@ -11,10 +11,12 @@ export default function editSpace({route, navigation}) {
     //route params: spaceID, currUser
     const [name, setName] = useState(route.params.name);
     const [modalVisible, setModalVisible] = useState(false)
+    const [optionModalVisible, setOptionModalVisible] = useState(false);
     const [isOwner, setIsOwner] = useState(false);
     const [members, setMembers] = useState([]);
     const [memberClicked, setMemberClicked] = useState('');
     const [memberClickedId, setMemberClickedID] = useState('');
+    const [option, setOption] = useState('');
     const currentUser = route.params.currUser;
     const currentSpaceId = route.params.spaceID;
     // console.log(currentUser);
@@ -26,9 +28,13 @@ export default function editSpace({route, navigation}) {
     useEffect(() => {
         async function getOwner() {
             let spaceOwner = (await getSpace(currentSpaceId)).owner;
-            let user = currentUser.uid
+            let user = currentUser.uid;
             // compare to see if current user is the space owner
-            (spaceOwner === user) ? setIsOwner(true) : setIsOwner(false);
+            if (spaceOwner.toString() === user.toString() ){
+                setIsOwner(true);
+            } else {
+                setIsOwner(false);
+            }
         }
        getOwner();
     }, []);
@@ -124,8 +130,8 @@ export default function editSpace({route, navigation}) {
                         name="Delete Space"
                         color='#EB5757'
                         onClick={() => {
-                            deleteSpace(currentUser, currentSpaceId);
-                            navigation.navigate('MySpacesPage')
+                            setOptionModalVisible(true);
+                            setOption('delete')
                         }}
                     />
                 </View>
@@ -134,8 +140,8 @@ export default function editSpace({route, navigation}) {
                         name="Leave Space"
                         color='#F2994A'
                         onClick= {() => {
-                            leaveSpace(currentUser, currentSpaceId, null);
-                            navigation.navigate('MySpacesPage') 
+                            setOptionModalVisible(true);
+                            setOption('leave')
                         }}
                     />
                  </View> 
@@ -166,7 +172,8 @@ export default function editSpace({route, navigation}) {
                                 width={100}
                                 onClick={() =>
                                     {
-                                    changeSpaceOwner(currentUser, memberClickedId, currentSpaceId)
+                                    changeSpaceOwner(currentUser, memberClickedId, currentSpaceId);
+                                    setIsOwner(false)
                                     setModalVisible(!modalVisible)
                                     }
                                 }
@@ -182,7 +189,54 @@ export default function editSpace({route, navigation}) {
                 </View>
             </View>
             </Modal>
-    </View>
+        </View>
+
+
+        {/* MODAL FOR LEAVING/DELETING SPACE*/}
+        <View style={styles.centeredView}>
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={optionModalVisible}
+            onRequestClose={() => {
+            setOptionModalVisible(!optionModalVisible);
+            }}
+        >
+        <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+                <Text style={styles.modalText}>Are you sure you wish to {option} the Space?</Text>
+                <View style={{flexDirection: 'row'}}>
+                    <View style={{paddingRight: 10}}>
+                        <Button
+                            name="Yes"
+                            color= "#EB5757"
+                            width={100}
+                            onClick={() =>
+                                {
+                                if (option === 'delete'){
+                                    deleteSpace(currentUser, currentSpaceId);
+                                    navigation.navigate('MySpacesPage') 
+
+                                } else {
+                                    leaveSpace(currentUser, currentSpaceId, null);
+                                    navigation.navigate('MySpacesPage') 
+                                }
+                                setOptionModalVisible(!optionModalVisible)
+                                }
+                            }
+                        />
+                    </View>
+                    <Button
+                        name="No"
+                        color= "#219653"
+                        width={100}
+                        onClick={() => setOptionModalVisible(!optionModalVisible)}
+                    />
+                </View>
+            </View>
+        </View>
+        </Modal>
+        </View>
         </SafeAreaView>
     );
 }

@@ -234,7 +234,7 @@ export default function SpacePage({route, navigation}){
                 </Text>
 
                 {/* List Containing Recently Added Items */}
-                <AlphabetList
+                {/* <AlphabetList
                     data = {recent_items_stack}
                     renderCustomItem={(item) => (
                       <Item 
@@ -248,7 +248,7 @@ export default function SpacePage({route, navigation}){
                         }}
                       />
                     )}
-                />
+                /> */}
             </View>
         </ScrollView>
     </SafeAreaView>

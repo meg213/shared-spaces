@@ -162,7 +162,9 @@ export default function editSpace({route, navigation}) {
             >
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                    <Icon name="close" size={36} />
+                    <View style={{marginLeft:'auto', marginBottom: -10}}>
+                        <Icon name="close" size={36} onPress={()=> { setModalVisible(false)}} />
+                    </View>
                     <Text style={styles.modalText}>{memberClicked}</Text>
                     <View style={{flexDirection: 'row'}}>
                         <View style={{paddingRight: 10}}>

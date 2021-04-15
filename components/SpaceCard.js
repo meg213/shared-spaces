@@ -46,7 +46,7 @@ const SpaceCard = (props) => {              //TO-DO: make props
                 </View>
                 <View style = {{paddingTop: 5}}>
                     <Text> 
-                        3 members
+                        {props.members} members
                     </Text>
                 </View>
                 <View style = {{paddingTop: 18}}>

@@ -11,21 +11,35 @@ import { FlatList } from 'react-native';
 import List from '../components/List';
 import { cos, max } from 'react-native-reanimated';
 import { AlphabetList } from 'react-native-section-alphabet-list';
+import { getImageDownloadURL } from '../utils/firebaseMethod'
 
 // References to Firebase collections
 const itemRef = db.collection('items');
 const userRef = db.collection('users');
 const spaceRef = db.collection('spaces');
+const messagesRef = db.collection('messages');
 const listRef = db.collection('lists');
 
 export default function SpacePage({route, navigation}){
+    console.log(route.params)
   // Tracks what Space we're in using "route"
+  const currUser = route.params.currUser;
+  const userID = currUser.uid;
+  const spaceID = route.params.data;
   const currSpaceID = route.params.data.substring(7);
   // Items array in reverse order; recently added items are first in array
   const[recentItems, setItems] = useState([]);
+  const componentIsMounted = useRef(true);
+  const [recentMessData, setRecentMessData] = useState("")
+  const [imgURL, setImgURL] = useState()
   const[spaceName, setSpaceName] = useState('');
-   const componentIsMounted = useRef(true);
-  
+
+  useEffect(() => {
+    (async () => {
+        setImgURL(await(getImageDownloadURL(userID)))
+    })();
+    return;
+  }, []);
   
   useEffect(() => {
     return () => {
@@ -43,6 +57,7 @@ export default function SpacePage({route, navigation}){
     }, []);
 
   // Updates recentItems on every new item instance
+
   useEffect(() => {
     const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {updateRecentItems(documentSnapshot)});
     async function updateRecentItems(documentSnapshot) {
@@ -129,6 +144,25 @@ export default function SpacePage({route, navigation}){
   console.log("RECENT ITEMS:\n")
   console.log(recent_items_stack)
 
+  useEffect(() => {
+        const subscriber = messagesRef
+        .orderBy('createdAt', 'desc')
+        .where('user.spaceID', '==', spaceID)
+        .limit(1)
+        .onSnapshot(documentSnapshot => {createMessagesData(documentSnapshot)});
+        async function createMessagesData(documentSnapshot) {
+          for (let i = 0; i < documentSnapshot.docs.length; i++) {
+              let m = await documentSnapshot.docs[i].data()
+              let data = {
+                  name: m.user.name,
+                  text: m.text.text
+              }
+              setRecentMessData(data)
+          }
+        }
+        return () => subscriber;
+      }, []);
+
   return (
     <SafeAreaView style={styles.container}>
         <View style ={{
@@ -170,7 +204,11 @@ export default function SpacePage({route, navigation}){
                 margin: 6,
                 }}
             >
-                <User/>
+                <User
+                    size="medium"
+                    title={currUser.displayName}
+                    source={imgURL}
+                />
             </View>
             <View>
                 <Text style={{
@@ -182,7 +220,11 @@ export default function SpacePage({route, navigation}){
                 }}> 
                     Messages 
                 </Text>
-                <RecentMessageShow/>
+                <RecentMessageShow
+                    name={recentMessData.name}
+                    lastestMessage={recentMessData.text}
+                    onClick={() => {navigation.navigate('ChatScreen', {spaceID: route.params.data, currUser: route.params.currUser})}}
+                />
             </View>
             <View style={{height: 120, marginTop: 6, marginLeft: 6}}>
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>

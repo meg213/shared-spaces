@@ -6,6 +6,7 @@ import Button from "../components/Button";
 import Search from '../components/Search';
 import {AlphabetList} from 'react-native-section-alphabet-list';
 import { db } from '../config/keys';
+import createItem from './CreateItem';
 
 class SectionHeader extends Component {
   render() {
@@ -27,6 +28,8 @@ class SectionHeader extends Component {
   }
 }
 
+
+
 const itemRef = db.collection('items');
 const listRef = db.collection('lists');
 const userRef = db.collection('users');
@@ -37,6 +40,7 @@ export default function AllItemsPage({route, navigation}) {
   const[allItems, setItems] = useState([]);
   const componentIsMounted = useRef(true);
   const currSpaceID = route.params.data.substring(7);
+  const [itemIDToData, setMapItemIDToData] = useState(new Map());
 
   useEffect(() => {
     return () => {
@@ -129,7 +133,7 @@ export default function AllItemsPage({route, navigation}) {
             />
             <View style={styles.headerMain}>
               <Text style={styles.headerTitle}>All Items</Text>
-              <Text>{data.length}</Text>
+          <Text>{allItems.length}</Text>
             </View>
         </View>
         <View style={styles.search}>

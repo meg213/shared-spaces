@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Pressable, Text, View, StyleSheet,} from 'react-native';
+import { Pressable, Text, View, StyleSheet} from 'react-native';
 import { TextInput } from 'react-native-paper';
 
 /*

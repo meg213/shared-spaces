@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef, Component} from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { Icon, SearchBar } from 'react-native-elements';
 import Item from "../components/Item";
 import Button from "../components/Button";
 import Search from '../components/Search';
@@ -139,7 +139,15 @@ export default function SharedPage({route, navigation}) {
             </View>
         </View>
         <View style={styles.search}>
-              <Search/>
+          <SearchBar
+            placeholder="Search here..."
+            
+            containerStyle={styles.container}
+            inputContainerStyle={styles.inputContainer}
+            placeholderTextColor='#4E7580'
+            round='true'
+            lightTheme='true'  
+          />
         </View>
         <ScrollView scrollEventThrottle={16}>
         <View>
@@ -196,6 +204,14 @@ const styles = StyleSheet.create({
     color: '#4E7580'
   },
   search: {
-      width: '90%'
+    width: '100%',
+  },
+  inputContainer: {
+    backgroundColor: '#D9DED8',
+  },
+  container: {
+    backgroundColor: '#F2F0EB',
+    borderBottomColor: '#F2F0EB',
+    borderTopColor: '#F2F0EB',
   }
 });

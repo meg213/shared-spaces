@@ -5,14 +5,18 @@ import Button from '../components/Button';
 import FormInput from '../components/FormInput';
 import { createItems, createItemInList } from '../utils/firebaseMethod';
 import * as ImagePicker from 'expo-image-picker'
-import {db} from '../config/keys';;
+import {db} from '../config/keys';
+// import { Dropdown } from 'react-native-material-dropdown-v2-fixed';
 
+const itemRef = db.collection('items');
 const listRef = db.collection('lists');
+const userRef = db.collection('users');
 const spaceRef = db.collection('spaces');
 
 export default function createItem({route, navigation}) {
     //route params: spaceID, currUser
     const [name, setName] = useState("");
+
     const [category, setCategory] = useState("");
     const [shared, setShared] = useState(false);
     const toggleShared = () => setShared(previousState => ! previousState);
@@ -24,8 +28,8 @@ export default function createItem({route, navigation}) {
 
 
     let openImagePickerAsync = async () => {
-        let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
+        let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();   
+        
         if (permissionResult.granted === false) {
           alert("Permission to access camera roll is required!");
           return;
@@ -50,6 +54,7 @@ export default function createItem({route, navigation}) {
             // get all the lists of a space
             var all_lists = documentSnapshot.data().lists;
             var data = [];
+        // console.log(result);
 
             //go through each list, get the data fo the list
             for (let i = 0; i < all_lists.length; i++) {
@@ -73,6 +78,7 @@ export default function createItem({route, navigation}) {
         data.push({value: listData[i].name, key: listData[i]})
     }
     console.log(data)
+
 
     return(
         <SafeAreaView style = {[styles.container]}>
@@ -101,6 +107,22 @@ export default function createItem({route, navigation}) {
                     autoCorrect={false}
                 />
 
+                <View
+                style={{
+                    height:80
+                }}>
+                    {/* <Dropdown
+                        label={'Select List'}
+                        data={data}
+                        onChangeText={(value) => {
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].value === value) {
+                                    setCategory('lists/' + data[i].key.listID)
+                                }
+                            }
+                        }}
+                    /> */}
+                </View>
                 <View style={styles.shared}>
                     <Text style={styles.subtext}>Is this item is shared?</Text>
                     <Switch
@@ -126,15 +148,14 @@ export default function createItem({route, navigation}) {
                         else { // if the item has a list
                             console.log('created Item in list')
                             createItemInList(currentUser, category, name, shared, image) 
-                        }
 
+                        }
                        navigation.navigate('SpacePage')
                     }
                   }
                 />
             </View>
         </SafeAreaView>
-        
     );
 }
 

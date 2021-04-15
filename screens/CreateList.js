@@ -1,4 +1,4 @@
-import React, { useState, Component } from 'react';
+import React, { useState, useRef, useEffect, Component } from 'react';
 import { Alert } from 'react-native';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView , Pressable, Image} from 'react-native';
 import Button from '../components/Button';
@@ -6,17 +6,69 @@ import FormInput from '../components/FormInput';
 import CheckBox from '../components/Checkbox';
 import { BottomSheet , Icon} from 'react-native-elements'
 import { getItems } from '../utils/firebaseMethod';
-// import { CheckBox } from 'react-native-elements'
 import { createNewList } from '../utils/firebaseMethod';
+import { db } from '../config/keys';
 
+const itemRef = db.collection('items');
+const listRef = db.collection('lists');
+const userRef = db.collection('users');
+const spaceRef = db.collection('spaces');
 const CreateList= ({route, navigation}) => {
     const [name, setName] = useState("");
     const [icon, setIcon] = useState(require('../assets/kitchen.png'))
     const [isVisible, setIsVisible] = useState(false);
-
-    const [index, setIndex] = useState(0);
-    const buttons = ['Home', 'Office', 'Other']
+    const [items, setItems] = useState([]);
+    const [checkboxes, setCheckboxes] = useState([]);
+    
+    const componentIsMounted = useRef(true);
     const currentSpaceId = route.params.spaceID;
+
+    useEffect(() => {
+        return () => {
+          componentIsMounted.current = false;
+        };
+      }, []);
+    
+      useEffect(() => {
+        const subscriber = spaceRef.doc(currentSpaceId.substring(7)).onSnapshot(documentSnapshot => {getNoneListItems(documentSnapshot)});
+        async function getNoneListItems(documentSnapshot) {
+            // get the unordered items
+            var unlisted_items = documentSnapshot.data().items; 
+            let data = [];
+            //get the item objects from each
+            for (let i = 0; i < unlisted_items.length; i++) {
+            let itemData = (await itemRef.doc(unlisted_items[i].substring(6)).get()).data();
+            if (itemData !== undefined) {
+                // get the owner
+                let owner; 
+                if (itemData.userID === undefined) {
+                    owner = 'none'
+                } else {
+                    owner = (await userRef.doc(itemData.userID.substring(6)).get()).data();
+                }
+                data.push({
+                    owner: owner.firstname,
+                    category: itemData.category,
+                    name: itemData.name,
+                    spaceID: itemData.spaceID,
+                    userID: itemData.userID, 
+                    isShared: itemData.isShared,
+                })
+                // console.log('data', data);
+            }
+            }
+            if (componentIsMounted.current) {
+                setItems(data)
+            }
+        }
+        return () => subscriber;
+    }, []);
+
+    let data = [];
+    for (var i = 0; i < items.length; i++){
+        data.push({value: items[i].name, isChecked: false})
+    }
+    console.log('items', data);
 
     const ImageItem = (props) => {
         return (
@@ -27,6 +79,15 @@ const CreateList= ({route, navigation}) => {
                 <Image source={props.src} style={styles.icons}/>
             </Pressable>
         )
+    }
+
+    const handleCheckboxes = (name) => {
+        for (var i = 0; i < data.length; i++){
+            if (data[i].value === name) {
+                data[i].isChecked = !data[i].isChecked;
+                console.log('here in checked')
+            }
+        }
     }
 
     return(
@@ -57,20 +118,18 @@ const CreateList= ({route, navigation}) => {
                 </Pressable>
                 <View style={styles.itemList}>
                     <Text style={styles.itemTitle}>Add Items</Text>
-                    {/* number of checkboxes per number of items */}
-                    <CheckBox 
-                        title='test'
-                        checked
-                        onPress={()=> {console.log('hi')}}
-                    />
-                    <CheckBox />
-                    <CheckBox />
-                    <CheckBox />
-                    <CheckBox />
-                    <CheckBox />
-                    <CheckBox />
-                    <CheckBox />
-                    <CheckBox />
+                    <View>
+                        { items.map((item) => {
+                            return (
+                                <CheckBox
+                                    title={item.name}
+                                    onPress={()=> {handleCheckboxes(item.name)}}
+                                    isChecked={item.isCheecked}
+                                />
+                            )
+                        })
+                        }
+                    </View>
                 </View>
             </ScrollView>
             <View style={{  alignSelf: 'center', position: 'absolute', bottom: 0, marginBottom: 18 }}>
@@ -78,7 +137,7 @@ const CreateList= ({route, navigation}) => {
                     name="Create List"
                     width="75%"
                     onClick={() => {
-                        createNewList(currentSpaceId,name)
+                        createNewList(currentSpaceId, name)
                         navigation.navigate('ListsList');
                     }}
                 />

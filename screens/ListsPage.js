@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef, Component} from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { Icon, SearchBar } from 'react-native-elements';
 import List from "../components/List";
 import Search from "../components/Search"
 import Button from "../components/Button";
@@ -8,6 +8,7 @@ import { db } from '../config/keys';
 import {AlphabetList} from 'react-native-section-alphabet-list';
 import MyItemsPage from './MyItemsPage';
 import { getList } from '../utils/firebaseMethod';
+import { render } from 'react-dom';
 
 class SectionHeader extends Component {
   render() {
@@ -34,9 +35,16 @@ export default function ListsPage({navigation, route}) {
   const listRef = db.collection('lists');
   const currSpaceID = route.params.data.substring(7);
 
-  const[myLists, setLists] = useState([])
+  const [search, setSearch] = useState('');
+  const [filteredDataSource, setFilteredDataSource] = useState([]);
+  const [masterDataSource, setMasterDataSource] = useState([]);
+
+  const[myLists, setLists] = useState([]);
   const componentIsMounted = useRef(true);
 
+  // To Search a Specific List
+  
+  
   useEffect(() => {
     return () => {
       componentIsMounted.current = false;
@@ -46,7 +54,7 @@ export default function ListsPage({navigation, route}) {
   useEffect(() => {
     const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {createListsData(documentSnapshot)});
     async function createListsData(documentSnapshot) {
-      console.log('snapshot:', documentSnapshot.data())
+      // console.log('snapshot:', documentSnapshot.data())
       var currentSpaceLists = documentSnapshot.data().lists;
       var data = [];
 
@@ -71,13 +79,41 @@ export default function ListsPage({navigation, route}) {
     }
     return () => subscriber;
   }, []);
-
-  let data = []
+  
+  let originalData = [];
   for (let i = 0; i < myLists.length; i++) {
-    data.push(myLists[i]);
-    console.log(myLists[i]);
-    //data.push({value: myLists[i].name, key: myLists[i]})
+    originalData.push({value: myLists[i].value.name, 
+      key: {
+        name: myLists[i].value.name,
+        items: myLists[i].value.items,
+        spaceID: myLists[i].value.spaceID,
+        listID: myLists[i].key
+      }
+    })
   }
+  //setFilteredDataSource(data);
+
+  const searchFilterFunction = (text) => {
+    //if the search bar is not empty
+    if (text) {
+      //we want to filter the data
+      //Update FilteredDataSource
+      const newData = originalData.filter(function (item) {
+        const itemData = item.key.name ? item.key.name.toUpperCase() : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+        }
+      );
+      setFilteredDataSource(newData);
+      setSearch(text);
+    } else { //otherwise, if the searchbar IS empty
+      //Inserted text is blank, Update FiltereDataSource with original data
+      setFilteredDataSource(originalData);
+      setSearch(text);
+    }
+  };
+
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -98,25 +134,34 @@ export default function ListsPage({navigation, route}) {
             </View>
         </View>
             <View style={styles.search}>
-              <Search/>
+              <SearchBar
+                placeholder="Search here..."
+                onChangeText={(text) => searchFilterFunction(text)}
+                value = {search}
+                containerStyle={styles.container}
+                inputContainerStyle={styles.inputContainer}
+                placeholderTextColor='#4E7580'
+                round='true'
+                lightTheme='true'
+              />
             </View>
         <ScrollView scrollEventThrottle={16}>
         <AlphabetList
-              data = {data}
-              renderSectionHeader={SectionHeader}
-              renderCustomItem={(item) => (
-                <List
-                  listName={item.value.name}
-                  numItems={item.value.items.length}
-                  onPress={() => {
-                    console.log(item);
-                    navigation.navigate("ListDetail", { listID: item.key, name: item.value.name, numItems: item.value.items.length, data: route.params.data});
-                    //navigation.navigate('ListDetail', { items: item.key.items, data:route.params.data, name: item.value, numItems: item.key.number })
-                  }}
+          data = {filteredDataSource}
+          renderSectionHeader={SectionHeader}
+          renderCustomItem={(item) => (
+            <List
+              listName={item.key.name}
+              numItems={item.key.items.length}
+              onPress={() => {
+                console.log('item', item);
+                navigation.navigate("ListDetail", { listID: item.key.listID, name: item.key.name, numItems: item.key.items.length, data: route.params.data});
+                }
+              }
                   // TODO: Create custom icon for lists
-                />
-              )}
             />
+          )}
+        />
         </ScrollView>
         <View style={styles.fab}>
             <Button
@@ -159,13 +204,21 @@ const styles = StyleSheet.create({
   },
   fab: {
     position: 'absolute',
-    left: 0,
     bottom: 0,
+    //flex: 1,
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginBottom: 40
+    marginBottom: 36
   },
   search: {
-    width: '95%'
+    width: '100%',
+  },
+  inputContainer: {
+    backgroundColor: '#D9DED8',
+  },
+  container: {
+    backgroundColor: '#F2F0EB',
+    borderBottomColor: '#F2F0EB',
+    borderTopColor: '#F2F0EB',
   }
 });

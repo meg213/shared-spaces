@@ -6,7 +6,6 @@ import {storage, db} from '../config/keys';
 import User from '../components/User';
 
 export default function ItemDetailScreen ({route, navigation}) {
-    
     const itemData = route.params.data;
     const itemName = itemData.name;
     const list = itemData.listID;
@@ -30,6 +29,7 @@ export default function ItemDetailScreen ({route, navigation}) {
         })();
     }, []);
 
+    console.log('route.params', route.params.data);
     return (
         <SafeAreaView style = {[styles.container]}>
             <ScrollView>
@@ -59,7 +59,6 @@ export default function ItemDetailScreen ({route, navigation}) {
                         {owner}
                     </Text>
                 </View>
-
                 <View style={{flexDirection: 'row', paddingTop: 48, paddingHorizontal: 30, justifyContent: 'center'}}>
                     <Button name="edit" width="55%"/>       
                     <Button name="delete" width="55%"/>

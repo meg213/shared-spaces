@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useRef, Component} from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import Item from "../components/Item";
-import { Icon } from 'react-native-elements';
+import { Icon, SearchBar } from 'react-native-elements';
 import Button from "../components/Button";
 import Search from '../components/Search';
 import {AlphabetList} from 'react-native-section-alphabet-list';
@@ -31,13 +31,12 @@ class SectionHeader extends Component {
 
 
 const itemRef = db.collection('items');
-const listRef = db.collection('lists')
+const listRef = db.collection('lists');
 const userRef = db.collection('users');
 const spaceRef = db.collection('spaces');
 
 export default function AllItemsPage({route, navigation}) {
   //route params: spaceID
-  console.log(route)
   const[allItems, setItems] = useState([]);
   const componentIsMounted = useRef(true);
   const currSpaceID = route.params.data.substring(7);
@@ -118,7 +117,7 @@ export default function AllItemsPage({route, navigation}) {
     data.push({value: allItems[i].name, key: allItems[i]})
   }
   console.log(data)
-  
+
   return (
     <SafeAreaView style={styles.container}>
         <View style={styles.header}>
@@ -137,10 +136,19 @@ export default function AllItemsPage({route, navigation}) {
           <Text>{allItems.length}</Text>
             </View>
         </View>
+        <View style={styles.search}>
+          <SearchBar
+            placeholder="Search here..."
+            
+            containerStyle={styles.container}
+            inputContainerStyle={styles.inputContainer}
+            placeholderTextColor='#4E7580'
+            round='true'
+            lightTheme='true'
+          />
+        </View>
         <ScrollView scrollEventThrottle={16}>
-            <View>
-              <Search/>
-            </View>
+          <View>  
             <AlphabetList
               data = {data}
               renderSectionHeader={SectionHeader}
@@ -157,6 +165,7 @@ export default function AllItemsPage({route, navigation}) {
                 />
               )}
             />
+          </View>
         </ScrollView>
     </SafeAreaView>
   );
@@ -190,4 +199,15 @@ const styles = StyleSheet.create({
       fontWeight: '500',
       paddingBottom: 12,
   },
+  search: {
+    width: '100%',
+  },
+  inputContainer: {
+    backgroundColor: '#D9DED8',
+  },
+  container: {
+    backgroundColor: '#F2F0EB',
+    borderBottomColor: '#F2F0EB',
+    borderTopColor: '#F2F0EB',
+  }
 });

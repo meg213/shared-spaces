@@ -18,6 +18,7 @@ const itemRef = db.collection('items');
 const userRef = db.collection('users');
 const spaceRef = db.collection('spaces');
 const messagesRef = db.collection('messages');
+const listRef = db.collection('lists');
 
 export default function SpacePage({route, navigation}){
     console.log(route.params)
@@ -29,7 +30,6 @@ export default function SpacePage({route, navigation}){
   // Items array in reverse order; recently added items are first in array
   const[recentItems, setItems] = useState([]);
   const componentIsMounted = useRef(true);
-  const [itemIDToData, setMapItemIDToData] = useState(new Map());
   const [recentMessData, setRecentMessData] = useState("")
   const [imgURL, setImgURL] = useState()
   const[spaceName, setSpaceName] = useState('');
@@ -46,6 +46,18 @@ export default function SpacePage({route, navigation}){
       componentIsMounted.current = false;
     };
   }, []);
+
+  useEffect(() => {
+    const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {getSpaceName(documentSnapshot)});
+     async function getSpaceName(documentSnapshot) {
+        console.log('snap', documentSnapshot.data())
+        setSpaceName(documentSnapshot.data().name)
+     }
+     return () => subscriber;
+    }, []);
+
+  // Updates recentItems on every new item instance
+
   useEffect(() => {
     const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {updateRecentItems(documentSnapshot)});
     async function updateRecentItems(documentSnapshot) {
@@ -132,7 +144,6 @@ export default function SpacePage({route, navigation}){
   console.log("RECENT ITEMS:\n")
   console.log(recent_items_stack)
 
-
   useEffect(() => {
         const subscriber = messagesRef
         .orderBy('createdAt', 'desc')
@@ -176,7 +187,7 @@ export default function SpacePage({route, navigation}){
                 fontWeight:'500',
                 color: "#184254"
                 }}>
-                {route.params.name}
+                {spaceName}
             </Text>
             <Icon
                 size={40} 
@@ -220,7 +231,7 @@ export default function SpacePage({route, navigation}){
                     <Card name="Shared"
                         onClick={() => {
                             console.log('card click test');
-                            navigation.navigate('SharedList');
+                            navigation.navigate('SharedList', {data:route.params.data, currUser: route.params.currUser});
                             }}/>
                     <Card name="My Items"
                         icon='account-circle'
@@ -238,7 +249,7 @@ export default function SpacePage({route, navigation}){
                         icon='group'
                         backgroundColor="#F2994A"
                         onClick={() => {
-                            navigation.navigate('AllItems', {data:route.params.data});
+                            navigation.navigate('AllItems', {data:route.params.data, currUser: route.params.currUser});
                             }}/>
                 </ScrollView>
             </View>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, SafeAreaView, Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
 import SpacePage from './SpacePage';
 import Button from '../components/Button';
@@ -43,6 +43,8 @@ export default function MySpacesPage({navigation}){
         }
         return () => subscriber;
     }, []);
+
+    console.log('spaceNames', spaceNames);
     return (
         <SafeAreaView style = {[styles.container]}>
             <View style ={{

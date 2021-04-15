@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef, Component} from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { Icon, SearchBar } from 'react-native-elements';
 import Item from "../components/Item";
 import Button from "../components/Button";
 import Search from '../components/Search';
@@ -29,10 +29,11 @@ class SectionHeader extends Component {
 }
 
 const itemRef = db.collection('items');
+const listRef = db.collection('lists');
+const userRef = db.collection('users');
 const spaceRef = db.collection('spaces');
 
 export default function MyItemsPage({route, navigation}) {
-  console.log(route)
   //route params: spaceID
   const[myItems, setItems] = useState([])
   const componentIsMounted = useRef(true);
@@ -44,23 +45,70 @@ export default function MyItemsPage({route, navigation}) {
       componentIsMounted.current = false;
     };
   }, []);
-
   useEffect(() => {
     const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {createItemsData(documentSnapshot)});
     async function createItemsData(documentSnapshot) {
-        console.log(documentSnapshot.data())
-        var currentUserItems = documentSnapshot.data().items;
-        var data = []
-        for (let i = 0; i < currentUserItems.length; i++) {
-            let itemData = (await itemRef.doc(currentUserItems[i].substring(6)).get()).data();
-            console.log(itemData)
-            if (itemData == undefined) {
-                continue
-            }
-            if (itemData.userID.substring(6) == ownerID) {
-              data.push(itemData)
+        // get all the lists of a space
+        var all_lists = documentSnapshot.data().lists;
+        var all_items_not_in_lists = documentSnapshot.data().items;
+        var data = [];
+
+        //go through each list, get the items in the list
+        for (let i = 0; i < all_lists.length; i++) {
+          let listData = (await listRef.doc(all_lists[i].substring(6)).get()).data();
+            // if there is at least one item in the list
+            for (let i = 0; i < listData.items.length; i++) {
+              let itemData = (await itemRef.doc(listData.items[i].substring(6)).get()).data();
+              //console.log('itemdata', itemData)
+              //get the owner
+              let owner; 
+              if (itemData.userID === undefined) {
+                  owner = 'none'
+              } else {
+                  owner = (await userRef.doc(itemData.userID.substring(6)).get()).data();
+              }
+
+              //if the itemData user === current user
+              if (itemData.userID.substring(6) === route.params.currUser.uid){
+                data.push({
+                  owner: owner.firstname,
+                  name: itemData.name,
+                  spaceID: itemData.spaceID,
+                  userID: itemData.userID, 
+                  isShared: itemData.isShared,
+                  listName: listData.name
+                })
+              }
+              console.log(data)
             }
         }
+        
+
+        for (let i = 0; i < all_items_not_in_lists.length; i++) {
+          let itemData = (await itemRef.doc(all_items_not_in_lists[i].substring(6)).get()).data();
+          //console.log('itemdata', itemData)
+          //get the owner
+          let owner; 
+          if (itemData.userID === undefined) {
+              owner = 'none'
+          } else {
+              owner = (await userRef.doc(itemData.userID.substring(6)).get()).data();
+          }
+
+          //if the itemData user === current user
+          if (itemData.userID.substring(6) === route.params.currUser.uid){
+            data.push({
+              owner: owner.firstname,
+              name: itemData.name,
+              spaceID: itemData.spaceID,
+              userID: itemData.userID, 
+              isShared: itemData.isShared,
+            })
+          }
+          console.log(data)
+        }
+      
+
         if (componentIsMounted.current) {
             setItems(data)
         }
@@ -68,11 +116,10 @@ export default function MyItemsPage({route, navigation}) {
     return () => subscriber;
   }, []);
 
-  let data = []
+   let data = []
   for (let i = 0; i < myItems.length; i++) {
     data.push({value: myItems[i].name, key: myItems[i]})
   }
-
   return (
     <SafeAreaView style={styles.container}>
         <View style={styles.header}>
@@ -91,27 +138,34 @@ export default function MyItemsPage({route, navigation}) {
               <Text> {myItems.length} </Text>
             </View>
         </View>
+        <View style={styles.search}>
+          <SearchBar
+            placeholder="Search here..."
+            
+            containerStyle={styles.container}
+            inputContainerStyle={styles.inputContainer}
+            placeholderTextColor='#4E7580'
+            round='true'
+            lightTheme='true'
+          />
+        </View>
         <ScrollView scrollEventThrottle={16}>
-            <View>
-              <Search/>
-            </View>
+          <View> 
             <AlphabetList
               data = {data}
               renderSectionHeader={SectionHeader}
               renderCustomItem={(item) => (
-                <Item
+                <Item 
                   listPage
-                  itemName={item.value}
-                  list={item.key.category}
+                  owner={item.key.owner}
+                  itemName={item.key.name}
+                  list={item.key.listName}
                   shared={item.key.isShared}
-                  owner={null}
+                  onClick={()=> {navigation.navigate('ItemDetailScreen', {data: item.key})}}
                 />
               )}
             />
-            <Button
-                onClick={()=> {navigation.navigate('SpacePage')}}
-                name="Back"
-            />
+        </View>    
         </ScrollView>
     </SafeAreaView>
   );
@@ -150,5 +204,16 @@ const styles = StyleSheet.create({
     color: '#4E7580',
     paddingHorizontal: 12,
     paddingVertical: 6
+  },
+  search: {
+    width: '100%',
+  },
+  inputContainer: {
+    backgroundColor: '#D9DED8',
+  },
+  container: {
+    backgroundColor: '#F2F0EB',
+    borderBottomColor: '#F2F0EB',
+    borderTopColor: '#F2F0EB',
   }
 });

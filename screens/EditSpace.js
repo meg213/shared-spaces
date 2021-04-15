@@ -3,11 +3,10 @@ import { ScrollView, StyleSheet, Text, View, SafeAreaView} from 'react-native';
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
 import { Icon } from 'react-native-elements';
-import { createItems } from '../utils/firebaseMethod';
 import User from "../components/User";
 import {db} from '../config/keys';
 import {AlphabetList} from 'react-native-section-alphabet-list';
-import { getImageDownloadURL } from '../utils/firebaseMethod';
+import { getImageDownloadURL, updateSpace } from '../utils/firebaseMethod';
 
 const itemRef = db.collection('items');
 const userRef = db.collection('users');
@@ -21,6 +20,7 @@ export default function editSpace({route, navigation}) {
     const [users, setUsers] = useState([]);
     const [userIDToData, setMapUserIDToData] = useState(new Map());
     const currentSpaceID = route.params.spaceID.substring(7);
+    const [name, setName] = useState(route.params.name);
 
     useEffect(() => {
         return () => {
@@ -53,6 +53,22 @@ export default function editSpace({route, navigation}) {
     console.log(users)
     console.log(userIDToData)
 
+    const deleteConfirmAlert = () => 
+        Alert.alert(
+            "Are you sure?",
+            "You are about to delete your space. This action cannot be reversed.",
+            [
+                {
+                    text: "Cancel",
+                    style: cancel
+                },
+                {
+                    text: "Delete Space",
+                    onPress: () => console.log("delete space!")
+                }
+            ]
+        );
+
     return(
         <SafeAreaView style = {[styles.container]}>
             <View>
@@ -65,7 +81,7 @@ export default function editSpace({route, navigation}) {
                 }}>
                 <Text style={styles.subtext}>Space Name</Text>
                 <FormInput
-                        labelValue={route.params.name}
+                        labelValue={name}
                         onChangeText={(spaceName) => setName(spaceName)}
                         placeholderText="List Name"
                         autoCapitalize="none"
@@ -73,6 +89,7 @@ export default function editSpace({route, navigation}) {
                 />
                 <Text style={styles.subtext}>{currentSpaceID}</Text>
                 <Text style={styles.subtext}>Current Members</Text>
+
                 <Text style={{paddingVertical: 12}}>To Do: Method for current list of users</Text>
                 <AlphabetList
                     data = {users}
@@ -90,11 +107,26 @@ export default function editSpace({route, navigation}) {
                     name="Generate Code"
                 />
             </View>
-            <View style={{marginBottom: 50, width: '100%', position: 'absolute', bottom: 0}}>
+            <View style={{marginBottom: 50, width: '100%', position: 'absolute', bottom: 0,}}>
+                <View style={{paddingVertical: 12}}>
+                <Button
+                    name="Update Space"
+                    color='#184254'
+                    onClick={() => { 
+                        console.log(currentSpaceId.substring(7))
+                        updateSpace(currentSpaceId, name);
+                        navigation.navigate('SpacePage') 
+                    }}
+                />
+                </View>
                 <Button
                     name="Delete Space"
                     color='#EB5757'
-                    // onPress={() => createItems(currentUser, currentSpaceId, name, category, shared)}
+                    onPress = { () => {
+                        console.log("Delete?")
+                        deleteConfirmAlert
+                    }}
+                    // onClick={() => createItems(currentUser, currentSpaceId, name, category, shared)}
                 />
             </View>
         </SafeAreaView>

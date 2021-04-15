@@ -75,16 +75,14 @@ export async function deleteUser(currentUser) {
  * @param itemCategory      Type of the item
  * @param isShared          Is the item shared or not?
  */
-export async function createItems(currentUser, currentSpaceId, itemName, itemCategory, isShared, image) {
+export async function createItems(currentUser, currentSpaceId, itemName, isShared, image) {
     console.log(image)
     try {
         const currItem = itemRef.add({
-            category: itemCategory,
             isShared: isShared,
             name: itemName,
             spaceID: currentSpaceId,
-            listID: "",
-            userID: ("users/"+currentUser.uid).replace(" ", '')
+            userID: "users/"+currentUser.uid
         });
         spaceRef.doc(currentSpaceId.substring(7))
         .update({
@@ -113,20 +111,30 @@ export async function createItems(currentUser, currentSpaceId, itemName, itemCat
  * @param itemCategory      Type of the item
  * @param isShared          Is the item shared or not?
  */
- export async function createItemInList(currentUser, targetList, itemName, itemCategory, isShared) {
+ export async function createItemInList(currentUser, targetList, itemName, isShared, image) {
     try {
         const currItem = itemRef.add({
-            category: itemCategory,
             isShared: isShared,
             name: itemName,
             spaceID: "",
             listID: targetList,
-            userID: "users/" + currentUser.uid
+            userID: "users/"+currentUser.uid
         });
 
         listRef.doc(targetList.substring(6)).update({
             items: firebase.firestore.FieldValue.arrayUnion((await currItem).path)
         })
+
+        if (image != '') {
+            const response = await fetch(image)
+            const blob = await response.blob()
+            const uploadImage = storage.ref().child(itemName)
+            let data =  {
+                userID: currentUser.uid,
+                spaceID: currentSpaceId
+            }
+            uploadImage.put(blob, data)
+        }
     } catch (e) {
         Alert.alert(e.message)
     }

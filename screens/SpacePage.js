@@ -32,6 +32,7 @@ export default function SpacePage({route, navigation}){
   const [itemIDToData, setMapItemIDToData] = useState(new Map());
   const [recentMessData, setRecentMessData] = useState("")
   const [imgURL, setImgURL] = useState()
+  const[spaceName, setSpaceName] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -45,8 +46,6 @@ export default function SpacePage({route, navigation}){
       componentIsMounted.current = false;
     };
   }, []);
-
-//   Updates recentItems on every new item instance
   useEffect(() => {
     const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {updateRecentItems(documentSnapshot)});
     async function updateRecentItems(documentSnapshot) {
@@ -54,15 +53,38 @@ export default function SpacePage({route, navigation}){
         var space = documentSnapshot.data();
         // Return the items lists, not in chronological order
         var items = space.items;
+        // Return all the lists in a given space
+        var all_lists = space.lists;
         // Empty array of items in order
         var data = [];
 
-        var mapItemIDtoData = new Map();
+        for (let i = 0; i < all_lists.length; i++) {
+            let listData = (await listRef.doc(all_lists[i].substring(6)).get()).data();
+  
+              // if there is at least one item in the list
+              for (let i = 0; i < listData.items.length; i++) {
+                let itemData = (await itemRef.doc(listData.items[i].substring(6)).get()).data();
+                //get the owner
+                let owner; 
+                if (itemData.userID === undefined) {
+                    owner = 'none'
+                } else {
+                    owner = (await userRef.doc(itemData.userID.substring(6)).get()).data();
+                }
+                data.push({
+                    owner: owner.firstname,
+                    name: itemData.name,
+                    spaceID: itemData.spaceID,
+                    userID: itemData.userID, 
+                    isShared: itemData.isShared,
+                    listName: listData.name
+                })
+            }
+        }
 
         for (let i = 0; i < items.length; i++) {
-            let itemID = items[i].substring(6);
             // Get item reference
-            let itemData = (await itemRef.doc(itemID).get()).data();
+            let itemData = (await itemRef.doc(items[i].substring(6)).get()).data();
             // Get corresponding item owner reference
             let owner = (await userRef.doc(itemData.userID.substring(6)).get()).data().firstname;
             // Abort if either data is undefined
@@ -71,28 +93,29 @@ export default function SpacePage({route, navigation}){
             }
 
             // Else push owner and item key-value pair into data
-            // data.push({item: itemData, owner: owner});
-
-            mapItemIDtoData.set(itemID, [itemData, owner])
-            data.push({value: itemData.name, key: itemID})
+            data.push({
+                owner: owner.firstname,
+                name: itemData.name,
+                spaceID: itemData.spaceID,
+                userID: itemData.userID, 
+                isShared: itemData.isShared,
+            });
         }
 
         if (componentIsMounted.current) {
             setItems(data);
-            setMapItemIDToData(mapItemIDtoData)
         }
     }
     return () => subscriber;
   }, []);
 
-
   let recent_items_stack = []   // Stack representing the recent items page
-  const max_items_shown = 5;    // How many items we want to show in "Recently Added Items"
+  const max_items_shown = 10;    // How many items we want to show in "Recently Added Items"
 
   for (let i = recentItems.length - 1; i >= 0; i--) {
     // Push most recent items onto the stack 
     // Track total number of items added
-    let count = recent_items_stack.push({value: recentItems[i].value, key: recentItems[i].key});
+    let count = recent_items_stack.push({value: recentItems[i].name, key: recentItems[i]});
 
     // Compare total items to constant maximum
     if (count == max_items_shown) {
@@ -105,6 +128,10 @@ export default function SpacePage({route, navigation}){
         break;
     }
   }
+
+  console.log("RECENT ITEMS:\n")
+  console.log(recent_items_stack)
+
 
   useEffect(() => {
         const subscriber = messagesRef
@@ -237,10 +264,17 @@ export default function SpacePage({route, navigation}){
                     data = {recent_items_stack}
                     renderCustomItem={(item) => (
                       <Item 
-                        itemName={item.value}
-                        list={itemIDToData.get(item.key)[0].category}
-                        owner={itemIDToData.get(item.key)[1]}
-                        shared={itemIDToData.get(item.key)[0].isShared}
+                        owner={item.key.owner}
+                        itemName={item.key.name}
+                        list={item.key.listName}
+                        shared={item.key.isShared}
+                        onClick={()=> {
+                            console.log(item.key)
+                            navigation.navigate('ItemDetailScreen', {data: item.key})}}
+                        // itemName={item.name}
+                        // list={item.key.item.listID}
+                        // owner={item.key.owner}
+                        // shared={item.key.item.isShared}
                       />
                     )}
                 />

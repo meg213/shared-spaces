@@ -3,9 +3,12 @@ import React, { useState, Component, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView, Switch, Image} from 'react-native';
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
-import { createItems } from '../utils/firebaseMethod';
-import {db} from '../config/keys';
+import { createItems, createItemInList } from '../utils/firebaseMethod';
 import * as ImagePicker from 'expo-image-picker'
+import {db} from '../config/keys';;
+
+const listRef = db.collection('lists');
+const spaceRef = db.collection('spaces');
 
 export default function createItem({route, navigation}) {
     //route params: spaceID, currUser
@@ -17,7 +20,7 @@ export default function createItem({route, navigation}) {
     const currentSpaceId = route.params.spaceID;
     console.log(currentSpaceId);
     const [image, setImage] = useState(null);
-    const [allList, setAllList] = useState([]);
+    const [listData, setListData] = useState('')
 
 
     let openImagePickerAsync = async () => {
@@ -40,22 +43,56 @@ export default function createItem({route, navigation}) {
         console.log(pickerResult);
     }
 
+    useEffect(() => {
+        const subscriber = spaceRef.doc(currentSpaceId.substring(7)).onSnapshot(documentSnapshot => {createListData(documentSnapshot)});
+        async function createListData(documentSnapshot) {
+            // console.log(documentSnapshot.data().lists)
+            // get all the lists of a space
+            var all_lists = documentSnapshot.data().lists;
+            var data = [];
+
+            //go through each list, get the data fo the list
+            for (let i = 0; i < all_lists.length; i++) {
+                let listData = (await listRef.doc(all_lists[i].substring(6)).get()).data();
+                data.push({
+                    listID:  all_lists[i].substring(6),
+                    items: listData.items,
+                    name: listData.name,
+                    spaceID: listData.spaceID
+                });
+            }
+            setListData(data);
+        
+        }
+        return () => subscriber;
+      }, []);
+   
+    // putting together lists
+    let data = []
+    for (let i = 0; i < listData.length; i++) {
+        data.push({value: listData[i].name, key: listData[i]})
+    }
+    console.log(data)
+
     return(
         <SafeAreaView style = {[styles.container]}>
+
             <View>
                 <Text style = {[styles.text]}>
                     Add Item
                 </Text>
             </View>
+
             <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 4 }}>
                 {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
                 <View style={{ paddingVertical:6}} />
                 <Button name="Upload a Photo of Item" onClick={openImagePickerAsync}/>
-                
             </View>
+
             <View style={{
                     paddingVertical:12
                 }}>
+
                 <FormInput
                     labelValue={name}
                     onChangeText={(itemName) => setName(itemName)}
@@ -63,13 +100,7 @@ export default function createItem({route, navigation}) {
                     autoCapitalize="none"
                     autoCorrect={false}
                 />
-                <FormInput
-                    labelValue={category}
-                    onChangeText={(itemCategory) => setCategory(itemCategory)}
-                    placeholderText="Add to List"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                />
+
                 <View style={styles.shared}>
                     <Text style={styles.subtext}>Is this item is shared?</Text>
                     <Switch
@@ -80,11 +111,26 @@ export default function createItem({route, navigation}) {
                         value={shared}
                     />
                 </View>
+
             </View>
+            
             <View style={{marginBottom: 50, width: '100%', position: 'absolute', bottom: 0}}>
                 <Button
                     name="Create Item"
-                    onClick={() => createItems(currentUser, currentSpaceId, name, category, shared, image)}
+                    onClick={() => {
+                        // if the item wasn't set to a list
+                        if (category.toString() === 'Select List'){
+                            console.log('no list');
+                            createItems(currentUser, currentSpaceId, name, shared, image)
+                        } 
+                        else { // if the item has a list
+                            console.log('created Item in list')
+                            createItemInList(currentUser, category, name, shared, image) 
+                        }
+
+                       navigation.navigate('SpacePage')
+                    }
+                  }
                 />
             </View>
         </SafeAreaView>

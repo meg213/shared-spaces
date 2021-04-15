@@ -6,8 +6,8 @@ import {storage, db} from '../config/keys';
 import User from '../components/User';
 
 export default function ItemDetailScreen ({route, navigation}) {
-    const itemData = route.params.itemData;
-    console.log(itemData)
+    
+    const itemData = route.params.data;
     const itemName = itemData.name;
     const list = itemData.listID;
     const shared = itemData.isShared;

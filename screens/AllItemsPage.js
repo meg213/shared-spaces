@@ -31,6 +31,7 @@ class SectionHeader extends Component {
 
 
 const itemRef = db.collection('items');
+const listRef = db.collection('lists')
 const userRef = db.collection('users');
 const spaceRef = db.collection('spaces');
 
@@ -51,26 +52,72 @@ export default function AllItemsPage({route, navigation}) {
   useEffect(() => {
     const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {createItemsData(documentSnapshot)});
     async function createItemsData(documentSnapshot) {
-        var all_items = documentSnapshot.data().items;
+        // get all the lists of a space
+        var all_lists = documentSnapshot.data().lists;
+        var all_items_not_in_lists = documentSnapshot.data().items;
         var data = [];
-        var mapItemIDtoData = new Map();
-        for (let i = 0; i < all_items.length; i++) {
-            let itemID = all_items[i].substring(6);
-            let itemData = (await itemRef.doc(itemID).get()).data();
-            let owner = (await userRef.doc(itemData.userID.substring(6)).get()).data().firstname;
-            if (itemData == undefined || owner == undefined) {
-                continue
+
+        //go through each list, get the items in the list
+        for (let i = 0; i < all_lists.length; i++) {
+          let listData = (await listRef.doc(all_lists[i].substring(6)).get()).data();
+
+            // if there is at least one item in the list
+            for (let i = 0; i < listData.items.length; i++) {
+              let itemData = (await itemRef.doc(listData.items[i].substring(6)).get()).data();
+              //get the owner
+              let owner; 
+              if (itemData.userID === undefined) {
+                  owner = 'none'
+              } else {
+                  owner = (await userRef.doc(itemData.userID.substring(6)).get()).data();
+              }
+              data.push({
+                owner: owner.firstname,
+                name: itemData.name,
+                spaceID: itemData.spaceID,
+                userID: itemData.userID, 
+                isShared: itemData.isShared,
+                listName: listData.name
+              })
+              console.log(data)
             }
-            mapItemIDtoData.set(itemID, [itemData, owner])
-            data.push({value: itemData.name, key: itemID})
         }
+
+        for (let i = 0; i < all_items_not_in_lists.length; i++) {
+          let itemData = (await itemRef.doc(all_items_not_in_lists[i].substring(6)).get()).data();
+          //console.log('itemdata', itemData)
+          //get the owner
+          let owner; 
+          if (itemData.userID === undefined) {
+              owner = 'none'
+          } else {
+              owner = (await userRef.doc(itemData.userID.substring(6)).get()).data();
+          }
+
+          data.push({
+            owner: owner.firstname,
+            name: itemData.name,
+            spaceID: itemData.spaceID,
+            userID: itemData.userID, 
+            isShared: itemData.isShared,
+          })
+
+          console.log(data)
+        }
+
         if (componentIsMounted.current) {
             setItems(data)
-            setMapItemIDToData(mapItemIDtoData)
         }
     }
     return () => subscriber;
   }, []);
+
+  console.log(allItems)
+   let data = []
+  for (let i = 0; i < allItems.length; i++) {
+    data.push({value: allItems[i].name, key: allItems[i]})
+  }
+  console.log(data)
   
   return (
     <SafeAreaView style={styles.container}>
@@ -95,21 +142,20 @@ export default function AllItemsPage({route, navigation}) {
               <Search/>
             </View>
             <AlphabetList
-              data = {allItems}
-              // renderSectionHeader={SectionHeader}
+              data = {data}
+              renderSectionHeader={SectionHeader}
               renderCustomItem={(item) => (
                 <Item 
                   listPage
-                  itemName={item.value}
-                  list={itemIDToData.get(item.key)[0].category}
-                  owner={itemIDToData.get(item.key)[1]}
-                  shared={itemIDToData.get(item.key)[0].isShared}
-                  onClick={() => navigation.navigate('ItemDetailScreen', {itemData: itemIDToData.get(item.key)[0]})}
+                  owner={item.key.owner}
+                  itemName={item.key.name}
+                  list={item.key.listName}
+                  shared={item.key.isShared}
+                  onClick={()=> {
+                    console.log(item.key)
+                    navigation.navigate('ItemDetailScreen', {data: item.key})}}
                 />
               )}
-            />
-            <Button
-                onClick={()=> {navigation.navigate('SpacePage')}}
             />
         </ScrollView>
     </SafeAreaView>

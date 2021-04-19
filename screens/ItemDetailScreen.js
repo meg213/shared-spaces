@@ -14,7 +14,7 @@ export default function ItemDetailScreen ({route, navigation}) {
     //Need to query the information above from database based on the Item that was clicked (most of the same information that was on the card clicked to get here)
     //Image is the only thing extra that needs to be queried that was not queried on the item card
 
-    console.log('route.params!', route.params.data);
+    console.log('route.params!', route.params);
     return (
         <SafeAreaView style = {[styles.container]}>
             <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 4,paddingHorizontal: 30, flexDirection: 'row' }}>

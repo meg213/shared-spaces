@@ -72,7 +72,9 @@ export default function AllItemsPage({route, navigation}) {
                 spaceID: itemData.spaceID,
                 userID: itemData.userID, 
                 isShared: itemData.isShared,
-                listName: listData.name
+                listName: listData.name,
+                itemID: listData.items[i],
+                listID: all_lists[i],
               })
               console.log(data)
             }
@@ -95,6 +97,8 @@ export default function AllItemsPage({route, navigation}) {
             spaceID: itemData.spaceID,
             userID: itemData.userID, 
             isShared: itemData.isShared,
+            itemID: all_items_not_in_lists[i],
+            listID: 'None'
           })
 
           //console.log(data)

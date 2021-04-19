@@ -219,6 +219,46 @@ export async function createSpaces(currentUser, spaceName, spaceType) {
     }
 }
 
+export async function updateItem(space, item, newName, newShared, newList, oldList) {
+    const itemID = item.substring(6);
+    const listID = newList.substring(6);
+    const oldListID = oldList.substring(6);
+    const spaceID = space.substring(7);
+
+    try {  
+        itemRef.doc(itemID).update({
+            name: newName,
+            isShared: newShared,
+            list: newList
+        })
+        // clear out old info: does it need to be removed from an old list or from the unlisted items?
+        if (oldList === 'None') {
+            spaceRef.doc(spaceID).update({
+                items: firebase.firestore.FieldValue.arrayRemove((await item))
+            })
+        } else {
+            listRef.doc(oldListID).update({
+                items: firebase.firestore.FieldValue.arrayRemove((await item))
+            })
+        }
+
+        // update the new info: is it going into a new list or to the unlisted items?
+        if (newList === 'None'){
+            // update space to add a new unlisted item
+            spaceRef.doc(spaceID).update({
+                items: firebase.firestore.FieldValue.arrayUnion((await item))
+            })
+        } else {
+            // update the new list with the new item
+            listRef.doc(listID).update({
+                items: firebase.firestore.FieldValue.arrayUnion((await item))
+            })
+        }
+    } catch (e) {
+        console.error("getItem: Error in updating item with ID: ", itemID);
+        alert(e.message);
+    }
+}
 /**
  * Removes user from space
  * @param currentUser   User requesting or marked for removal

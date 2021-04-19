@@ -75,10 +75,12 @@ export default function SharedPage({route, navigation}) {
                   spaceID: itemData.spaceID,
                   userID: itemData.userID, 
                   isShared: itemData.isShared,
-                  listName: listData.name
+                  listName: listData.name,
+                  itemID: listData.items[i],
+                  listID: all_lists[i],
                 })
               }
-              //console.log(data)
+              console.log('shared data', data)
             }
         }
        
@@ -101,6 +103,8 @@ export default function SharedPage({route, navigation}) {
               spaceID: itemData.spaceID,
               userID: itemData.userID, 
               isShared: itemData.isShared,
+              itemID: all_items_not_in_lists[i],
+              listID: 'None'
             })
           }
         }

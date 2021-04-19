@@ -4,13 +4,15 @@ import Button from '../components/Button';
 import { Dropdown } from 'react-native-material-dropdown-v2-fixed';
 import FormInput from '../components/FormInput';
 import { db } from '../config/keys';
+import { updateItem } from '../utils/firebaseMethod';
 
 export default function EditItem({route, navigation}) {
 
     // route params: spaceID, currUser
     const [name, setName] = useState(route.params.route.name);
+    const [category, setCategory] = useState("Select List");
     const [listData, setListData] = useState('')
-    const [shared, setShared] = useState(true);
+    const [shared, setShared] = useState(route.params.route.isShared);
     const toggleShared = () => setShared(previousState => ! previousState);
     const currentSpaceId = route.params.route.spaceID;
 
@@ -102,8 +104,16 @@ for (let i = 0; i < listData.length; i++) {
                     name="Update Item"
                     color='#184254'
                     onClick={() => { 
-                        // updateSpace(currentSpaceId, name);
-                        navigation.navigate('SpacePage') 
+                      //  if the item wasn't set to a list
+                        if (category.toString() === 'Select List'){
+                            updateItem(route.params.route.spaceID, route.params.route.itemID, name, shared, 'None', route.params.route.listID)
+                            console.log('here')
+                        } 
+                        else { // if the item has a list
+                            updateItem(route.params.route.spaceID, route.params.route.itemID, name, shared, category, route.params.route.listID)
+                        }
+                      navigation.navigate('SpacePage') 
+                    console.log('update' , route.params.route)
                     }}
                 />
             </View>
@@ -131,6 +141,7 @@ const styles = StyleSheet.create({
     },
     shared: {
         paddingVertical: 12,
+        width: '100%',
         paddingHorizontal: 6,
         flexDirection: 'row',
         justifyContent: 'space-between',

@@ -17,7 +17,7 @@ export default function createItem({route, navigation}) {
     //route params: spaceID, currUser
     const [name, setName] = useState("");
 
-    const [category, setCategory] = useState("");
+    const [category, setCategory] = useState("Select List");
     const [shared, setShared] = useState(false);
     const toggleShared = () => setShared(previousState => ! previousState);
     const currentUser = route.params.currUser;

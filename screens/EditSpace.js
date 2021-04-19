@@ -113,7 +113,6 @@ export default function editSpace({route, navigation}) {
         }
         getMembers();
     })
-    // console.log(members);
 
     return(
         <SafeAreaView style = {[styles.container]}>
@@ -147,7 +146,6 @@ export default function editSpace({route, navigation}) {
                                     <View style={styles.users}>
                                         <User
                                             title={user.initials}
-                                            // backgroundColor='#FFFFFF'
                                         />
                                         <Text style={styles.userText}>{user.firstName} {user.lastName} </Text>
                                     </View>
@@ -158,11 +156,7 @@ export default function editSpace({route, navigation}) {
                             </Pressable>
                     )})}
                 </View>
-                <Text style={[styles.subtext, {paddingVertical: 12}]}>Add Members</Text>
-                <Input
-                    placeholderText="Join Space Code"
-                    labelValue={code}
-                />
+                <Text style={[styles.subtext, {paddingVertical: 12}]}>Add Members with code: {code}</Text>
                 <Button
                     name="Generate Code"
                     onClick={handleGenerateCodeSubmit}

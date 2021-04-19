@@ -126,7 +126,7 @@ export async function createItems(currentUser, currentSpaceId, itemName, isShare
         .update({
             items: firebase.firestore.FieldValue.arrayUnion((await currItem).path)
         })
-        if (image != '') {
+        if (image != '' || image != null) {
             const response = await fetch(image)
             const blob = await response.blob()
             const uploadImage = storage.ref().child(itemName)
@@ -163,7 +163,7 @@ export async function createItems(currentUser, currentSpaceId, itemName, isShare
             items: firebase.firestore.FieldValue.arrayUnion((await currItem).path)
         })
 
-        if (image != '') {
+        if (image != '' || image != null) {
             const response = await fetch(image)
             const blob = await response.blob()
             const uploadImage = storage.ref().child(itemName)

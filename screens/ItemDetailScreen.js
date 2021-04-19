@@ -16,7 +16,7 @@ export default function ItemDetailScreen ({route, navigation}) {
     useEffect(() => {
         (async () => {
           let imageRef = storage.ref(itemName);
-          console.log(imageRef)
+        //   console.log(imageRef)
           await imageRef.getDownloadURL().then((url) => {
               setImage(url)
           })
@@ -29,7 +29,7 @@ export default function ItemDetailScreen ({route, navigation}) {
         })();
     }, []);
 
-    console.log('route.params!', route.params);
+    console.log('route.params!', route.params.data.listName);
     return (
         <SafeAreaView style = {[styles.container]}>
             <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 4,paddingHorizontal: 30, flexDirection: 'row' }}>
@@ -41,7 +41,7 @@ export default function ItemDetailScreen ({route, navigation}) {
                     {itemName}
                 </Text>
                 <Text style={[styles.subtext]}>
-                    {list}
+                    {route.params.data.listName}
                 </Text>
             </View>
             { shared ?             

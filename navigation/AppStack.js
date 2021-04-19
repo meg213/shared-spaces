@@ -225,6 +225,11 @@ const AppStack = () => {
       component={CreateList}
       options={{ headerShown: false}}
     /> 
+    <Stack.Screen
+      name="ListDetail"
+      component={ListDetail}
+      options={{ headerShown: false}}
+    />
 
     <Stack.Screen 
       name="ItemDetailScreen"

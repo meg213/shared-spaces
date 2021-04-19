@@ -101,7 +101,10 @@ export default function ProfilePage({route, navigation}) {
                     <Button
                         name="Update"
                         color="#EB5757"
-                        onClick={() => {updateProfileInformation(currUser, lastname, firstname, email, phone, imageURI, newPassword, currPassword); setCurrPassword(''); setNewPassword('')}}
+                        onClick={() => {
+                          updateProfileInformation(currUser, lastname, firstname, email, phone, imageURI, newPassword, currPassword); setCurrPassword(''); setNewPassword('')
+                          navigation.navigate('MySpacesPage')
+                        }}
                     />    
                 </View>
                 <View style={{marginBottom: 12}}>

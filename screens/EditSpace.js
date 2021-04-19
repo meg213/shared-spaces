@@ -162,15 +162,15 @@ export default function editSpace({route, navigation}) {
                             </Pressable>
                     )})}
                 </View>
-                {/* <Text style={[styles.subtext, {paddingVertical: 12}]}>Add Members</Text> */}
-                {/* <Input
+                <Text style={[styles.subtext, {paddingVertical: 12}]}>Add Members</Text>
+                <Input
                     placeholderText="Join Space Code"
                     labelValue={code}
                 />
                 <Button
                     name="Generate Code"
                     onClick={handleGenerateCodeSubmit}
-                /> */}
+                />
             </View>
             <View style={{marginBottom: 50, width: '100%', position: 'absolute', bottom: 0,}}>
                 <Button

@@ -1,34 +1,88 @@
-import { db } from '../config/keys';
+import { db, storage} from '../config/keys';
 import firebase from 'firebase/app';
 import { Alert } from 'react-native';
-import Item from '../components/Item';
+import {joinCodeMax, joinCodeMin} from "../utils/Constants"
+import { findDOMNode } from 'react-dom';
 
 const spaceRef = db.collection("spaces")
 const userRef = db.collection("users")
 const itemRef = db.collection("items")
 const listRef = db.collection("lists")
 
+
+export async function generateCode() {
+    let allCodes = await getAllJoinCode()
+    let isBreak = false
+    let randomNumber = null
+    while (!isBreak) {
+        randomNumber = Math.floor(Math.random() * (joinCodeMax - joinCodeMin + 1) + joinCodeMin)
+        if (!allCodes.includes(randomNumber)) {
+            isBreak = true
+        }
+    }
+    console.log(randomNumber)
+    return randomNumber
+}
+
+export async function updateJoinCodeForSpace(spaceID, code) {
+    spaceRef.doc(spaceID).update({
+        joinCode: code
+    })
+}
+
+export async function getAllJoinCode() {
+    let allCodes = []
+    await spaceRef.get().then(
+        querySnapshot => {
+            querySnapshot.forEach(documentSnapshot => {
+                if (documentSnapshot.data().joinCode != undefined || documentSnapshot.data().joinCode != null) {
+                    allCodes.push(documentSnapshot.data().joinCode)
+                }
+            })
+        }
+    )
+    return allCodes
+}
+
+
+
+export async function joinSpace(currUser, joinCode) {
+    const userID = currUser.uid;
+    let spaceID = null;
+    await spaceRef.where('joinCode', '==', joinCode).get().then(querySnapshot => {
+        querySnapshot.forEach(documentSnapshot => {
+            spaceID = documentSnapshot.id
+        })
+    })
+    addNewUser(spaceID, userID)
+}
 /**
  * Add new user to target Space
  * @param targetSpace Space ID new user wishes to join
  * @param requestingUser User requesting to join space
  */
 export async function addNewUser(targetSpace, requestingUser) {
-    const spaceID = targetSpace.substring(7);
-    const userID  = requestingUser.substring(6);
-
+    const spaceID = targetSpace;
+    console.log(spaceID)
+    console.log(requestingUser)
+    console.log(("spaces/"+spaceID).replace(" ", ''))
     try {
         // Check if user is already in space.
-        const currentUsers = spaceRef.doc(spaceID).user;
+        const currentUsers = ((await spaceRef.doc(spaceID).get()).data().user);
+        console.log(currentUsers)
         for (let i = 0; i < currentUsers.length; i++) {
             if (currentUsers[i] == requestingUser) {
+                console.log("found")
                 return;
             }
         }
-
+        console.log("spaces/" + spaceID)
         // User is not in group. Add to target space.
         spaceRef.doc(spaceID).update({
-            user: firebase.firestore.FieldValue.arrayUnion((await requestingUser).path)
+            user: firebase.firestore.FieldValue.arrayUnion(requestingUser)
+        });
+        userRef.doc(requestingUser).update({
+            spaces: firebase.firestore.FieldValue.arrayUnion(("spaces/"+spaceID).replace(" ", ''))
         });
     } catch (e) {
         console.error("addNewUser: Error in adding user");
@@ -59,7 +113,8 @@ export async function deleteUser(currentUser) {
  * @param itemName          Name of the item
  * @param isShared          Is the item shared or not?
  */
-export async function createItems(currentUser, currentSpaceId, itemName, isShared) {
+
+export async function createItems(currentUser, currentSpaceId, itemName, isShared, image) {
     try {
         const currItem = itemRef.add({
             isShared: isShared,
@@ -72,7 +127,16 @@ export async function createItems(currentUser, currentSpaceId, itemName, isShare
         .update({
             items: firebase.firestore.FieldValue.arrayUnion((await currItem).path)
         })
-        Alert.alert("Item Created");
+        if (image != '') {
+            const response = await fetch(image)
+            const blob = await response.blob()
+            const uploadImage = storage.ref().child(itemName)
+            let data =  {
+                userID: currentUser.uid,
+                spaceID: currentSpaceId
+            }
+            uploadImage.put(blob, data)
+        }
     } catch (e) {
         Alert.alert(e.message)
     }
@@ -85,19 +149,31 @@ export async function createItems(currentUser, currentSpaceId, itemName, isShare
  * @param itemName          Name of the item
  * @param isShared          Is the item shared or not?
  */
- export async function createItemInList(currentUser, targetList, itemName,isShared) {
+
+ export async function createItemInList(currentUser, targetList, itemName, isShared, image) {
     try {
         const currItem = itemRef.add({
             isShared: isShared,
             name: itemName,
             spaceID: "",
             listID: targetList,
-            userID: "users/" + currentUser.uid
+            userID: "users/"+currentUser.uid
         });
 
         listRef.doc(targetList.substring(6)).update({
             items: firebase.firestore.FieldValue.arrayUnion((await currItem).path)
         })
+
+        if (image != '') {
+            const response = await fetch(image)
+            const blob = await response.blob()
+            const uploadImage = storage.ref().child(itemName)
+            let data =  {
+                userID: currentUser.uid,
+                spaceID: currentSpaceId
+            }
+            uploadImage.put(blob, data)
+        }
     } catch (e) {
         Alert.alert(e.message)
     }
@@ -592,28 +668,85 @@ export async function getAllLists(space) {
     return listData;
 }
 
+export async function uploadImageToStorage(userID, image) {
+    if (image != '' || image != null) {
+        var photoURL = ""
+        const response = await fetch(image)
+        const blob = await response.blob()
+        const uploadImage = storage.ref().child(userID)
+        await uploadImage.put(blob)
+    }
+}
+
+export async function getImageDownloadURL(imageID) {
+    var photoURL = null
+    await storage.ref(imageID).getDownloadURL().then((url) => {
+                photoURL = url
+    })
+    return photoURL
+
+}
+
+export async function updateProfileInformation(user, lastName, firstName, email, phone, imageURI, newPassword, currPassword) {
+    const userID = user.uid;
+    if (imageURI != null) {
+        console.log(await getImageDownloadURL(userID))
+        if (await getImageDownloadURL(userID) != null) {
+            await storage.ref(userID).delete()
+        }
+        await uploadImageToStorage(userID, imageURI)
+        
+    }
+    userRef.doc(userID).update({
+        firstname: firstName,
+        lastname: lastName,
+        phone: phone,
+        email: email,
+    });
+    await user.updateProfile({
+        displayName: firstName[0] + lastName[0],
+        email: email
+    })
+    await user.updateEmail(email)
+    if (newPassword != "" && currPassword != "") {
+        const currUser = firebase.auth().currentUser;
+        var creds = firebase.auth.EmailAuthProvider.credential(email, currPassword)
+        currUser.reauthenticateWithCredential(creds).then(() => {
+            currUser.updatePassword(newPassword)
+            Alert.alert("password updated")
+        }).catch(() => {
+            Alert.alert("update password failed")
+        })
+    }
+}
+
 /** 
  * Authentication Functions
 */
-export async function signUp(lastName, firstName, email, phone, password, confirmPassword) {
+export async function signUp(lastName, firstName, email, phone, password, confirmPassword, image) {
     if (!lastName) {
-        alert('First name is required');
+        Alert.alert('First name is required');
     } else if (!firstName) {
-        alert('First name is required');
+        Alert.alert('First name is required');
     } else if (!email) {
-        alert('Email field is required.');
+        Alert.alert('Email field is required.');
     } else if (!password) {
-        alert('Password field is required.');
+        Alert.alert('Password field is required.');
     } else if (!confirmPassword) {
         setPassword('');
-        alert('Confirm password field is required.');
+        Alert.alert('Confirm password field is required.');
     } else if (password !== confirmPassword) {
-        alert('Password does not match!');
+        Alert.alert('Password does not match!');
     } else {
         try {
             await firebase.auth().createUserWithEmailAndPassword(email, password);
             const currUser = firebase.auth().currentUser;
-            userRef.doc(currUser.uid).set({
+            const userID = currUser.uid;
+            uploadImageToStorage(userID, image)
+            await currUser.updateProfile({
+                displayName: firstName[0] + lastName[0]
+            })
+            userRef.doc(userID).set({
                 email: currUser.email,
                 firstname: firstName,
                 lastname: lastName,

@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef, Component} from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { Icon, SearchBar } from 'react-native-elements';
 import Item from "../components/Item";
 import Button from "../components/Button";
 import Search from '../components/Search';
@@ -143,26 +143,36 @@ export default function MyItemsPage({route, navigation}) {
             </View>
         </View>
         <View style={styles.search}>
-              <Search/>
+          <SearchBar
+            placeholder="Search here..."
+            
+            containerStyle={styles.container}
+            inputContainerStyle={styles.inputContainer}
+            placeholderTextColor='#4E7580'
+            round='true'
+            lightTheme='true'
+          />
         </View>
-        <ScrollView scrollEventThrottle={16}>
-          <View> 
-            <AlphabetList
-              data = {data}
-              renderSectionHeader={SectionHeader}
-              renderCustomItem={(item) => (
-                <Item 
-                  listPage
-                  owner={item.key.owner}
-                  itemName={item.key.name}
-                  list={item.key.listName}
-                  shared={item.key.isShared}
-                  onClick={()=> {navigation.navigate('ItemDetailScreen', {data: item.key})}}
-                />
-              )}
-            />
-        </View>    
-        </ScrollView>
+        <View style={{height: '80%'}}>
+          <ScrollView scrollEventThrottle={16}>
+            <View> 
+              <AlphabetList
+                data = {data}
+                renderSectionHeader={SectionHeader}
+                renderCustomItem={(item) => (
+                  <Item 
+                    listPage
+                    owner={item.key.owner}
+                    itemName={item.key.name}
+                    list={item.key.listName}
+                    shared={item.key.isShared}
+                    onClick={()=> {navigation.navigate('ItemDetailScreen', {data: item.key})}}
+                  />
+                )}
+              />
+          </View>    
+          </ScrollView>
+        </View>
     </SafeAreaView>
   );
 }
@@ -202,6 +212,14 @@ const styles = StyleSheet.create({
     paddingVertical: 6
   },
   search: {
-    width: '90%'
+    width: '100%',
+  },
+  inputContainer: {
+    backgroundColor: '#D9DED8',
+  },
+  container: {
+    backgroundColor: '#F2F0EB',
+    borderBottomColor: '#F2F0EB',
+    borderTopColor: '#F2F0EB',
   }
 });

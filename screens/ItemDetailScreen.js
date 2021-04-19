@@ -1,18 +1,33 @@
-import React, { useState, Component } from 'react';
+import React, { useState, Component, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView, Switch, Image} from 'react-native';
 import Button from '../components/Button';
+import {storage, db} from '../config/keys';
+
 import User from '../components/User';
 
 export default function ItemDetailScreen ({route, navigation}) {
-    const [itemName, setName] = useState(route.params.data.name);
-    const [list, setCategory] = useState(route.params.data.listName); //the list or category it's in
-    const [shared, setShared] = useState(route.params.data.isShared);
-    const [image, setImage] = useState(null);
-    const [owner, setOwner] = useState(route.params.data.owner);
-    const [initials, setInitials] = useState("MG") //not sure if I need this. Maybe can get it from owner
-    
-    //Need to query the information above from database based on the Item that was clicked (most of the same information that was on the card clicked to get here)
-    //Image is the only thing extra that needs to be queried that was not queried on the item card
+    const itemData = route.params.data;
+    const itemName = itemData.name;
+    const list = itemData.listID;
+    const shared = itemData.isShared;
+    const [owner, setOwner] = useState()
+    const [initials, setInitials] = useState()
+    const[image, setImage] = useState()
+    useEffect(() => {
+        (async () => {
+          let imageRef = storage.ref(itemName);
+          console.log(imageRef)
+          await imageRef.getDownloadURL().then((url) => {
+              setImage(url)
+          })
+          let userData = ((await db.collection("users").doc(itemData.userID.substring(6)).get()).data())
+          let firstname = userData.firstname
+          let lastname = userData.lastname
+          let initial = firstname[0] + lastname[0]
+          setOwner(firstname + lastname)
+          setInitials(initial)
+        })();
+    }, []);
 
     console.log('route.params!', route.params);
     return (

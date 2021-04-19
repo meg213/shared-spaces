@@ -1,13 +1,78 @@
-import React, { useState, Component, useEffect } from 'react';
+import React, { useState, Component, useEffect, useRef } from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView, Modal, Pressable} from 'react-native';
 import Button from '../components/Button';
 import User from '../components/User';
 import FormInput from '../components/FormInput';
 import { Icon } from 'react-native-elements';
-import { changeSpaceOwner, deleteSpace, getSpace, leaveSpace, updateSpace } from '../utils/firebaseMethod';
-import { db } from '../config/keys';
+import Input from "../components/Input";
+import {joinCodeMax, joinCodeMin} from "../utils/Constants"
+import {db} from '../config/keys';
+import {AlphabetList} from 'react-native-section-alphabet-list';
+import { changeSpaceOwner, deleteSpace, getSpace, leaveSpace, getImageDownloadURL, updateSpace, generateCode, updateJoinCodeForSpace} from '../utils/firebaseMethod';
+
+const itemRef = db.collection('items');
+const userRef = db.collection('users');
+const spaceRef = db.collection('spaces');
 
 export default function editSpace({route, navigation}) {
+    // console.log(route.params);
+    //route params: spaceID, currUser
+    const componentIsMounted = useRef(true);
+    const [users, setUsers] = useState([]);
+    const [userIDToData, setMapUserIDToData] = useState(new Map());
+    const currentSpaceID = route.params.spaceID.substring(7);
+    const [name, setName] = useState(route.params.name);
+    const [code, setCode] = useState();
+
+    const [modalVisible, setModalVisible] = useState(false)
+    const [optionModalVisible, setOptionModalVisible] = useState(false);
+    const [isOwner, setIsOwner] = useState(false);
+    const [members, setMembers] = useState([]);
+    const [memberClicked, setMemberClicked] = useState('');
+    const [memberClickedId, setMemberClickedID] = useState('');
+    const [option, setOption] = useState('');
+    const currentUser = route.params.currUser;
+    const currentSpaceId = route.params.spaceID;
+    
+    // db refs
+    const userRef = db.collection('users');
+
+    useEffect(() => {
+        const subscriber = spaceRef.doc(currentSpaceID).onSnapshot(documentSnapshot => {createUsersData(documentSnapshot)});
+        async function createUsersData(documentSnapshot) {
+            var all_users = documentSnapshot.data().user;
+            var data = [];
+            var mapUserIDtoData = new Map();
+            for (let i = 0; i < all_users.length; i++) {
+                let userID = all_users[i];
+                let userData = (await userRef.doc(userID).get()).data();
+                let initials = userData.firstname[0] + userData.lastname[0]
+                let avatar = await getImageDownloadURL(userID)
+                mapUserIDtoData.set(userID, [userData, initials, avatar])
+                data.push({value: userData.firstname + " " + userData.lastname, key: userID})
+            }
+            if (componentIsMounted.current) {
+                setUsers(data)
+                setMapUserIDToData(mapUserIDtoData)
+            }
+        }
+        return () => subscriber;
+      }, []);
+    
+      const handleGenerateCodeSubmit = async() => {
+        let code = await generateCode()
+        setCode(code)
+        await updateJoinCodeForSpace(currentSpaceID, code)
+    }
+    
+
+    useEffect(() => {
+        return () => {
+          componentIsMounted.current = false;
+        };
+    }, []);
+      
+
     const deleteConfirmAlert = () => 
         Alert.alert(
             "Are you sure?",
@@ -23,22 +88,6 @@ export default function editSpace({route, navigation}) {
                 }
             ]
         );
-
-    //route params: spaceID, currUser
-    const [name, setName] = useState(route.params.name);
-    const [modalVisible, setModalVisible] = useState(false)
-    const [optionModalVisible, setOptionModalVisible] = useState(false);
-    const [isOwner, setIsOwner] = useState(false);
-    const [members, setMembers] = useState([]);
-    const [memberClicked, setMemberClicked] = useState('');
-    const [memberClickedId, setMemberClickedID] = useState('');
-    const [option, setOption] = useState('');
-    const currentUser = route.params.currUser;
-    const currentSpaceId = route.params.spaceID;
-    // console.log(currentUser);
-
-    // db refs
-    const userRef = db.collection('users');
 
     // Get the owner of a space
     useEffect(() => {
@@ -100,7 +149,8 @@ export default function editSpace({route, navigation}) {
                         placeholderText="List Name"
                         autoCapitalize="none"
                         autoCorrect={false}
-                    />
+                />
+                <Text style={styles.subtext}>{currentSpaceID}</Text>
                 <Text style={styles.subtext}>Current Members</Text>
                 <View>
                     {members.map((user) =>
@@ -126,8 +176,13 @@ export default function editSpace({route, navigation}) {
                     )})}
                 </View>
                 <Text style={[styles.subtext, {paddingVertical: 12}]}>Add Members</Text>
+                <Input
+                    placeholderText="Join Space Code"
+                    labelValue={code}
+                />
                 <Button
                     name="Generate Code"
+                    onClick={handleGenerateCodeSubmit}
                 />
             </View>
             <View style={{marginBottom: 50, width: '100%', position: 'absolute', bottom: 0,}}>

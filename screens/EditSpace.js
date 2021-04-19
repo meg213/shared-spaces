@@ -133,10 +133,6 @@ export default function editSpace({route, navigation}) {
                         autoCapitalize="none"
                         autoCorrect={false}
                 />
-                <View style={{paddingVertical: 12}}>
-                    <Text style={styles.subtext}>Space Code:</Text>
-                    <Text style={{color: '#184254', fontSize: 22, fontWeight: '500', paddingVertical: 6}}>{currentSpaceID}</Text>
-                </View>
                 <Text style={styles.subtext}>Current Members</Text>
                 <View>
                     {members.map((user) =>

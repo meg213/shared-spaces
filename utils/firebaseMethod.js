@@ -497,7 +497,7 @@ export async function getAllLists(space) {
 }
 
 export async function uploadImageToStorage(userID, image) {
-    if (image != '') {
+    if (image != '' || image != null) {
         var photoURL = ""
         const response = await fetch(image)
         const blob = await response.blob()
@@ -508,15 +508,11 @@ export async function uploadImageToStorage(userID, image) {
 
 export async function getImageDownloadURL(imageID) {
     var photoURL = null
-    try {
-        await storage.ref(imageID).getDownloadURL().then((url) => {
-            photoURL = url
-        })
-    } catch (e) {
-        alert(e.message);
-    } finally {
-        return photoURL
-    }
+    await storage.ref(imageID).getDownloadURL().then((url) => {
+                photoURL = url
+    })
+    return photoURL
+
 }
 
 export async function updateProfileInformation(user, lastName, firstName, email, phone, imageURI, newPassword, currPassword) {

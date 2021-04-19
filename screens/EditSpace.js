@@ -72,23 +72,6 @@ export default function editSpace({route, navigation}) {
         };
     }, []);
       
-
-    const deleteConfirmAlert = () => 
-        Alert.alert(
-            "Are you sure?",
-            "You are about to delete your space. This action cannot be reversed.",
-            [
-                {
-                    text: "Cancel",
-                    style: cancel
-                },
-                {
-                    text: "Delete Space",
-                    onPress: () => console.log("delete space!")
-                }
-            ]
-        );
-
     // Get the owner of a space
     useEffect(() => {
         async function getOwner() {

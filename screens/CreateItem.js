@@ -6,7 +6,7 @@ import FormInput from '../components/FormInput';
 import { createItems, createItemInList } from '../utils/firebaseMethod';
 import * as ImagePicker from 'expo-image-picker'
 import {db} from '../config/keys';
-import { Dropdown } from 'react-native-material-dropdown-v2-fixed';
+// import { Dropdown } from 'react-native-material-dropdown-v2-fixed';
 
 const itemRef = db.collection('items');
 const listRef = db.collection('lists');
@@ -111,7 +111,7 @@ export default function createItem({route, navigation}) {
                 style={{
                     height:80
                 }}>
-                    <Dropdown
+                    {/* <Dropdown
                         label={'Select List'}
                         data={data}
                         onChangeText={(value) => {
@@ -121,7 +121,7 @@ export default function createItem({route, navigation}) {
                                 }
                             }
                         }}
-                    />
+                    /> */}
                 </View>
                 <View style={styles.shared}>
                     <Text style={styles.subtext}>Is this item is shared?</Text>

@@ -73,6 +73,19 @@ export default function ListsPage({navigation, route}) {
         }
       }
 
+      let newData = [];
+      for (let i = 0; i < data.length; i++) {
+        newData.push({value: data[i].value.name, 
+          key: {
+            name: data[i].value.name,
+            items: data[i].value.items,
+            spaceID: data[i].value.spaceID,
+            listID: data[i].key
+          }
+        })
+      }
+      setFilteredDataSource(newData);
+
       if (componentIsMounted.current) {
         setLists(data);
       }

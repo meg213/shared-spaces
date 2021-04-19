@@ -43,7 +43,7 @@
     "react-native-svg": "^12.1.0",
     "react-native-upload-photo-button": "^1.0.0",
     "react-native-vector-icons": "^8.0.0",
-    "react-native-web": "^0.13.18",
+    "react-native-web": "^0.15.7",
     "react-navigation": "^4.4.3"
   },
   "devDependencies": {

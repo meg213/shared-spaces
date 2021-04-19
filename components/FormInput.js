@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, TextInput, StyleSheet} from 'react-native';
-import {windowHeight} from '../utils/Dimensions';
+import {windowHeight} from '../utils/Constants';
  
 
  

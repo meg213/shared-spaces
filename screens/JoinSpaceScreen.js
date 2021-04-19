@@ -8,7 +8,7 @@ import {joinSpace} from '../utils/firebaseMethod';
 
 const JoinSpaceScreen = ({route, navigation}) =>  {
     const currUser = route.params.currUser;
-    const [spaceID, setSpaceID] = useState()
+    const [joinCode, setJoinCode] = useState()
     return(
         <SafeAreaView style = {[styles.container]}>
             <View style = {{margin: 18}}>
@@ -24,15 +24,15 @@ const JoinSpaceScreen = ({route, navigation}) =>  {
                     borderRadius: 8
                 }}>
                 <FormInput
-                    labelValue={spaceID}
-                    onChangeText={(id) => setSpaceID(id)}
-                    placeholderText="Space ID"
+                    labelValue={joinCode}
+                    onChangeText={(code) => setJoinCode(code)}
+                    placeholderText="Please enter the Join Space Code"
                     autoCapitalize="none"
                     autoCorrect={false}
                 />
                 <Button 
                     name="Join Space"
-                    onClick={() => joinSpace(currUser, spaceID)}
+                    onClick={() => joinSpace(currUser, Number(joinCode))}
                 />
             </View>
         </SafeAreaView>

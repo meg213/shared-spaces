@@ -2,37 +2,31 @@ import React, { useState, Component, useEffect, useRef } from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView} from 'react-native';
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
-import { Icon } from 'react-native-elements';
+import Input from "../components/Input";
+import {joinCodeMax, joinCodeMin} from "../utils/Constants"
 import User from "../components/User";
 import {db} from '../config/keys';
 import {AlphabetList} from 'react-native-section-alphabet-list';
-import { getImageDownloadURL, updateSpace } from '../utils/firebaseMethod';
+import { getImageDownloadURL, updateSpace, generateCode, updateJoinCodeForSpace} from '../utils/firebaseMethod';
 
 const itemRef = db.collection('items');
 const userRef = db.collection('users');
 const spaceRef = db.collection('spaces');
 
 export default function editSpace({route, navigation}) {
-    console.log(route.params);
+    // console.log(route.params);
     //route params: spaceID, currUser
-    // const currentUser = route.params.currUser;
     const componentIsMounted = useRef(true);
     const [users, setUsers] = useState([]);
     const [userIDToData, setMapUserIDToData] = useState(new Map());
     const currentSpaceID = route.params.spaceID.substring(7);
     const [name, setName] = useState(route.params.name);
-
-    useEffect(() => {
-        return () => {
-          componentIsMounted.current = false;
-        };
-      }, []);
+    const [code, setCode] = useState();
 
     useEffect(() => {
         const subscriber = spaceRef.doc(currentSpaceID).onSnapshot(documentSnapshot => {createUsersData(documentSnapshot)});
         async function createUsersData(documentSnapshot) {
             var all_users = documentSnapshot.data().user;
-            console.log(all_users);
             var data = [];
             var mapUserIDtoData = new Map();
             for (let i = 0; i < all_users.length; i++) {
@@ -50,8 +44,20 @@ export default function editSpace({route, navigation}) {
         }
         return () => subscriber;
       }, []);
-    console.log(users)
-    console.log(userIDToData)
+    
+      const handleGenerateCodeSubmit = async() => {
+        let code = await generateCode()
+        setCode(code)
+        await updateJoinCodeForSpace(currentSpaceID, code)
+    }
+    
+
+    useEffect(() => {
+        return () => {
+          componentIsMounted.current = false;
+        };
+    }, []);
+      
 
     const deleteConfirmAlert = () => 
         Alert.alert(
@@ -68,6 +74,7 @@ export default function editSpace({route, navigation}) {
                 }
             ]
         );
+    console.log(code)
 
     return(
         <SafeAreaView style = {[styles.container]}>
@@ -103,8 +110,13 @@ export default function editSpace({route, navigation}) {
                     )}
                 />
                 <Text style={[styles.subtext, {paddingVertical: 12}]}>Add Members</Text>
+                <Input
+                    placeholderText="Join Space Code"
+                    labelValue={code}
+                />
                 <Button
                     name="Generate Code"
+                    onClick={handleGenerateCodeSubmit}
                 />
             </View>
             <View style={{marginBottom: 50, width: '100%', position: 'absolute', bottom: 0,}}>

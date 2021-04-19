@@ -38,10 +38,10 @@ export default function ItemDetailScreen ({route, navigation}) {
                 </View>
                 <View style={{paddingVertical: 30, paddingHorizontal: 30}}>
                     <Text style={[styles.text]}>
-                        itemName {itemName}
+                        ItemName: {itemName}
                     </Text>
                     <Text style={[styles.subtext]}>
-                        list  {list}
+                        List:  {list}
                     </Text>
                 </View>
                 <View style={{paddingVertical: 16, paddingHorizontal: 30, flexDirection: 'row', alignItems: 'center'}}>

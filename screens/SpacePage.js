@@ -141,9 +141,6 @@ export default function SpacePage({route, navigation}){
     }
   }
 
-  console.log("RECENT ITEMS:\n")
-  console.log(recent_items_stack)
-
   useEffect(() => {
         const subscriber = messagesRef
         .orderBy('createdAt', 'desc')

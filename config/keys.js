@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
-import firestore from 'firebase/firestore';
+import 'firebase/firestore';
 import 'firebase/storage';
+import 'firebase/database'
 
 
 let config = {

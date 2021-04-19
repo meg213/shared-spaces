@@ -1,10 +1,8 @@
-import  {useState} from 'react';
-import { db } from '../config/keys';
-import {storage} from '../config/keys';
+import { db, storage} from '../config/keys';
 import firebase from 'firebase/app';
 import { Alert } from 'react-native';
-import Item from '../components/Item';
-import { set } from 'react-native-reanimated';
+import {joinCodeMax, joinCodeMin} from "../utils/Constants"
+import { findDOMNode } from 'react-dom';
 
 const spaceRef = db.collection("spaces")
 const userRef = db.collection("users")
@@ -12,10 +10,51 @@ const itemRef = db.collection("items")
 const listRef = db.collection("lists")
 
 
+export async function generateCode() {
+    let allCodes = await getAllJoinCode()
+    let isBreak = false
+    let randomNumber = null
+    while (!isBreak) {
+        randomNumber = Math.floor(Math.random() * (joinCodeMax - joinCodeMin + 1) + joinCodeMin)
+        if (!allCodes.includes(randomNumber)) {
+            isBreak = true
+        }
+    }
+    console.log(randomNumber)
+    return randomNumber
+}
 
-export async function joinSpace(currUser, spaceID) {
+export async function updateJoinCodeForSpace(spaceID, code) {
+    spaceRef.doc(spaceID).update({
+        joinCode: code
+    })
+}
+
+export async function getAllJoinCode() {
+    let allCodes = []
+    await spaceRef.get().then(
+        querySnapshot => {
+            querySnapshot.forEach(documentSnapshot => {
+                if (documentSnapshot.data().joinCode != undefined || documentSnapshot.data().joinCode != null) {
+                    allCodes.push(documentSnapshot.data().joinCode)
+                }
+            })
+        }
+    )
+    return allCodes
+}
+
+
+
+export async function joinSpace(currUser, joinCode) {
     const userID = currUser.uid;
-    addNewUser(spaceID, userID);
+    let spaceID = null;
+    await spaceRef.where('joinCode', '==', joinCode).get().then(querySnapshot => {
+        querySnapshot.forEach(documentSnapshot => {
+            spaceID = documentSnapshot.id
+        })
+    })
+    addNewUser(spaceID, userID)
 }
 /**
  * Add new user to target Space
@@ -458,7 +497,7 @@ export async function getAllLists(space) {
 }
 
 export async function uploadImageToStorage(userID, image) {
-    if (image != '') {
+    if (image != '' || image != null) {
         var photoURL = ""
         const response = await fetch(image)
         const blob = await response.blob()
@@ -469,15 +508,11 @@ export async function uploadImageToStorage(userID, image) {
 
 export async function getImageDownloadURL(imageID) {
     var photoURL = null
-    try {
-        await storage.ref(imageID).getDownloadURL().then((url) => {
-            photoURL = url
-        })
-    } catch (e) {
-        alert(e.message);
-    } finally {
-        return photoURL
-    }
+    await storage.ref(imageID).getDownloadURL().then((url) => {
+                photoURL = url
+    })
+    return photoURL
+
 }
 
 export async function updateProfileInformation(user, lastName, firstName, email, phone, imageURI, newPassword, currPassword) {

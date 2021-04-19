@@ -14,12 +14,8 @@ const User = (props) => {
             uri: props.source
           }}
           onPress={props.onClick}
-          backgroundColor='#56CCF2'
-          textColor= '#184254'
+          containerStyle={{backgroundColor: '#56CCF2'}}
         />
-        <Text>
-          {props.name}
-        </Text>
       </View>
     );
 }

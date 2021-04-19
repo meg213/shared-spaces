@@ -150,7 +150,8 @@ export default function editSpace({route, navigation}) {
                                 <View style={[styles.users, {justifyContent:'space-between'}]}>
                                     <View style={styles.users}>
                                         <User
-                                            initials={user.initials}
+                                            title={user.initials}
+                                            // backgroundColor='#FFFFFF'
                                         />
                                         <Text style={styles.userText}>{user.firstName} {user.lastName} </Text>
                                     </View>

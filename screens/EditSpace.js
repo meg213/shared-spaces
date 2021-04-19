@@ -133,7 +133,10 @@ export default function editSpace({route, navigation}) {
                         autoCapitalize="none"
                         autoCorrect={false}
                 />
-                <Text style={styles.subtext}>{currentSpaceID}</Text>
+                <View style={{paddingVertical: 12}}>
+                    <Text style={styles.subtext}>Space Code:</Text>
+                    <Text style={{color: '#184254', fontSize: 22, fontWeight: '500', paddingVertical: 6}}>{currentSpaceID}</Text>
+                </View>
                 <Text style={styles.subtext}>Current Members</Text>
                 <View>
                     {members.map((user) =>
@@ -158,15 +161,15 @@ export default function editSpace({route, navigation}) {
                             </Pressable>
                     )})}
                 </View>
-                <Text style={[styles.subtext, {paddingVertical: 12}]}>Add Members</Text>
-                <Input
+                {/* <Text style={[styles.subtext, {paddingVertical: 12}]}>Add Members</Text> */}
+                {/* <Input
                     placeholderText="Join Space Code"
                     labelValue={code}
                 />
                 <Button
                     name="Generate Code"
                     onClick={handleGenerateCodeSubmit}
-                />
+                /> */}
             </View>
             <View style={{marginBottom: 50, width: '100%', position: 'absolute', bottom: 0,}}>
                 <Button

@@ -630,11 +630,11 @@ export async function deleteList(currentList, currentSpace) {
         // if it has no list, delete the reference in the space
         if (currentList.toString() === "None") {
             spaceRef.doc(spaceID).update({
-                items: firebase.firestore.FieldValue.arrayRemove(currentItem)
+                items: firebase.firestore.FieldValue.arrayRemove((await currentItem).path)
             })
         } else { // else delete it from it's list
             listRef.doc(listID).update({
-                items: firebase.firestore.FieldValue.arrayRemove(currentItem)
+                items: firebase.firestore.FieldValue.arrayRemove((await currentItem).path)
             })
         }
 

@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
         padding: 12,
     },
     text:{
-        fontSize: 18,  
+        fontSize: 24,  
         color: "#184254",
         paddingTop: 2,
         flex: 1,
@@ -42,19 +42,32 @@ const SpaceCard = (props) => {              //TO-DO: make props
                     <Text style = {[styles.text]}>
                         {props.name}
                     </Text>
-                    <Circle num= "2"/>
                 </View>
                 <View style = {{paddingTop: 5}}>
-                    <Text> 
-                        3 members
+                    <Text style={{fontSize: 18}}> 
+                        {props.number} Member{props.number === 1 ? '' : 's'}
                     </Text>
                 </View>
-                <View style = {{paddingTop: 18}}>
+                <View style = {{paddingTop: 12}}>
                     <ArrowRight stroke = "black" style = {[styles.arrow]}/>
                 </View>
             </View>
         </Pressable>
     );
 }
+
+
+SpaceCard.propTypes = {
+    members: PropTypes.number,
+
+    onClick: PropTypes.func,
+  };
+
+SpaceCard.defaultProps = {
+    number: 1,
+
+    onClick: () => {}
+  }
+  
 
 export default SpaceCard;

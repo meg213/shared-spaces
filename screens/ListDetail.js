@@ -74,9 +74,11 @@ export default function ListsPage({navigation, route}) {
           spaceID: itemData.spaceID,
           userID: itemData.userID, 
           isShared: itemData.isShared,
-          listName: listName
+          listName: listName,
+          itemID: currentItemList[i],
+          listID: 'lists/' + listID
         })
-     //   console.log('data', data)
+       console.log('data List Detail', data)
       }
 
       if (componentIsMounted.current) {

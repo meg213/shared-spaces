@@ -1,11 +1,12 @@
 import React, {useState, useEffect, useRef, Component} from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import Item from "../components/Item";
-import { Icon } from 'react-native-elements';
+import { Icon, SearchBar } from 'react-native-elements';
 import Button from "../components/Button";
 import Search from '../components/Search';
 import {AlphabetList} from 'react-native-section-alphabet-list';
 import { db } from '../config/keys';
+import createItem from './CreateItem';
 
 class SectionHeader extends Component {
   render() {
@@ -27,6 +28,8 @@ class SectionHeader extends Component {
   }
 }
 
+
+
 const itemRef = db.collection('items');
 const listRef = db.collection('lists');
 const userRef = db.collection('users');
@@ -37,6 +40,7 @@ export default function AllItemsPage({route, navigation}) {
   const[allItems, setItems] = useState([]);
   const componentIsMounted = useRef(true);
   const currSpaceID = route.params.data.substring(7);
+  const [itemIDToData, setMapItemIDToData] = useState(new Map());
 
   useEffect(() => {
     return () => {
@@ -72,7 +76,9 @@ export default function AllItemsPage({route, navigation}) {
                 spaceID: itemData.spaceID,
                 userID: itemData.userID, 
                 isShared: itemData.isShared,
-                listName: listData.name
+                listName: listData.name,
+                itemID: listData.items[i],
+                listID: all_lists[i],
               })
               console.log(data)
             }
@@ -95,6 +101,8 @@ export default function AllItemsPage({route, navigation}) {
             spaceID: itemData.spaceID,
             userID: itemData.userID, 
             isShared: itemData.isShared,
+            itemID: all_items_not_in_lists[i],
+            listID: 'None'
           })
 
           //console.log(data)
@@ -129,12 +137,21 @@ export default function AllItemsPage({route, navigation}) {
             />
             <View style={styles.headerMain}>
               <Text style={styles.headerTitle}>All Items</Text>
-              <Text>{data.length}</Text>
+          <Text>{allItems.length}</Text>
             </View>
         </View>
         <View style={styles.search}>
-          <Search/>
+          <SearchBar
+            placeholder="Search here..."
+            
+            containerStyle={styles.container}
+            inputContainerStyle={styles.inputContainer}
+            placeholderTextColor='#4E7580'
+            round='true'
+            lightTheme='true'
+          />
         </View>
+        <View style={{height: '80%'}}>
         <ScrollView scrollEventThrottle={16}>
           <View>  
             <AlphabetList
@@ -155,6 +172,7 @@ export default function AllItemsPage({route, navigation}) {
             />
           </View>
         </ScrollView>
+        </View>
     </SafeAreaView>
   );
 }
@@ -188,6 +206,14 @@ const styles = StyleSheet.create({
       paddingBottom: 12,
   },
   search: {
-    width: '90%'
+    width: '100%',
+  },
+  inputContainer: {
+    backgroundColor: '#D9DED8',
+  },
+  container: {
+    backgroundColor: '#F2F0EB',
+    borderBottomColor: '#F2F0EB',
+    borderTopColor: '#F2F0EB',
   }
 });

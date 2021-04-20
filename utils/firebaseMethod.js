@@ -133,16 +133,16 @@ export async function createItems(currentUser, currentSpaceId, itemName, isShare
         .update({
             items: firebase.firestore.FieldValue.arrayUnion((await currItem).path)
         })
-        // if (image != '' || image != null) {
-        //     const response = await fetch(image)
-        //     const blob = await response.blob()
-        //     const uploadImage = storage.ref().child(itemName)
-        //     let data =  {
-        //         userID: currentUser.uid,
-        //         spaceID: currentSpaceId
-        //     }
-        //     uploadImage.put(blob, data)
-        // }
+        if (image != '' && image != null) {
+            const response = await fetch(image)
+            const blob = await response.blob()
+            const uploadImage = storage.ref().child(itemName)
+            let data =  {
+                userID: currentUser.uid,
+                spaceID: currentSpaceId
+            }
+            uploadImage.put(blob, data)
+        }
     } catch (e) {
         Alert.alert(e.message)
     }
@@ -171,12 +171,12 @@ export async function createItems(currentUser, currentSpaceId, itemName, isShare
             items: firebase.firestore.FieldValue.arrayUnion((await currItem).path)
         })
 
-        // if (image != '' || image != null) {
-        //     const response = await fetch(image)
-        //     const blob = await response.blob()
-        //     const uploadImage = storage.ref().child(itemName)
-        //     uploadImage.put(blob)
-        // }
+        if (image != '' && image != null) {
+            const response = await fetch(image)
+            const blob = await response.blob()
+            const uploadImage = storage.ref().child(itemName)
+            uploadImage.put(blob)
+        }
     } catch (e) {
         Alert.alert(e.message)
     }

@@ -24,6 +24,7 @@ const Search = ({...rest}) => {
                 inputContainerStyle={styles.inputContainer}
                 placeholder="Search here..."
                 {...rest}
+               
             />
         </View>
     );

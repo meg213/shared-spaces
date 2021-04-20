@@ -13,12 +13,14 @@ export default function ItemDetailScreen ({route, navigation}) {
     const [owner, setOwner] = useState()
     const [initials, setInitials] = useState()
     const[image, setImage] = useState()
+    const [avatar, setAvatar] = useState()
     useEffect(() => {
         (async () => {
-          let imageRef = storage.ref(itemName);
-          console.log(imageRef)
-          await imageRef.getDownloadURL().then((url) => {
+          await storage.ref(itemName).getDownloadURL().then((url) => {
               setImage(url)
+          })
+          await storage.ref(itemData.userID.substring(6)).getDownloadURL().then((url) => {
+              setAvatar(url)
           })
           let userData = ((await db.collection("users").doc(itemData.userID.substring(6)).get()).data())
           let firstname = userData.firstname
@@ -53,7 +55,10 @@ export default function ItemDetailScreen ({route, navigation}) {
                     </Text>
                 </View>
                 <View style={{paddingVertical: 16, paddingHorizontal: 30, flexDirection: 'row', alignItems: 'center'}}>
-                    <User initials={initials}/>
+                    <User 
+                        title={initials}
+                        source={avatar}
+                    />
                     <View style={{paddingHorizontal: 6}}/>
                     <Text style={[styles.small]}>
                         {owner}

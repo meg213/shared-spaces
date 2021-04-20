@@ -77,7 +77,9 @@ const CreateList= ({route, navigation}) => {
     }, []);
 
     console.log('itemIds', itemIDs)
+
     const ImageItem = (props) => {
+        console.log(props.src)
         return (
             <Pressable onPress={()=> {
                 setIsVisible(false)
@@ -155,7 +157,7 @@ const CreateList= ({route, navigation}) => {
                             }
                         }
                         if (name !== '') {
-                            createNewListWithItems(currentSpaceId, name, checkedItems);
+                            createNewListWithItems(currentSpaceId, name, checkedItems, icon);
                             navigation.navigate('ListsList');
                         } else {
                             setModalVisible(true);

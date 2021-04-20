@@ -532,7 +532,7 @@ export async function deleteSpace(currentUser, currentSpace) {
  export async function createNewListWithItems(currentSpaceID, listName, items, l_icon) {
     try {
         // Making a new list with array of items
-        console.log(l_icon);
+        console.log("creating new List" + l_icon);
         const newList = listRef.add({
             name: listName,
             spaceID: currentSpaceID,

@@ -21,7 +21,7 @@ const messagesRef = db.collection('messages');
 const listRef = db.collection('lists');
 
 export default function SpacePage({route, navigation}){
-    console.log(route.params)
+    // console.log(route.params)
   // Tracks what Space we're in using "route"
   const currUser = route.params.currUser;
   const userID = currUser.uid;
@@ -31,7 +31,7 @@ export default function SpacePage({route, navigation}){
   const[recentItems, setItems] = useState([]);
   // Stack of items for the "Recent Added Items" view
   const[recent_items_stack, setRecentList] = useState([]);
-//   const[recent_items_stack, setRecentList] = useState(new Map());
+
   // How many items do we want to show in "Recently Added Items"?
   const max_items_shown = 10;    
 
@@ -40,6 +40,7 @@ export default function SpacePage({route, navigation}){
   const [recentMessData, setRecentMessData] = useState("")
   const [imgURL, setImgURL] = useState()
 
+  // image stuff
   useEffect(() => {
     (async () => {
         setImgURL(await(getImageDownloadURL(userID)))
@@ -53,6 +54,7 @@ export default function SpacePage({route, navigation}){
     };
   }, []);
 
+  // setting the space name
   useEffect(() => {
     const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {getSpaceName(documentSnapshot)});
      async function getSpaceName(documentSnapshot) {
@@ -62,8 +64,8 @@ export default function SpacePage({route, navigation}){
      return () => subscriber;
     }, []);
 
-  // Updates recentItems on every new item instance
 
+  // Updates recentItems on every new item instance
   useEffect(() => {
     const subscriber = spaceRef.doc(currSpaceID).onSnapshot(documentSnapshot => {updateRecentItems(documentSnapshot)});
     async function updateRecentItems(documentSnapshot) {
@@ -130,24 +132,26 @@ export default function SpacePage({route, navigation}){
         }
 
         if (componentIsMounted.current) {
-            data.sort((a,b) => b.timestamp - a.timestamp)
+            data.sort((a,b) => b.timestamp - a.timestamp);
             setItems(data);
+            console.log('data', data)
+
+            let mostRecentItems = [];
+
+            for (let i = 0; i < (data.length || i < max_items_shown); i++) {
+                console.log('recent items!', data[i])
+                console.log('recent items key', data[i].key)
+                mostRecentItems.push({key: data[i], value: data[i].key})
+            }
+            setRecentList(mostRecentItems);
         }
     }
     return () => subscriber;
   }, []);
 
-  useEffect(() => {
-    // Add most recent items to recent items stack
-    let mostRecentItems = [];
+  console.log('fingers crossed', recent_items_stack);
 
-    for (let i = 0; i < recentItems.length && i < max_items_shown; i++) {
-        // mostRecentItems.set(recentItems[i].key, recentItems[i]);
-        mostRecentItems.push({key: recentItems[i].key, value: recentItems[i]});
-    }
-
-    setRecentList(recent_items_stack => [...mostRecentItems]);
-  }, [recentItems]);
+  // messaging
   useEffect(() => {
         const subscriber = messagesRef
         .orderBy('createdAt', 'desc')
@@ -235,7 +239,6 @@ export default function SpacePage({route, navigation}){
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                     <Card name="Shared"
                         onClick={() => {
-                            console.log('card click test');
                             navigation.navigate('SharedList', {data:route.params.data, currUser: route.params.currUser});
                             }}/>
                     <Card name="My Items"
@@ -276,12 +279,12 @@ export default function SpacePage({route, navigation}){
                 </Text>
 
                 {/* List Containing Recently Added Items */}
-                {/* <AlphabetList
+                <AlphabetList
                     data = {recent_items_stack}
                     renderCustomItem={(item) => (
                       <Item 
                         owner={item.key.owner}
-                        itemName={item.value}
+                        itemName={item.key.name}
                         list={item.key.listName}
                         shared={item.key.isShared}
                         onClick={()=> {
@@ -290,7 +293,7 @@ export default function SpacePage({route, navigation}){
                         }}
                       />
                     )}
-                /> */}
+                />
             </View>
         </ScrollView>
     </SafeAreaView>

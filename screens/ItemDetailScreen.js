@@ -96,8 +96,11 @@ export default function ItemDetailScreen ({route, navigation}) {
                             onClick={() =>{
                                 // delete item
                                 deleteItem(route.params.data.itemID, route.params.data.listID, route.params.data.spaceID)
-                                setModalVisible(!modalVisible)}}
-                                onClick={()=> {navigation.navigate('SpacePage')}}
+                                console.log(route.params.data);
+                                setModalVisible(!modalVisible)
+                                navigation.navigate('MySpacesPage');
+                            }}
+                                
                         />
                     </View>
                           <Button

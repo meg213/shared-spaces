@@ -626,7 +626,6 @@ export async function deleteList(currentList, currentSpace) {
         const listID  = currentList.substring(6);
         const itemID = currentItem.substring(6);
 
-
         // if it has no list, delete the reference in the space
         if (currentList.toString() === "None") {
             spaceRef.doc(spaceID).update({

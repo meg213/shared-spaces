@@ -387,12 +387,13 @@ export async function deleteSpace(currentUser, currentSpace) {
  * @param currentSpaceID Space to own the newly created list
  * @param listName Name of the list
  */
- export async function createNewList(currentSpaceID, listName) {
+ export async function createNewList(currentSpaceID, listName, l_icon) {
     try {
         const newList = listRef.add({
             name: listName,
             spaceID: currentSpaceID,
-            items: []
+            items: [],
+            icon: l_icon
         })
         spaceRef.doc(currentSpaceID.substring(7)).update({
             lists: firebase.firestore.FieldValue.arrayUnion((await newList).path)
@@ -409,13 +410,15 @@ export async function deleteSpace(currentUser, currentSpace) {
  * @param listName Name of the list
  * @param items array of items to add
  */
- export async function createNewListWithItems(currentSpaceID, listName, items) {
+ export async function createNewListWithItems(currentSpaceID, listName, items, l_icon) {
     try {
         // Making a new list with array of items
+        console.log(l_icon);
         const newList = listRef.add({
             name: listName,
             spaceID: currentSpaceID,
-            items: items
+            items: items,
+            icon: l_icon
         });
 
         // Add reference of new list to current space

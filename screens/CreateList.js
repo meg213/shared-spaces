@@ -81,6 +81,7 @@ const CreateList= ({route, navigation}) => {
         return (
             <Pressable onPress={()=> {
                 setIsVisible(false)
+                console.log(props.src)
                 setIcon(props.src)
             }}>
                 <Image source={props.src} style={styles.icons}/>
@@ -153,7 +154,7 @@ const CreateList= ({route, navigation}) => {
                                 checkedItems.push(itemIDs[i]);
                             }
                         }
-                        createNewListWithItems(currentSpaceId, name, checkedItems);
+                        createNewListWithItems(currentSpaceId, name, checkedItems, icon);
                         navigation.navigate('ListsList');
                     }}
                 />

@@ -626,21 +626,23 @@ export async function deleteList(currentList, currentSpace) {
         const listID  = currentList.substring(6);
         const itemID = currentItem.substring(6);
 
+
+
         // if it has no list, delete the reference in the space
         if (currentList.toString() === "None") {
             spaceRef.doc(spaceID).update({
-                items: firebase.firestore.FieldValue.arrayRemove((await currentItem).path)
+                items: firebase.firestore.FieldValue.arrayRemove((await currentItem))
             })
         } else { // else delete it from it's list
             listRef.doc(listID).update({
-                items: firebase.firestore.FieldValue.arrayRemove((await currentItem).path)
+                items: firebase.firestore.FieldValue.arrayRemove((await currentItem))
             })
         }
 
         // delete the item from the itemRef
         itemRef.doc(itemID).delete();
     } catch (e) {
-        console.error("Error deleting list: ", e);
+        console.error("Error deleting item: ", e);
         alert(e.message);
     }
 }

@@ -1,7 +1,7 @@
 import { db } from '../config/keys';
 import React, {useState, useEffect, useRef, Component} from 'react';
 import { ScrollView, StyleSheet, Text, View, SafeAreaView } from 'react-native';
-import { Icon, ListItem } from 'react-native-elements';
+import { Icon, ListItem, SearchBar } from 'react-native-elements';
 import Search from "../components/Search"
 import Button from "../components/Button";
 import Item from "../components/Item";
@@ -40,6 +40,9 @@ export default function ListsPage({navigation, route}) {
   const[items, setItems] = useState([])
   const componentIsMounted = useRef(true);
 
+  const [search, setSearch] = useState('');
+  const [filteredDataSource, setFilteredDataSource] = useState([]);
+
   useEffect(() => {
     return () => {
       componentIsMounted.current = false;
@@ -74,10 +77,18 @@ export default function ListsPage({navigation, route}) {
           spaceID: itemData.spaceID,
           userID: itemData.userID, 
           isShared: itemData.isShared,
-          listName: listName
+          listName: listName,
+          itemID: currentItemList[i],
+          listID: 'lists/' + listID
         })
-     //   console.log('data', data)
+       console.log('data List Detail', data)
       }
+
+      let newData = []
+        for (let i = 0; i < data.length; i++) {
+          newData.push({value: data[i].name, key: data[i]})
+        }
+      setFilteredDataSource(newData);
 
       if (componentIsMounted.current) {
         setItems(data);
@@ -86,10 +97,30 @@ export default function ListsPage({navigation, route}) {
     return () => subscriber;
   }, []);
 
-  let data = []
+  let originalData = []
   for (let i = 0; i < items.length; i++) {
-    data.push({value: items[i].name, key: items[i]})
+    originalData.push({value: items[i].name, key: items[i]})
   }
+
+  const searchFilterFunction = (text) => {
+    //if the search bar is not empty
+    if (text) {
+      //we want to filter the data
+      //Update FilteredDataSource
+      const newData = originalData.filter(function (item) {
+        const itemData = item.key.name ? item.key.name.toUpperCase() : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+        }
+      );
+      setFilteredDataSource(newData);
+      setSearch(text);
+    } else { //otherwise, if the searchbar IS empty
+      //Inserted text is blank, Update FiltereDataSource with original data
+      setFilteredDataSource(originalData);
+      setSearch(text);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -109,11 +140,21 @@ export default function ListsPage({navigation, route}) {
             </View>
         </View>
         <View style={styles.search}>
-            <Search/>
+          <SearchBar
+            placeholder="Search here..."
+            onChangeText={(text) => searchFilterFunction(text)}
+            value = {search}
+            containerStyle={styles.container}
+            inputContainerStyle={styles.inputContainer}
+            placeholderTextColor='#4E7580'
+            round='true'
+            lightTheme='true'
+          />
         </View>
-        <ScrollView>
+        <View style={{height: '80%'}}>
+          <ScrollView scollEventThrottle={16}>
             <AlphabetList
-              data = {data}
+              data = {filteredDataSource}
               renderSectionHeader={SectionHeader}
               renderCustomItem={(item) => (
                 <Item 
@@ -127,6 +168,7 @@ export default function ListsPage({navigation, route}) {
               )}
             />
         </ScrollView>
+        </View>
         <View style={styles.fab}>
             <Button
                 width='80%'
@@ -150,7 +192,7 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    justifyContent: 'center',
+    //justifyContent: 'center',
     backgroundColor: '#FFFFFF',
     height: 80,
     width: '100%',
@@ -169,26 +211,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'column',
-    // marginLeft: 110
+    marginLeft: 115
   },
   headerTitle: {
       fontSize: 30,
       color: '#184254',
       fontWeight: '500',
-      justifyContent: 'center',
+      //justifyContent: 'center',
       paddingBottom: 12,
-      alignItems: 'center'
-  },
-  fab: {
-    position: 'absolute',
-    left: 0,
-    bottom: 0,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginBottom: 40
+      //alignItems: 'center'
   },
   search: {
-    width: '95%'
+    width: '100%'
   },
   fab: {
     position: 'absolute',
@@ -198,7 +232,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     marginBottom: 40
   },
-  icon: {
-
-  }
+  inputContainer: {
+    backgroundColor: '#D9DED8',
+  },
 });

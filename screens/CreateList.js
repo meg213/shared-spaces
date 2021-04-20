@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, Component } from 'react';
 import { Alert } from 'react-native';
-import { ScrollView, StyleSheet, Text, View, SafeAreaView , Pressable, Image} from 'react-native';
+import { ScrollView, StyleSheet, Text, View, SafeAreaView , Pressable, Modal, Image} from 'react-native';
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
 import CheckBox from '../components/Checkbox';
@@ -21,7 +21,7 @@ const CreateList= ({route, navigation}) => {
     const [items, setItems] = useState([]);
     const [itemIDs, setItemIDs] = useState([]);
     const [checkboxes, setCheckboxes] = useState([]);
-    
+    const [modalVisible, setModalVisible] = useState(false)
     const componentIsMounted = useRef(true);
     const currentSpaceId = route.params.spaceID;
 
@@ -154,8 +154,12 @@ const CreateList= ({route, navigation}) => {
                                 checkedItems.push(itemIDs[i]);
                             }
                         }
-                        createNewListWithItems(currentSpaceId, name, checkedItems, icon);
-                        navigation.navigate('ListsList');
+                        if (name !== '') {
+                            createNewListWithItems(currentSpaceId, name, checkedItems);
+                            navigation.navigate('ListsList');
+                        } else {
+                            setModalVisible(true);
+                        }
                     }}
                 />
             </View>
@@ -189,6 +193,32 @@ const CreateList= ({route, navigation}) => {
                     </View>
                 </View>
             </BottomSheet>
+
+         {/* MODAL FOR ERROR HANDLING NO NAME*/}
+        <View style={styles.centeredView}>
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+            setModalVisible(!modalVisible);
+            }}
+        >
+        <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+                <Text style={styles.modalText}>You have to name the list!</Text>
+                <View style={{flexDirection: 'row', paddingVertical: 12}}>
+                        <Button
+                            name="Close"
+                            color= "#EB5757"
+                            width={100}
+                            onClick={() =>{setModalVisible(!modalVisible)}}
+                        />
+                </View>
+            </View>
+        </View>
+        </Modal>
+        </View>
         </SafeAreaView>
     );
 }
@@ -261,6 +291,27 @@ const styles = StyleSheet.create({
         margin: 12,
         width: 60,
         height: 60,    
-    }
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 18
+      },
+      modalView: {
+        margin: 6,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 18,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+      },
 
 })

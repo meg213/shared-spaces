@@ -1,9 +1,12 @@
 import React, {useContext, useState} from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import FormInput from '../components/FormInput';
-import FormButton from '../components/FormButton';
+import Button from '../components/Button';
+import { Icon } from 'react-native-elements';
 import { signUp } from '../utils/firebaseMethod';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import * as ImagePicker from 'expo-image-picker';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const SignupScreen = ({navigation}) => {
   const [lname, setLName] = useState();
@@ -12,9 +15,29 @@ const SignupScreen = ({navigation}) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
+  const [image, setImage] = useState(null);
+
+  let openImagePickerAsync = async () => {
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowEditing: true,
+            aspect: [4,3],
+            quality: 1,
+    });
+    if (!pickerResult.cancelled) {
+      setImage(pickerResult.uri);
+    }
+  }
 
   return (     
-
+<ScrollView>
     <KeyboardAwareScrollView 
       resetScrollToCoords={{ x: 0, y: 0 }}
       contentContainerStyle={styles.container}
@@ -25,6 +48,12 @@ const SignupScreen = ({navigation}) => {
 
       <Text style={styles.text}>Let's get started</Text>
       <Text style={styles.subtext}>Tell us a bit about yourself</Text>
+
+      <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 4 }}>
+                {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+                <View style={{ paddingVertical:0}} />
+                <Button name="Upload Your Profile Picture" color="#184254" onClick={openImagePickerAsync} />
+      </View>
 
       <FormInput
         labelValue={fname}
@@ -81,9 +110,9 @@ const SignupScreen = ({navigation}) => {
           secureTextEntry={true}
         />
 
-        <FormButton
-          buttonTitle="Sign Up"
-          onPress={() => signUp(lname, fname, email, phone, password, confirmPassword)}
+        <Button
+          name="Sign Up"
+          onClick={() => signUp(lname, fname, email, phone, password, confirmPassword, image)}
         />
 
       <View style={styles.textPrivate}>
@@ -105,6 +134,7 @@ const SignupScreen = ({navigation}) => {
       </TouchableOpacity>
 
     </KeyboardAwareScrollView>
+    </ScrollView>
   );
 };
 
@@ -135,7 +165,7 @@ const styles = StyleSheet.create({
   },
   subtext: {
     fontSize: 20,
-    marginBottom: 24,
+    marginBottom: 12,
     textAlign: 'left',
     alignSelf: 'stretch',
     color: '#184254',
@@ -153,7 +183,7 @@ const styles = StyleSheet.create({
   textPrivate: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginVertical: 35,
+    marginVertical: 25,
     justifyContent: 'center',
   },
   color_textPrivate: {

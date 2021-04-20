@@ -1,20 +1,39 @@
-import React, { useState, Component } from 'react';
-import { ScrollView, StyleSheet, Text, View, SafeAreaView, Switch, Image} from 'react-native';
+import React, { useState, Component, useEffect } from 'react';
+import { ScrollView, StyleSheet, Text, View, SafeAreaView, Modal, Image} from 'react-native';
 import Button from '../components/Button';
+import {storage, db} from '../config/keys';
 import User from '../components/User';
+import { deleteItem } from '../utils/firebaseMethod';
 
 export default function ItemDetailScreen ({route, navigation}) {
-    const [itemName, setName] = useState(route.params.data.name);
-    const [list, setCategory] = useState(route.params.data.listName); //the list or category it's in
-    const [shared, setShared] = useState(route.params.data.isShared);
-    const [image, setImage] = useState(null);
-    const [owner, setOwner] = useState(route.params.data.owner);
-    const [initials, setInitials] = useState("MG") //not sure if I need this. Maybe can get it from owner
-    
-    //Need to query the information above from database based on the Item that was clicked (most of the same information that was on the card clicked to get here)
-    //Image is the only thing extra that needs to be queried that was not queried on the item card
+    const itemData = route.params.data;
+    const itemName = itemData.name;
+    const list = itemData.listID;
+    const shared = itemData.isShared;
+    const [owner, setOwner] = useState()
+    const [initials, setInitials] = useState()
+    const[image, setImage] = useState()
+    const [avatar, setAvatar] = useState()
+    const [modalVisible, setModalVisible] = useState(false);
 
-    console.log('route.params', route.params.data);
+    useEffect(() => {
+        (async () => {
+          await storage.ref(itemName).getDownloadURL().then((url) => {
+              setImage(url)
+          })
+          await storage.ref(itemData.userID.substring(6)).getDownloadURL().then((url) => {
+              setAvatar(url)
+          })
+          let userData = ((await db.collection("users").doc(itemData.userID.substring(6)).get()).data())
+          let firstname = userData.firstname
+          let lastname = userData.lastname
+          let initial = firstname[0] + lastname[0]
+          setOwner(firstname + lastname)
+          setInitials(initial)
+        })();
+    }, []);
+
+    console.log('route.params!', route.params.data.listName);
     return (
         <SafeAreaView style = {[styles.container]}>
             <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 4,paddingHorizontal: 30, flexDirection: 'row' }}>
@@ -26,7 +45,7 @@ export default function ItemDetailScreen ({route, navigation}) {
                     {itemName}
                 </Text>
                 <Text style={[styles.subtext]}>
-                    {list}
+                    {route.params.data.listName}
                 </Text>
             </View>
             { shared ?             
@@ -39,7 +58,10 @@ export default function ItemDetailScreen ({route, navigation}) {
                 </Text>
             </View> : null}
             <View style={{paddingVertical: 16, paddingHorizontal: 30, flexDirection: 'row', alignItems: 'center'}}>
-                <User initials={initials}/>
+                <User 
+                    title={initials}
+                    source={avatar}
+                />
                 <View style={{paddingHorizontal: 6}}/>
                 <Text style={[styles.small]}>
                     {owner}
@@ -47,9 +69,56 @@ export default function ItemDetailScreen ({route, navigation}) {
             </View>
 
             <View style={{ position: 'absolute', bottom: 48, flexDirection: 'row', paddingTop: 48, paddingHorizontal: 30, justifyContent: 'center'}}>
-                <Button name="edit" width="55%" textColor="#184254" color="#ffffff" icon='edit' iconColor="#D9BD4B"/>       
-                <Button name="delete" width="55%" color="#ffffff" textColor="#184254" icon="close" iconColor="#EB5757"/>
+                <Button name="edit" width="55%" textColor="#184254" color="#ffffff" icon='edit' iconColor="#D9BD4B"
+                    onClick={()=> {navigation.navigate("EditItemScreen", {route: route.params.data})}}
+                />       
+                <Button name="delete" width="55%" color="#ffffff" textColor="#184254" icon="close" iconColor="#EB5757"
+                    onClick={()=> {setModalVisible(true)}}
+                />
             </View>
+
+
+
+        {/* MODAL FOR HANDLING DELETE ITEM*/}
+        <View style={styles.centeredView}>
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+            setModalVisible(!modalVisible);
+            }}
+        >
+        <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+                <Text style={styles.modalText}>Are you sure you wish to delete this item?</Text>
+                <View style={{flexDirection: 'row', paddingVertical: 12}}>
+                    <View style={{ paddingRight: 12}}>
+                        <Button
+                            name="Yes"
+                            color= "#EB5757"
+                            width={100}
+                            onClick={() =>{
+                                // delete item
+                                deleteItem(route.params.data.itemID, route.params.data.listID, route.params.data.spaceID)
+                                console.log(route.params.data);
+                                setModalVisible(!modalVisible)
+                                navigation.navigate('SpacePage');
+                            }}
+                                
+                        />
+                    </View>
+                          <Button
+                            name="No"
+                            color= "#6FCF97"
+                            width={100}
+                            onClick={() =>{setModalVisible(!modalVisible)}}
+                        />
+                </View>
+            </View>
+        </View>
+        </Modal>
+        </View>
         </SafeAreaView>
     );
 }
@@ -111,7 +180,38 @@ const styles = StyleSheet.create({
     icon: {
         width: 320,
         height: 300
-    }
-
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 18
+      },
+      modalView: {
+        margin: 6,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 18,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+      },
+      modalHeader: {
+        flexDirection:'row',
+        justifyContent: 'space-between',
+        alignItems: 'stretch',
+    },
+    modalText: {
+        fontSize: 24,
+        color: '#4E7580',
+        paddingHorizontal: 20,
+        paddingTop: 16
+    },
 
 });

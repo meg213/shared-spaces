@@ -1,9 +1,9 @@
 import React, { useState, Component, useEffect } from 'react';
-import { ScrollView, StyleSheet, Text, View, SafeAreaView, Switch, Image} from 'react-native';
+import { ScrollView, StyleSheet, Text, View, SafeAreaView, Modal, Image} from 'react-native';
 import Button from '../components/Button';
 import {storage, db} from '../config/keys';
-
 import User from '../components/User';
+import { deleteItem } from '../utils/firebaseMethod';
 
 export default function ItemDetailScreen ({route, navigation}) {
     const itemData = route.params.data;
@@ -12,7 +12,9 @@ export default function ItemDetailScreen ({route, navigation}) {
     const shared = itemData.isShared;
     const [owner, setOwner] = useState()
     const [initials, setInitials] = useState()
-    const[image, setImage] = useState()
+    const [modalVisible, setModalVisible] = useState(false);
+    const[image, setImage] = useState();
+
     useEffect(() => {
         (async () => {
           let imageRef = storage.ref(itemName);
@@ -65,8 +67,50 @@ export default function ItemDetailScreen ({route, navigation}) {
                 <Button name="edit" width="55%" textColor="#184254" color="#ffffff" icon='edit' iconColor="#D9BD4B"
                     onClick={()=> {navigation.navigate("EditItemScreen", {route: route.params.data})}}
                 />       
-                <Button name="delete" width="55%" color="#ffffff" textColor="#184254" icon="close" iconColor="#EB5757"/>
+                <Button name="delete" width="55%" color="#ffffff" textColor="#184254" icon="close" iconColor="#EB5757"
+                    onClick={()=> {setModalVisible(true)}}
+                />
             </View>
+
+
+
+        {/* MODAL FOR HANDLING DELETE ITEM*/}
+        <View style={styles.centeredView}>
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+            setModalVisible(!modalVisible);
+            }}
+        >
+        <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+                <Text style={styles.modalText}>Are you sure you wish to delete this item?</Text>
+                <View style={{flexDirection: 'row', paddingVertical: 12}}>
+                    <View style={{ paddingRight: 12}}>
+                        <Button
+                            name="Yes"
+                            color= "#EB5757"
+                            width={100}
+                            onClick={() =>{
+                                // delete item
+                                deleteItem(route.params.data.itemID, route.params.data.listID, route.params.data.spaceID)
+                                setModalVisible(!modalVisible)}}
+                                onClick={()=> {navigation.navigate('SpacePage')}}
+                        />
+                    </View>
+                          <Button
+                            name="No"
+                            color= "#6FCF97"
+                            width={100}
+                            onClick={() =>{setModalVisible(!modalVisible)}}
+                        />
+                </View>
+            </View>
+        </View>
+        </Modal>
+        </View>
         </SafeAreaView>
     );
 }
@@ -128,7 +172,38 @@ const styles = StyleSheet.create({
     icon: {
         width: 320,
         height: 300
-    }
-
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 18
+      },
+      modalView: {
+        margin: 6,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 18,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+      },
+      modalHeader: {
+        flexDirection:'row',
+        justifyContent: 'space-between',
+        alignItems: 'stretch',
+    },
+    modalText: {
+        fontSize: 24,
+        color: '#4E7580',
+        paddingHorizontal: 20,
+        paddingTop: 16
+    },
 
 });

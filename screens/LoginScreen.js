@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import FormInput from '../components/FormInput';
-import FormButton from '../components/FormButton';
+import Button from '../components/Button';
 import { signIn } from '../utils/firebaseMethod';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -40,9 +40,9 @@ const LoginScreen = ({navigation}) => {
         secureTextEntry={true}
       />
 
-      <FormButton
-        buttonTitle="Sign In"
-        onPress={() => signIn(email, password)}
+      <Button
+        name="Sign In"
+        onClick={() => signIn(email, password)}
       />
 
       <TouchableOpacity style={styles.forgotButton} onPress={() => navigation.navigate('ForgotPassword')}>

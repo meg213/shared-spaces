@@ -1,7 +1,6 @@
 import React, {useContext, useState} from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import FormInput from '../components/FormInput';
-import FormButton from '../components/FormButton';
 import Button from '../components/Button';
 import { Icon } from 'react-native-elements';
 import { signUp } from '../utils/firebaseMethod';
@@ -52,8 +51,8 @@ const SignupScreen = ({navigation}) => {
 
       <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 4 }}>
                 {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-                <View style={{ paddingVertical:6}} />
-                <Button name="Upload Your Profile Picture" onClick={openImagePickerAsync} />
+                <View style={{ paddingVertical:0}} />
+                <Button name="Upload Your Profile Picture" color="#184254" onClick={openImagePickerAsync} />
       </View>
 
       <FormInput
@@ -111,9 +110,9 @@ const SignupScreen = ({navigation}) => {
           secureTextEntry={true}
         />
 
-        <FormButton
-          buttonTitle="Sign Up"
-          onPress={() => signUp(lname, fname, email, phone, password, confirmPassword, image)}
+        <Button
+          name="Sign Up"
+          onClick={() => signUp(lname, fname, email, phone, password, confirmPassword, image)}
         />
 
       <View style={styles.textPrivate}>
@@ -166,7 +165,7 @@ const styles = StyleSheet.create({
   },
   subtext: {
     fontSize: 20,
-    marginBottom: 24,
+    marginBottom: 12,
     textAlign: 'left',
     alignSelf: 'stretch',
     color: '#184254',
@@ -184,7 +183,7 @@ const styles = StyleSheet.create({
   textPrivate: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginVertical: 35,
+    marginVertical: 25,
     justifyContent: 'center',
   },
   color_textPrivate: {

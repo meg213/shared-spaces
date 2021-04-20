@@ -16,7 +16,6 @@ const spaceRef = db.collection('spaces');
 export default function createItem({route, navigation}) {
     //route params: spaceID, currUser
     const [name, setName] = useState("");
-
     const [category, setCategory] = useState('Select List');
     const [shared, setShared] = useState(false);
     const toggleShared = () => setShared(previousState => ! previousState);
@@ -77,7 +76,7 @@ export default function createItem({route, navigation}) {
     for (let i = 0; i < listData.length; i++) {
         data.push({value: listData[i].name, key: listData[i]})
     }
-    console.log(data)
+   // console.log(data)
 
 
     return(

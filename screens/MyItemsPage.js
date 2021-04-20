@@ -40,6 +40,9 @@ export default function MyItemsPage({route, navigation}) {
   const currSpaceID = route.params.data.substring(7);
   const ownerID = route.params.currUser.uid;
 
+  const [search, setSearch] = useState('');
+  const [filteredDataSource, setFilteredDataSource] = useState([]);
+
   useEffect(() => {
     return () => {
       componentIsMounted.current = false;
@@ -76,10 +79,12 @@ export default function MyItemsPage({route, navigation}) {
                   spaceID: itemData.spaceID,
                   userID: itemData.userID, 
                   isShared: itemData.isShared,
-                  listName: listData.name
+                  listName: listData.name,
+                  itemID: listData.items[i],
+                  listID: all_lists[i],
                 })
               }
-              console.log(data)
+              console.log('data', data)
             }
         }
         
@@ -103,11 +108,19 @@ export default function MyItemsPage({route, navigation}) {
               spaceID: itemData.spaceID,
               userID: itemData.userID, 
               isShared: itemData.isShared,
+              itemID: all_items_not_in_lists[i],
+              listID: 'None'
             })
           }
-          console.log(data)
+          console.log('data', data)
         }
-      
+        /////////
+        let newData = []
+        for (let i = 0; i < data.length; i++) {
+          newData.push({value: data[i].name, key: data[i]})
+        }
+        setFilteredDataSource(newData);
+        /////////
 
         if (componentIsMounted.current) {
             setItems(data)
@@ -116,10 +129,31 @@ export default function MyItemsPage({route, navigation}) {
     return () => subscriber;
   }, []);
 
-   let data = []
+   let originalData = []
   for (let i = 0; i < myItems.length; i++) {
-    data.push({value: myItems[i].name, key: myItems[i]})
+    originalData.push({value: myItems[i].name, key: myItems[i]})
   }
+
+  const searchFilterFunction = (text) => {
+    //if the search bar is not empty
+    if (text) {
+      //we want to filter the data
+      //Update FilteredDataSource
+      const newData = originalData.filter(function (item) {
+        const itemData = item.key.name ? item.key.name.toUpperCase() : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+        }
+      );
+      setFilteredDataSource(newData);
+      setSearch(text);
+    } else { //otherwise, if the searchbar IS empty
+      //Inserted text is blank, Update FiltereDataSource with original data
+      setFilteredDataSource(originalData);
+      setSearch(text);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
         <View style={styles.header}>
@@ -141,7 +175,8 @@ export default function MyItemsPage({route, navigation}) {
         <View style={styles.search}>
           <SearchBar
             placeholder="Search here..."
-            
+            onChangeText={(text) => searchFilterFunction(text)}
+            value = {search}
             containerStyle={styles.container}
             inputContainerStyle={styles.inputContainer}
             placeholderTextColor='#4E7580'
@@ -149,24 +184,26 @@ export default function MyItemsPage({route, navigation}) {
             lightTheme='true'
           />
         </View>
-        <ScrollView scrollEventThrottle={16}>
-          <View> 
-            <AlphabetList
-              data = {data}
-              renderSectionHeader={SectionHeader}
-              renderCustomItem={(item) => (
-                <Item 
-                  listPage
-                  owner={item.key.owner}
-                  itemName={item.key.name}
-                  list={item.key.listName}
-                  shared={item.key.isShared}
-                  onClick={()=> {navigation.navigate('ItemDetailScreen', {data: item.key})}}
-                />
-              )}
-            />
-        </View>    
-        </ScrollView>
+        <View style={{height: '80%'}}>
+          <ScrollView scrollEventThrottle={16}>
+            <View> 
+              <AlphabetList
+                data = {filteredDataSource}
+                renderSectionHeader={SectionHeader}
+                renderCustomItem={(item) => (
+                  <Item 
+                    listPage
+                    owner={item.key.owner}
+                    itemName={item.key.name}
+                    list={item.key.listName}
+                    shared={item.key.isShared}
+                    onClick={()=> {navigation.navigate('ItemDetailScreen', {data: item.key})}}
+                  />
+                )}
+              />
+          </View>    
+          </ScrollView>
+        </View>
     </SafeAreaView>
   );
 }

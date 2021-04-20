@@ -28,6 +28,7 @@ export default function MySpacesPage({navigation}){
     useEffect(() => {
         const subscriber = userRef.doc(currUser.uid).onSnapshot(documentSnapshot => {createSpaceCard(documentSnapshot)});
         async function createSpaceCard(documentSnapshot) {
+          //  console.log(documentSnapshot.data())
             var spaces = documentSnapshot.data().spaces;
             var names = [];
             for (let i = 0; i < spaces.length; i++) {
@@ -36,6 +37,7 @@ export default function MySpacesPage({navigation}){
                     continue
                 }
                 names.push({spaceData: spaceData, spaceId: spaces[i]});
+     
             }
             if (componentIsMounted.current) {
                 setSpaceNames(names)

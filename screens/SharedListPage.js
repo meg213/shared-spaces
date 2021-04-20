@@ -38,6 +38,9 @@ export default function SharedPage({route, navigation}) {
   const componentIsMounted = useRef(true);
   const currSpaceID = route.params.data.substring(7);
 
+  const [search, setSearch] = useState('');
+  const [filteredDataSource, setFilteredDataSource] = useState([]);
+
   useEffect(() => {
     return () => {
       componentIsMounted.current = false;
@@ -58,7 +61,7 @@ export default function SharedPage({route, navigation}) {
             // if there is at least one item in the list
             for (let i = 0; i < listData.items.length; i++) {
               let itemData = (await itemRef.doc(listData.items[i].substring(6)).get()).data();
-              console.log('itemdata', itemData)
+             // console.log('itemdata', itemData)
               //get the owner
               let owner; 
               if (itemData.userID === undefined) {
@@ -75,10 +78,12 @@ export default function SharedPage({route, navigation}) {
                   spaceID: itemData.spaceID,
                   userID: itemData.userID, 
                   isShared: itemData.isShared,
-                  listName: listData.name
+                  listName: listData.name,
+                  itemID: listData.items[i],
+                  listID: all_lists[i],
                 })
               }
-              console.log(data)
+              console.log('shared data', data)
             }
         }
        
@@ -101,11 +106,18 @@ export default function SharedPage({route, navigation}) {
               spaceID: itemData.spaceID,
               userID: itemData.userID, 
               isShared: itemData.isShared,
+              itemID: all_items_not_in_lists[i],
+              listID: 'None'
             })
           }
-          console.log(data)
         }
-
+        ///////////
+        let newData = []
+        for (let i = 0; i < data.length; i++) {
+          newData.push({value: data[i].name, key: data[i]})
+        }
+        setFilteredDataSource(newData);
+        //////////
         if (componentIsMounted.current) {
             setItems(data)
         }
@@ -113,11 +125,33 @@ export default function SharedPage({route, navigation}) {
     return () => subscriber;
   }, []);
 
-   let data = []
+   let originalData = []
   for (let i = 0; i < allItems.length; i++) {
-    data.push({value: allItems[i].name, key: allItems[i]})
+    originalData.push({value: allItems[i].name, key: allItems[i]})
   }
 
+
+  const searchFilterFunction = (text) => {
+    //if the search bar is not empty
+    if (text) {
+      //we want to filter the data
+      //Update FilteredDataSource
+      const newData = originalData.filter(function (item) {
+        const itemData = item.key.name ? item.key.name.toUpperCase() : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+        }
+      );
+      setFilteredDataSource(newData);
+      setSearch(text);
+    } else { //otherwise, if the searchbar IS empty
+      //Inserted text is blank, Update FiltereDataSource with original data
+      setFilteredDataSource(originalData);
+      setSearch(text);
+    }
+  };
+
+//////////////////////////////
 
     return (
 
@@ -135,13 +169,14 @@ export default function SharedPage({route, navigation}) {
             />
             <View style={styles.headerMain}>
               <Text style={styles.headerTitle}>Shared Items</Text>
-              <Text> {data.length}</Text>
+              <Text> {originalData.length}</Text>
             </View>
         </View>
         <View style={styles.search}>
           <SearchBar
             placeholder="Search here..."
-            
+            onChangeText={(text) => searchFilterFunction(text)}
+            value = {search}
             containerStyle={styles.container}
             inputContainerStyle={styles.inputContainer}
             placeholderTextColor='#4E7580'
@@ -149,24 +184,26 @@ export default function SharedPage({route, navigation}) {
             lightTheme='true'  
           />
         </View>
-        <ScrollView scrollEventThrottle={16}>
-        <View>
-        <AlphabetList
-              data = {data}
-              renderSectionHeader={SectionHeader}
-              renderCustomItem={(item) => (
-                <Item 
-                  listPage
-                  owner={item.key.owner}
-                  itemName={item.key.name}
-                  list={item.key.listName}
-                  shared={item.key.isShared}
-                  onClick={()=> {navigation.navigate('ItemDetailScreen', {data: item.key})}}
-                />
-              )}
-            />
+        <View style={{height: '80%'}}>
+          <ScrollView scrollEventThrottle={16}>
+          <View>
+          <AlphabetList
+                data = {filteredDataSource}
+                renderSectionHeader={SectionHeader}
+                renderCustomItem={(item) => (
+                  <Item 
+                    listPage
+                    owner={item.key.owner}
+                    itemName={item.key.name}
+                    list={item.key.listName}
+                    shared={item.key.isShared}
+                    onClick={()=> {navigation.navigate('ItemDetailScreen', {data: item.key})}}
+                  />
+                )}
+              />
+          </View>
+          </ScrollView>
         </View>
-        </ScrollView>
     </SafeAreaView> 
     );
 }

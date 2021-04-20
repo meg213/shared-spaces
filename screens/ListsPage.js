@@ -158,24 +158,26 @@ export default function ListsPage({navigation, route}) {
                 lightTheme='true'
               />
             </View>
-        <ScrollView scrollEventThrottle={16}>
-        <AlphabetList
-          data = {filteredDataSource}
-          renderSectionHeader={SectionHeader}
-          renderCustomItem={(item) => (
-            <List
-              listName={item.key.name}
-              numItems={item.key.items.length}
-              onPress={() => {
-                console.log('item', item);
-                navigation.navigate("ListDetail", { listID: item.key.listID, name: item.key.name, numItems: item.key.items.length, data: route.params.data});
+          <View style={{height: '81%'}}>
+          <ScrollView scrollEventThrottle={16}>
+          <AlphabetList
+            data = {filteredDataSource}
+            renderSectionHeader={SectionHeader}
+            renderCustomItem={(item) => (
+              <List
+                listName={item.key.name}
+                numItems={item.key.items.length}
+                onPress={() => {
+                  console.log('item', item);
+                  navigation.navigate("ListDetail", { listID: item.key.listID, name: item.key.name, numItems: item.key.items.length, data: route.params.data});
+                  }
                 }
-              }
-                  // TODO: Create custom icon for lists
-            />
-          )}
-        />
-        </ScrollView>
+                    // TODO: Create custom icon for lists
+              />
+            )}
+          />
+          </ScrollView>
+        </View>
         <View style={styles.fab}>
             <Button
                 width='80%'

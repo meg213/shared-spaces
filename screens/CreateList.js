@@ -1,13 +1,14 @@
 import React, { useState, useRef, useEffect, Component } from 'react';
 import { Alert } from 'react-native';
-import { ScrollView, StyleSheet, Text, View, SafeAreaView , Pressable, Image} from 'react-native';
+import { ScrollView, StyleSheet, Text, View, SafeAreaView , Pressable, Modal, Image} from 'react-native';
 import Button from '../components/Button';
 import FormInput from '../components/FormInput';
 import CheckBox from '../components/Checkbox';
 import { BottomSheet , Icon} from 'react-native-elements'
 import { getItems } from '../utils/firebaseMethod';
-import { createNewList } from '../utils/firebaseMethod';
+import { createNewList, createNewListWithItems, mostRecentList } from '../utils/firebaseMethod';
 import { db } from '../config/keys';
+import { TapGestureHandler } from 'react-native-gesture-handler';
 
 const itemRef = db.collection('items');
 const listRef = db.collection('lists');
@@ -18,8 +19,9 @@ const CreateList= ({route, navigation}) => {
     const [icon, setIcon] = useState(require('../assets/kitchen.png'))
     const [isVisible, setIsVisible] = useState(false);
     const [items, setItems] = useState([]);
+    const [itemIDs, setItemIDs] = useState([]);
     const [checkboxes, setCheckboxes] = useState([]);
-    
+    const [modalVisible, setModalVisible] = useState(false)
     const componentIsMounted = useRef(true);
     const currentSpaceId = route.params.spaceID;
 
@@ -35,9 +37,12 @@ const CreateList= ({route, navigation}) => {
             // get the unordered items
             var unlisted_items = documentSnapshot.data().items; 
             let data = [];
+            let itemIds = []
             //get the item objects from each
             for (let i = 0; i < unlisted_items.length; i++) {
             let itemData = (await itemRef.doc(unlisted_items[i].substring(6)).get()).data();
+            itemIds.push(unlisted_items[i])
+
             if (itemData !== undefined) {
                 // get the owner
                 let owner; 
@@ -58,18 +63,20 @@ const CreateList= ({route, navigation}) => {
             }
             }
             if (componentIsMounted.current) {
-                setItems(data)
+                setItems(data);
+                setItemIDs(itemIds);
+                // add the data to a checkboxes array
+                let newdata = [];
+                for (var i = 0; i < data.length; i++){
+                    newdata.push({value: data[i].name, isChecked: false})
+                }
+                setCheckboxes(newdata);       
             }
         }
         return () => subscriber;
     }, []);
 
-    let data = [];
-    for (var i = 0; i < items.length; i++){
-        data.push({value: items[i].name, isChecked: false})
-    }
-    console.log('items', data);
-
+    console.log('itemIds', itemIDs)
     const ImageItem = (props) => {
         return (
             <Pressable onPress={()=> {
@@ -82,12 +89,14 @@ const CreateList= ({route, navigation}) => {
     }
 
     const handleCheckboxes = (name) => {
-        for (var i = 0; i < data.length; i++){
-            if (data[i].value === name) {
-                data[i].isChecked = !data[i].isChecked;
-                console.log('here in checked')
+        var newArray = checkboxes;
+        for (var i = 0; i < checkboxes.length; i++){
+            if (checkboxes[i].value === name) {
+                newArray[i].isChecked = !checkboxes[i].isChecked;
+                console.log(checkboxes[i].value, ' is ', checkboxes[i].isChecked )
             }
         }
+        return newArray;
     }
 
     return(
@@ -119,12 +128,12 @@ const CreateList= ({route, navigation}) => {
                 <View style={styles.itemList}>
                     <Text style={styles.itemTitle}>Add Items</Text>
                     <View>
-                        { items.map((item) => {
+                        { checkboxes.map((item) => {
                             return (
                                 <CheckBox
-                                    title={item.name}
-                                    onPress={()=> {handleCheckboxes(item.name)}}
-                                    isChecked={item.isCheecked}
+                                    title={item.value}
+                                    onPress={()=> {setCheckboxes(handleCheckboxes(item.value))}}
+                                    checked={item.isChecked}
                                 />
                             )
                         })
@@ -137,8 +146,19 @@ const CreateList= ({route, navigation}) => {
                     name="Create List"
                     width="75%"
                     onClick={() => {
-                        createNewList(currentSpaceId, name)
-                        navigation.navigate('ListsList');
+                        console.log(items)
+                        var checkedItems = [];
+                        for (var i = 0; i < items.length; i++){
+                            if (checkboxes[i].isChecked){
+                                checkedItems.push(itemIDs[i]);
+                            }
+                        }
+                        if (name !== '') {
+                            createNewListWithItems(currentSpaceId, name, checkedItems);
+                            navigation.navigate('ListsList');
+                        } else {
+                            setModalVisible(true);
+                        }
                     }}
                 />
             </View>
@@ -172,6 +192,32 @@ const CreateList= ({route, navigation}) => {
                     </View>
                 </View>
             </BottomSheet>
+
+         {/* MODAL FOR ERROR HANDLING NO NAME*/}
+        <View style={styles.centeredView}>
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+            setModalVisible(!modalVisible);
+            }}
+        >
+        <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+                <Text style={styles.modalText}>You have to name the list!</Text>
+                <View style={{flexDirection: 'row', paddingVertical: 12}}>
+                        <Button
+                            name="Close"
+                            color= "#EB5757"
+                            width={100}
+                            onClick={() =>{setModalVisible(!modalVisible)}}
+                        />
+                </View>
+            </View>
+        </View>
+        </Modal>
+        </View>
         </SafeAreaView>
     );
 }
@@ -244,6 +290,27 @@ const styles = StyleSheet.create({
         margin: 12,
         width: 60,
         height: 60,    
-    }
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 18
+      },
+      modalView: {
+        margin: 6,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 18,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+      },
 
 })

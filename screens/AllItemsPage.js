@@ -42,6 +42,9 @@ export default function AllItemsPage({route, navigation}) {
   const currSpaceID = route.params.data.substring(7);
   const [itemIDToData, setMapItemIDToData] = useState(new Map());
 
+  const [search, setSearch] = useState('');
+  const [filteredDataSource, setFilteredDataSource] = useState([]);
+
   useEffect(() => {
     return () => {
       componentIsMounted.current = false;
@@ -76,7 +79,9 @@ export default function AllItemsPage({route, navigation}) {
                 spaceID: itemData.spaceID,
                 userID: itemData.userID, 
                 isShared: itemData.isShared,
-                listName: listData.name
+                listName: listData.name,
+                itemID: listData.items[i],
+                listID: all_lists[i],
               })
               console.log(data)
             }
@@ -99,10 +104,18 @@ export default function AllItemsPage({route, navigation}) {
             spaceID: itemData.spaceID,
             userID: itemData.userID, 
             isShared: itemData.isShared,
+            itemID: all_items_not_in_lists[i],
+            listID: 'None'
           })
 
-          console.log(data)
+          //console.log(data)
         }
+
+        let newData = []
+        for (let i = 0; i < data.length; i++) {
+          newData.push({value: data[i].name, key: data[i]})
+        }
+        setFilteredDataSource(newData);
 
         if (componentIsMounted.current) {
             setItems(data)
@@ -111,12 +124,32 @@ export default function AllItemsPage({route, navigation}) {
     return () => subscriber;
   }, []);
 
-  console.log(allItems)
-   let data = []
+ // console.log(allItems)
+   let originalData = []
   for (let i = 0; i < allItems.length; i++) {
-    data.push({value: allItems[i].name, key: allItems[i]})
+    originalData.push({value: allItems[i].name, key: allItems[i]})
   }
-  console.log(data)
+  //console.log(data)
+
+  const searchFilterFunction = (text) => {
+    //if the search bar is not empty
+    if (text) {
+      //we want to filter the data
+      //Update FilteredDataSource
+      const newData = originalData.filter(function (item) {
+        const itemData = item.key.name ? item.key.name.toUpperCase() : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+        }
+      );
+      setFilteredDataSource(newData);
+      setSearch(text);
+    } else { //otherwise, if the searchbar IS empty
+      //Inserted text is blank, Update FiltereDataSource with original data
+      setFilteredDataSource(originalData);
+      setSearch(text);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -139,7 +172,8 @@ export default function AllItemsPage({route, navigation}) {
         <View style={styles.search}>
           <SearchBar
             placeholder="Search here..."
-            
+            onChangeText={(text) => searchFilterFunction(text)}
+            value = {search}
             containerStyle={styles.container}
             inputContainerStyle={styles.inputContainer}
             placeholderTextColor='#4E7580'
@@ -147,10 +181,11 @@ export default function AllItemsPage({route, navigation}) {
             lightTheme='true'
           />
         </View>
+        <View style={{height: '80%'}}>
         <ScrollView scrollEventThrottle={16}>
           <View>  
             <AlphabetList
-              data = {data}
+              data = {filteredDataSource}
               renderSectionHeader={SectionHeader}
               renderCustomItem={(item) => (
                 <Item 
@@ -167,6 +202,7 @@ export default function AllItemsPage({route, navigation}) {
             />
           </View>
         </ScrollView>
+        </View>
     </SafeAreaView>
   );
 }

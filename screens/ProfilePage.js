@@ -63,6 +63,7 @@ export default function ProfilePage({route, navigation}) {
                 source={imageURI != null? imageURI : imgURL}
                 onClick={openImagePickerAsync}
             />
+          <ScrollView>
             <View style={styles.subcontainer}>
                 <Text style={styles.subtext}>Basic Information</Text>
                 <Input
@@ -100,7 +101,10 @@ export default function ProfilePage({route, navigation}) {
                     <Button
                         name="Update"
                         color="#EB5757"
-                        onClick={() => {updateProfileInformation(currUser, lastname, firstname, email, phone, imageURI, newPassword, currPassword); setCurrPassword(''); setNewPassword('')}}
+                        onClick={() => {
+                          updateProfileInformation(currUser, lastname, firstname, email, phone, imageURI, newPassword, currPassword); setCurrPassword(''); setNewPassword('')
+                          navigation.navigate('MySpacesPage')
+                        }}
                     />    
                 </View>
                 <View style={{marginBottom: 12}}>
@@ -115,6 +119,7 @@ export default function ProfilePage({route, navigation}) {
                     color="#EB5757"
                 />    
             </View> 
+            </ScrollView>
       </SafeAreaView>
     );
   }

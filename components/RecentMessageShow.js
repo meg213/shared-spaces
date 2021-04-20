@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
     padding: 16,
     minWidth: '80%',
     marginHorizontal: 12,
+    height: 60
   },
   circle: {
     flex: 1,
@@ -41,7 +42,7 @@ const RecentMessageShow = (props) => {
           fontWeight: "500",
           fontSize: 20,
         }}>
-            {props.name}
+            {props.name}{': '}
           <Text style={{
             padding: 10,
             color: '#4E7580',
@@ -50,11 +51,6 @@ const RecentMessageShow = (props) => {
             {props.lastestMessage}
           </Text>
         </Text>
-        <View style={[styles.circle]}>
-          <Text style={[styles.text]}>
-            2
-          </Text>
-        </View>
       </View>
     </Pressable>
   );

@@ -42,7 +42,7 @@ const RecentMessageShow = (props) => {
           fontWeight: "500",
           fontSize: 20,
         }}>
-            {props.name}{': '}
+            {props.name}{' '}
           <Text style={{
             padding: 10,
             color: '#4E7580',

@@ -175,11 +175,7 @@ export async function createItems(currentUser, currentSpaceId, itemName, isShare
             const response = await fetch(image)
             const blob = await response.blob()
             const uploadImage = storage.ref().child(itemName)
-            let data =  {
-                userID: currentUser.uid,
-                spaceID: currentSpaceId
-            }
-            uploadImage.put(blob, data)
+            uploadImage.put(blob)
         }
     } catch (e) {
         Alert.alert(e.message)

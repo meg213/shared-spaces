@@ -47,14 +47,19 @@ export async function getAllJoinCode() {
 
 
 export async function joinSpace(currUser, joinCode) {
-    const userID = currUser.uid;
-    let spaceID = null;
-    await spaceRef.where('joinCode', '==', joinCode).get().then(querySnapshot => {
-        querySnapshot.forEach(documentSnapshot => {
-            spaceID = documentSnapshot.id
+    try {
+        const userID = currUser.uid;
+        let spaceID = null;
+        await spaceRef.where('joinCode', '==', joinCode).get().then(querySnapshot => {
+            querySnapshot.forEach(documentSnapshot => {
+                spaceID = documentSnapshot.id
+            })
         })
-    })
-    addNewUser(spaceID, userID)
+        addNewUser(spaceID, userID)
+    }  catch (error) {
+        console.error("Join Space error");
+        console.log(error.message)
+    } 
 }
 /**
  * Add new user to target Space
@@ -119,6 +124,7 @@ export async function createItems(currentUser, currentSpaceId, itemName, isShare
         const currItem = itemRef.add({
             isShared: isShared,
             name: itemName,
+            listID: 'None',
             spaceID: currentSpaceId,
             userID: "users/" + currentUser.uid,
             timestamp: new Date()
@@ -150,14 +156,15 @@ export async function createItems(currentUser, currentSpaceId, itemName, isShare
  * @param isShared          Is the item shared or not?
  */
 
- export async function createItemInList(currentUser, targetList, itemName, isShared, image) {
+ export async function createItemInList(currentUser, targetList, currentSpaceID, itemName, isShared, image) {
     try {
         const currItem = itemRef.add({
             isShared: isShared,
             name: itemName,
-            spaceID: "",
+            spaceID: currentSpaceID,
             listID: targetList,
-            userID: "users/"+currentUser.uid
+            userID: "users/"+currentUser.uid,
+            timestamp: new Date()
         });
 
         listRef.doc(targetList.substring(6)).update({
@@ -543,7 +550,7 @@ export async function deleteSpace(currentUser, currentSpace) {
         for (let i = 0; i < items.length; i++) {
             let itemToRemove = items[i];
             
-            if (itemToRemove != undefined) {
+            if (itemToRemove !== undefined) {
                 spaceRef.doc(currentSpaceID.substring(7)).update({
                     items: firebase.firestore.FieldValue.arrayRemove(itemToRemove)
                 });
@@ -552,8 +559,8 @@ export async function deleteSpace(currentUser, currentSpace) {
 
         Alert.alert("Created a new list!");
 
-        let path = newList.ref().toString();
-        return path;
+        // let path = newList.ref().toString();
+        // return path;
     } catch (e) {
         alert(e.message);
     }
@@ -604,6 +611,41 @@ export async function deleteList(currentList, currentSpace) {
         alert(e.message);
     }
 }
+
+/**
+ * Deletes Item reference from all locations
+ * @param currentList List to remove item from
+ * @param currentSpace Space to remove item from 
+ * @param currentItem The item to delete
+ * @returns 
+ */
+ export async function deleteItem(currentItem, currentList, currentSpace) {
+    try {
+        // Verify given item to delete belongs to corresponding space.
+        const spaceID = currentSpace.substring(7);
+        const listID  = currentList.substring(6);
+        const itemID = currentItem.substring(6);
+
+
+        // if it has no list, delete the reference in the space
+        if (currentList === "None") {
+            spaceRef.doc(spaceID).update({
+                items: firebase.firestore.FieldValue.arrayRemove((await currentItem).path)
+            })
+        } else { // else delete it from it's list
+            listRef.doc(listID).update({
+                items: firebase.firestore.FieldValue.arrayRemove((await currentItem).path)
+            })
+        }
+
+        // delete the item from the itemRef
+        itemRef.doc(itemID).delete();
+    } catch (e) {
+        console.error("Error deleting list: ", e);
+        alert(e.message);
+    }
+}
+
 
 /**
  * @param space ID of the current space, should be of form spaces/...

@@ -236,12 +236,6 @@ const styles = StyleSheet.create({
       fontWeight: '500',
       paddingBottom: 12,
   },
-  sortedLetters: {
-    fontSize: 22,
-    color: '#4E7580',
-    paddingHorizontal: 12,
-    paddingVertical: 6
-  },
   search: {
     width: '100%',
   },

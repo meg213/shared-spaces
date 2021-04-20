@@ -147,7 +147,7 @@ export default function createItem({route, navigation}) {
                         } 
                         else { // if the item has a list
                             console.log('created Item in list')
-                            createItemInList(currentUser, category, name, shared, image) 
+                            createItemInList(currentUser, category, currentSpaceId, name, shared, image) 
 
                         }
                        navigation.navigate('SpacePage')

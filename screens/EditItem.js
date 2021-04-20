@@ -97,6 +97,7 @@ for (let i = 0; i < listData.length; i++) {
                     ios_backgroundColor="#3e3e3e"
                     onValueChange={toggleShared}
                     value={shared}
+                    useNativeDriver={true}
                 />
             </View>
             <View style={{marginBottom: 50, width: '100%', position: 'absolute', bottom: 0,}}>
@@ -112,7 +113,7 @@ for (let i = 0; i < listData.length; i++) {
                         else { // if the item has a list
                             updateItem(route.params.route.spaceID, route.params.route.itemID, name, shared, category, route.params.route.listID)
                         }
-                      navigation.navigate('SpacePage') 
+                    navigation.navigate('SpacePage') 
                     console.log('update' , route.params.route)
                     }}
                 />

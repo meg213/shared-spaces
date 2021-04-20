@@ -98,7 +98,7 @@ export default function ItemDetailScreen ({route, navigation}) {
                                 deleteItem(route.params.data.itemID, route.params.data.listID, route.params.data.spaceID)
                                 console.log(route.params.data);
                                 setModalVisible(!modalVisible)
-                                navigation.navigate('MySpacesPage');
+                                navigation.navigate('SpacePage');
                             }}
                                 
                         />

@@ -277,23 +277,22 @@ export default function SpacePage({route, navigation}){
                 }}> 
                     Recently Added Items 
                 </Text>
-
-                {/* List Containing Recently Added Items */}
-                <AlphabetList
-                    data = {recent_items_stack}
-                    renderCustomItem={(item) => (
-                      <Item 
-                        owner={item.key.owner}
-                        itemName={item.key.name}
-                        list={item.key.listName}
-                        shared={item.key.isShared}
-                        onClick={()=> {
-                            console.log(item)
-                            navigation.navigate('ItemDetailScreen', {data: item.key})
-                        }}
-                      />
-                    )}
-                />
+                {
+                    recent_items_stack.map((item) => {
+                        return (
+                            <Item 
+                            owner={item.key.owner}
+                            itemName={item.key.name}
+                            list={item.key.listName}
+                            shared={item.key.isShared}
+                            onClick={()=> {
+                                console.log(item)
+                                navigation.navigate('ItemDetailScreen', {data: item.key})
+                            }}
+                          />
+                        )
+                    })
+                }
             </View>
         </ScrollView>
     </SafeAreaView>

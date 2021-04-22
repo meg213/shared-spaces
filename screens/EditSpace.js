@@ -8,7 +8,7 @@ import Input from "../components/Input";
 import {joinCodeMax, joinCodeMin} from "../utils/Constants"
 import {db} from '../config/keys';
 import {AlphabetList} from 'react-native-section-alphabet-list';
-import { changeSpaceOwner, deleteSpace, getSpace, leaveSpace, getImageDownloadURL, updateSpace, generateCode, updateJoinCodeForSpace} from '../utils/firebaseMethod';
+import { changeSpaceOwner, deleteSpace, getSpace, leaveSpace, getImageDownloadURL, updateSpace, generateCode, updateJoinCodeForSpace, removeUser} from '../utils/firebaseMethod';
 
 const itemRef = db.collection('items');
 const userRef = db.collection('users');
@@ -264,9 +264,9 @@ export default function editSpace({route, navigation}) {
                             onClick={() =>
                                 {
                                 if (option === 'delete'){
-                                    deleteSpace(currentUser, currentSpaceId);
+                                    // deleteSpace(currentUser, currentSpaceId);
+                                    removeUser(currentSpaceID, currentUser, currentUser)
                                     navigation.navigate('MySpacesPage') 
-
                                 } else {
                                     leaveSpace(currentUser, currentSpaceId, null);
                                     navigation.navigate('MySpacesPage') 

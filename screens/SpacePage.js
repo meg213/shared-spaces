@@ -147,7 +147,7 @@ export default function SpacePage({route, navigation}){
         }
     }
     return () => subscriber;
-  }, []);
+  }, [recent_items_stack, setRecentList]);
 
   console.log('fingers crossed', recent_items_stack);
 

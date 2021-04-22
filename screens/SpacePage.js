@@ -134,13 +134,13 @@ export default function SpacePage({route, navigation}){
         if (componentIsMounted.current) {
             data.sort((a,b) => b.timestamp - a.timestamp);
             setItems(data);
-            console.log('data', data)
+           // console.log('data', data)
 
             let mostRecentItems = [];
 
             for (let i = 0; i < (data.length || i < max_items_shown); i++) {
-                console.log('recent items!', data[i])
-                console.log('recent items key', data[i].key)
+              //  console.log('recent items!', data[i])
+              //  console.log('recent items key', data[i].key)
                 mostRecentItems.push({key: data[i], value: data[i].key})
             }
             setRecentList(mostRecentItems);
@@ -149,7 +149,7 @@ export default function SpacePage({route, navigation}){
     return () => subscriber;
   }, [recent_items_stack, setRecentList]);
 
-  console.log('fingers crossed', recent_items_stack);
+ // console.log('fingers crossed', recent_items_stack);
 
   // messaging
   useEffect(() => {

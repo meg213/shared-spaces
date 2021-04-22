@@ -76,7 +76,6 @@ const CreateList= ({route, navigation}) => {
         return () => subscriber;
     }, []);
 
-    console.log('itemIds', itemIDs)
     const ImageItem = (props) => {
         return (
             <Pressable onPress={()=> {
@@ -89,14 +88,13 @@ const CreateList= ({route, navigation}) => {
     }
 
     const handleCheckboxes = (name) => {
-        var newArray = checkboxes;
+        var newArray = [...checkboxes];
         for (var i = 0; i < checkboxes.length; i++){
             if (checkboxes[i].value === name) {
                 newArray[i].isChecked = !checkboxes[i].isChecked;
-                console.log(checkboxes[i].value, ' is ', checkboxes[i].isChecked )
             }
         }
-        return newArray;
+        setCheckboxes(newArray);
     }
 
     return(
@@ -131,8 +129,11 @@ const CreateList= ({route, navigation}) => {
                         { checkboxes.map((item) => {
                             return (
                                 <CheckBox
+                                    key={Math.random()}
                                     title={item.value}
-                                    onPress={()=> {setCheckboxes(handleCheckboxes(item.value))}}
+                                    onPress={()=> {
+                                        handleCheckboxes(item.value)
+                                    }}
                                     checked={item.isChecked}
                                 />
                             )
@@ -146,7 +147,7 @@ const CreateList= ({route, navigation}) => {
                     name="Create List"
                     width="75%"
                     onClick={() => {
-                        console.log(items)
+                       // console.log(items)
                         var checkedItems = [];
                         for (var i = 0; i < items.length; i++){
                             if (checkboxes[i].isChecked){

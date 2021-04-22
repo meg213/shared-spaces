@@ -236,7 +236,7 @@ export default function editSpace({route, navigation}) {
                             onClick={() => {
                                     console.log('memberclicked', memberClicked)
                                     console.log('memberClickedID', memberClickedId)
-                                    //removeUser(currentSpaceID, currentUser, memberClickedId)
+                                    removeUser(currentSpaceID, currentUser, memberClickedId)
                                     setModalVisible(!modalVisible)
                                 }}
                         />

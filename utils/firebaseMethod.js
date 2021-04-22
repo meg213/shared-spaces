@@ -105,6 +105,11 @@ export async function removeUser(targetSpace, currentUser, victimUser) {
             // For some reason, we passed in the ID itself and not the full name
             targetSpace = "spaces/".concat(targetSpace)
         }
+
+        if (victimUser.substring(0, 6) != "users/") {
+            // For some reason, we passed in the ID itself and not the full name
+            victimUser = "users/".concat(victimUser)
+        }
     
         const targetID = targetSpace.substring(7);
         const requestingUser = currentUser.uid;
@@ -390,6 +395,11 @@ export async function updateItem(space, item, newName, newShared, newList, oldLi
  */
 export async function leaveSpace(currentUser, currentSpace) 
 {
+    if (currentSpace.substring(0, 7) != "spaces/") {
+        // For some reason, we passed in the ID itself and not the full name
+        currentSpace = "spaces/".concat(targetSpace)
+    }
+
     const spaceID = currentSpace.substring(7);
     const userID  = currentUser.uid;
 

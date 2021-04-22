@@ -264,8 +264,7 @@ export default function editSpace({route, navigation}) {
                             onClick={() =>
                                 {
                                 if (option === 'delete'){
-                                    // deleteSpace(currentUser, currentSpaceId);
-                                    removeUser(currentSpaceID, currentUser, currentUser)
+                                    deleteSpace(currentUser, currentSpaceId);
                                     navigation.navigate('MySpacesPage') 
                                 } else {
                                     leaveSpace(currentUser, currentSpaceId, null);

@@ -124,12 +124,10 @@ export default function AllItemsPage({route, navigation}) {
     return () => subscriber;
   }, []);
 
- // console.log(allItems)
-   let originalData = []
+  let originalData = []
   for (let i = 0; i < allItems.length; i++) {
     originalData.push({value: allItems[i].name, key: allItems[i]})
   }
-  //console.log(data)
 
   const searchFilterFunction = (text) => {
     //if the search bar is not empty

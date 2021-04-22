@@ -44,8 +44,6 @@ export async function getAllJoinCode() {
     return allCodes
 }
 
-
-
 export async function joinSpace(currUser, joinCode) {
     try {
         const userID = currUser.uid;
@@ -105,6 +103,17 @@ export async function deleteUser(currentUser) {
         userRef.doc(userID).delete().then(() => {
             console.log("deleteUser: User deleted successfully!")
         })
+    } catch (e) {
+        console.error("deleteUser: Error in deleting user");
+        Alert.alert(e.message);
+    }
+}
+
+export async function getUser(user) {
+    const userID = user.substring(6);
+
+    try {
+        return (await userRef.doc(userID).get()).data()
     } catch (e) {
         console.error("deleteUser: Error in deleting user");
         Alert.alert(e.message);
@@ -231,7 +240,7 @@ export async function getItem(item) {
     let itemData;
     
     try {
-        itemData = itemRef.doc(itemID).get().data();
+        itemData = (await itemRef.doc(itemID)).get().data();
     } catch (e) {
         console.error("getItem: Error in getting item with ID: ", itemID);
         alert(e.message);
@@ -365,9 +374,9 @@ export async function leaveSpace(currentUser, currentSpace)
             Alert.alert("Attempted to leave space as owner. Please change ownership before continuing.");
             return -1;
         } else {
-            // Remove users from space
+            // Remove user from space
             spaceRef.doc(spaceID).update({
-                users: firebase.firestore.FieldValue.arrayRemove((await userID))
+                user: firebase.firestore.FieldValue.arrayRemove((await userID))
             });
             // Remove space from user
             userRef.doc(userID).update({
@@ -442,14 +451,15 @@ export async function deleteSpace(currentUser, currentSpace) {
         console.log(lists)
 
         for (let i = 0; i < lists.length; i++) {
-            deleteList(lists[i], currentSpace);
+            let currListID = lists[i].substring(6)
+            (await listRef.doc(currListID).delete());
         }
 
         // 2. Delete the items.
         const items = spaceData.items;  // Items array in space's unnamed list
         for (let i = 0; i < items.length; i++) {
             let currItemID = items[i].substring(6);
-            itemRef.doc(currItemID).delete();
+            (await itemRef.doc(currItemID).delete());
         }
 
         // 3. Delete the space.
@@ -625,8 +635,6 @@ export async function deleteList(currentList, currentSpace) {
         const spaceID = currentSpace.substring(7);
         const listID  = currentList.substring(6);
         const itemID = currentItem.substring(6);
-
-
 
         // if it has no list, delete the reference in the space
         if (currentList.toString() === "None") {

@@ -233,7 +233,12 @@ export default function editSpace({route, navigation}) {
                             name="Remove Member"
                             color= "#9B51E0"
                             width={100}
-                            onClick={() => setModalVisible(!modalVisible)}
+                            onClick={() => {
+                                    console.log('memberclicked', memberClicked)
+                                    console.log('memberClickedID', memberClickedId)
+                                    //removeUser(currentSpaceID, currentUser, memberClickedId)
+                                    setModalVisible(!modalVisible)
+                                }}
                         />
                     </View>
                 </View>

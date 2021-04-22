@@ -32,7 +32,10 @@ const JoinSpaceScreen = ({route, navigation}) =>  {
                 />
                 <Button 
                     name="Join Space"
-                    onClick={() => joinSpace(currUser, Number(joinCode))}
+                    onClick={() => {
+                        joinSpace(currUser, Number(joinCode));
+                        navigation.navigate('MySpacesPage') 
+                    }}
                 />
             </View>
         </SafeAreaView>

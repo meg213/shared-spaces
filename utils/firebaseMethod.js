@@ -92,6 +92,41 @@ export async function addNewUser(targetSpace, requestingUser) {
         Alert.alert(e.message);
     }
 }
+
+/**
+ * Removes a member from the target space
+ * @param targetSpace    spaceID containing both requesting and victim user, "spaces/..."
+ * @param requestingUser user requesting removal of victim user, should be currUser
+ * @param victimUser     user selected for removal, "users/..."
+ */
+export async function removeUser(targetSpace, currentUser, victimUser) {
+    victimID = victimUser.substring(6);
+    targetID = targetSpace.substring(7);
+    requestingUser = currentUser.uid;
+
+    try {
+        targetSpaceData = (await getSpace(targetSpace));
+        ownerUID = targetSpaceData.owner;
+        
+        // Check if currentUser has owner permissions
+        if (requestingUser != ownerUID) {
+            throw "Invalid Permissions: Only the owner may remove members.";
+        }
+
+        // Remove victim user from target space
+        spaceRef.doc(spaceID).update({
+            user: firebase.firestore.FieldValue.arrayRemove((await victimID))
+        });
+        // Remove target space from victim user's space list
+        userRef.doc(userID).update({
+            spaces: firebase.firestore.FieldValue.arrayRemove((await currentSpace))
+        });
+    } catch (e) {
+        console.error("removeUser: Error in adding user");
+        Alert.alert(e.message);
+    }
+}
+
 /**
  * Deletes user from Firebase
  * @param currentUser User requesting deletion

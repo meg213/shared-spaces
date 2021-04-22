@@ -39,11 +39,7 @@ const JoinSpaceScreen = ({route, navigation}) =>  {
                 />
             </View>
         </SafeAreaView>
-
-
-
     )
-
 }
 
 export default JoinSpaceScreen;

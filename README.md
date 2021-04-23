@@ -82,6 +82,10 @@ You can download the source code from our GitHub and unzip the file to your disi
 #### Run Instructions
 Once you have downloaded the source code and also ```npm install``` all of the dependencies, in order to run the application you should go to into the directory and run ```expo start```. This should open up a tab in your default browser that then gives you options on how you would like to run Shared Spaces. If you would like to run Shared Spaces in your browser (not recommended) you can choose the option "Run in web browser" to do so. We recommend the "Run on Android device/emulator" option. You should open up the [Android Studio][4] that you downloaded and start up an emulator. Once the emulator is up and running, you then can press the "Run on Android device/emulator" button. Additionally, you can download the [Expo][3] app to run Shared Spaces on your phone. There is a QR code on the browser tab that can be scanned from inside the Expo app. Once you have done one of the three options, the app should be up and running and you should be able to use the app as you please.
 
+#### Troubleshooting
+* If you're getting errors for things not being able to be found, make sure that you have downloaded all the correct dependencies. This is crutial to the proper functioning of Shared Spaces. 
+* If when you try to click the "Run on Android device/emulator" button and nothing happens, make sure that you open the emulator __before__ trying to run it. The emulator needs to be already open so Expo can find the correct device to run Shared Spaces on.
+
 [1]: https://code.visualstudio.com/download
 [2]: https://nodejs.org/en/
 [3]: https://expo.io/tools

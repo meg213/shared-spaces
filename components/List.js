@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     icon: {
         width: 50,
         height: 50,
-        color: "#000000",
+        //color: "#000000",
         marginLeft: 12,
         marginRight: 18
     },
@@ -66,7 +66,6 @@ List.propTypes = {
     listName: PropTypes.string,
     numItems: PropTypes.number,
     icon: PropTypes.any,
-
     onPres: PropTypes.func,
 };
 

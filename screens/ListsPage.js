@@ -100,6 +100,7 @@ export default function ListsPage({navigation, route}) {
         name: myLists[i].value.name,
         items: myLists[i].value.items,
         spaceID: myLists[i].value.spaceID,
+        icon: myLists[i].value.icon,
         listID: myLists[i].key
       }
     })
@@ -167,9 +168,10 @@ export default function ListsPage({navigation, route}) {
               <List
                 listName={item.key.name}
                 numItems={item.key.items.length}
+                icon={item.key.icon}
                 onPress={() => {
                   console.log('item', item);
-                  navigation.navigate("ListDetail", { listID: item.key.listID, name: item.key.name, numItems: item.key.items.length, data: route.params.data});
+                  navigation.navigate("ListDetail", { listID: item.key.listID, currUser: route.params.currUser, name: item.key.name, numItems: item.key.items.length, data: route.params.data});
                   }
                 }
                     // TODO: Create custom icon for lists

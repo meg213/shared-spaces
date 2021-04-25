@@ -76,10 +76,14 @@ const CreateList= ({route, navigation}) => {
         return () => subscriber;
     }, []);
 
+    console.log('itemIds', itemIDs)
+
     const ImageItem = (props) => {
+        console.log(props.src)
         return (
             <Pressable onPress={()=> {
                 setIsVisible(false)
+                console.log(props.src)
                 setIcon(props.src)
             }}>
                 <Image source={props.src} style={styles.icons}/>
@@ -155,7 +159,7 @@ const CreateList= ({route, navigation}) => {
                             }
                         }
                         if (name !== '') {
-                            createNewListWithItems(currentSpaceId, name, checkedItems);
+                            createNewListWithItems(currentSpaceId, name, checkedItems, icon);
                             navigation.navigate('ListsList');
                         } else {
                             setModalVisible(true);

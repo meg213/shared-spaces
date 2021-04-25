@@ -167,8 +167,18 @@ export default function ListsPage({navigation, route}) {
               />
               )}
             />
-          </ScrollView>
-      </View>  
+        </ScrollView>
+        </View>
+        <View style={styles.fab}>
+            <Button
+                width='80%'
+                name="Add Item"
+                onClick={()=> {
+                  console.log(route.params.items);
+                  navigation.navigate("CreateItem", {spaceID:route.params.data, currUser: route.params.currUser})
+                }}
+            />
+        </View>
     </SafeAreaView>
   );
 }

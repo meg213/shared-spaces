@@ -38,7 +38,7 @@ export default function ItemDetailScreen ({route, navigation}) {
         <SafeAreaView style = {[styles.container]}>
             <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 4,paddingHorizontal: 30, flexDirection: 'row' }}>
                 {image && <Image source={{ uri: image }} style={[styles.icon]} />}
-                <Image source={require('../assets/icon.png')} style={[styles.icon]}/>
+                {/* <Image source={require('../assets/icon.png')} style={[styles.icon]}/> */}
             </View>
             <View style={{paddingVertical: 30, paddingHorizontal: 30}}>
                 <Text style={[styles.text]}>

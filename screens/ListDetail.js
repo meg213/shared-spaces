@@ -212,7 +212,9 @@ const styles = StyleSheet.create({
       //alignItems: 'center'
   },
   search: {
-    width: '100%'
+    width: '100%',
+    height: 20,
+    marginVertical: 30
   },
   fab: {
     position: 'absolute',

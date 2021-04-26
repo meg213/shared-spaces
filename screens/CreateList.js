@@ -89,7 +89,7 @@ const CreateList= ({route, navigation}) => {
     }
 
     const handleCheckboxes = (name) => {
-        var newArray = checkboxes;
+        var newArray = [...checkboxes];
         for (var i = 0; i < checkboxes.length; i++){
             if (checkboxes[i].value === name) {
                 newArray[i].isChecked = !checkboxes[i].isChecked;

@@ -50,7 +50,6 @@ const CreateSpaceScreen = ({route, navigation}) => {
                 />
             </View>
             <View>
-             <Text style={styles.subText}>Members</Text>
             </View>
             <View style={styles.buttonStyles}>
                 <Button
